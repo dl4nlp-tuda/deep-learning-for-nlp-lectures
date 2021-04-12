@@ -15,3 +15,9 @@ Accompanying video lectures are linked on YouTube
 * Topics: Kick-off (challenges in NLP, Deep Learning in NLP, Terminology, History of DL, Perceptron)
 * [Slides as PDF](/pdf/dl4nlp2021-lecture01-video.pdf)
 * [YouTube video](https://youtu.be/AbmAFprJhJo)
+
+## Lecture 2
+
+* Topics: Machine learning basics, Cross-validation, Evaluation, Loss functions
+* [Slides as PDF](/pdf/dl4nlp2021-lecture02-video.pdf)
+* [YouTube video](https://youtu.be/ncoMF4zURSw)
