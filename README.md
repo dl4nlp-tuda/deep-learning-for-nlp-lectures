@@ -14,4 +14,4 @@ Accompanying video lectures are linked on YouTube
 
 * Topics: Kick-off (challenges in NLP, Deep Learning in NLP, Terminology, History of DL, Perceptron)
 * [Slides as PDF](/pdf/dl4nlp2021-lecture01-video.pdf)
-* [YouTube video](#) TBD
+* [YouTube video](https://youtu.be/AbmAFprJhJo)
