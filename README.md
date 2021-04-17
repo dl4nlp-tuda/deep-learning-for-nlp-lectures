@@ -21,3 +21,26 @@ Accompanying video lectures are linked on YouTube
 * Topics: Machine learning basics, Cross-validation, Evaluation, Loss functions
 * [Slides as PDF](/pdf/dl4nlp2021-lecture02-video.pdf)
 * [YouTube video](https://youtu.be/ncoMF4zURSw) (to be released publicly on Tuesday, April 20, 2021)
+
+## Compiling slides to PDF
+
+If you run a linux distribution (e.g, Ubuntu 20.04 and newer), all packages are provided as part of `texlive`. Install the following packages
+
+```plain
+$ sudo apt-get install texlive-latex-recommended texlive-pictures texlive-latex-extra \
+texlive-fonts-extra texlive-bibtex-extra texlive-humanities texlive-science \
+texlive-luatex biber wget -y
+```
+
+Install Fira Sans fonts required by the beamer template locally
+
+```plain
+$ wget https://github.com/mozilla/Fira/archive/refs/tags/4.106.zip -O 4.106.zip \
+&& unzip -o 4.106.zip && mkdir -p ~/.fonts/FiraSans && cp Fira-4.106/otf/Fira* \
+~/.fonts/FiraSans/ && rm -rf Fira-4.106 && rm 4.106.zip && fc-cache -f -v && mktexlsr
+```
+Compile each lecture's slides using ``lualatex``
+
+```$ lualatex dl4nlp2021-lecture*.tex && biber dl4nlp2021-lecture*.bcf && \
+lualatex dl4nlp2021-lecture*.tex && lualatex dl4nlp2021-lecture*.tex
+```
