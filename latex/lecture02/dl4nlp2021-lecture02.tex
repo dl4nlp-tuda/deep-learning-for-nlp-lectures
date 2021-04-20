@@ -902,11 +902,11 @@ Also known as \emph{relative entropy}
 Let $Y$ and $\hat{Y}$ be categorical random variables over same categories, with probability distributions $P(Y)$ and $Q(\hat{Y})$
 	
 	\begin{align*}
-	\mathbb{D}(P(Y) || Q(\hat{Y})) &= \mathbb{E}_{P(Y)} \left[ \log \frac{P(Y)}{P(\hat{Y})} \right] \\
-	&= \mathbb{E}_{P(Y)} \left[ \log P(Y) - \log P(\hat{Y}) \right] \\
-	&= \mathbb{E}_{P(Y)} \left[ \log P(Y)\right] - \mathbb{E}_{P(Y)} \left[ \log P(\hat{Y}) \right] \\
-	&= - \mathbb{E}_{P(Y)} \left[ \log \frac{1}{P(Y)}\right] - \mathbb{E}_{P(Y)} \left[ \log P(\hat{Y}) \right] \\
-	&= - \mathbb{H}_{P} (Y)  - \mathbb{E}_{P(Y)} \left[ \log P(\hat{Y}) \right] \\
+	\mathbb{D}(P(Y) || Q(\hat{Y})) &= \mathbb{E}_{P(Y)} \left[ \log \frac{P(Y)}{Q(\hat{Y})} \right] \\
+	&= \mathbb{E}_{P(Y)} \left[ \log P(Y) - \log Q(\hat{Y}) \right] \\
+	&= \mathbb{E}_{P(Y)} \left[ \log P(Y)\right] - \mathbb{E}_{P(Y)} \left[ \log Q(\hat{Y}) \right] \\
+	&= - \mathbb{E}_{P(Y)} \left[ \log \frac{1}{P(Y)}\right] - \mathbb{E}_{P(Y)} \left[ \log Q(\hat{Y}) \right] \\
+	&= - \mathbb{H}_{P} (Y)  - \mathbb{E}_{P(Y)} \left[ \log Q(\hat{Y}) \right] \\
 	\end{align*}
 	
 
@@ -919,15 +919,15 @@ Let $Y$ and $\hat{Y}$ be categorical random variables over same categories, with
 Labels as categorical probability distributions
 
 \begin{align*}
-\mathbb{D}(P(Y) || Q(\hat{Y})) &= - \mathbb{H}_{P} (Y)  - \mathbb{E}_{P(Y)} \left[ \log P(\hat{Y}) \right] \\
+\mathbb{D}(P(Y) || Q(\hat{Y})) &= - \mathbb{H}_{P} (Y)  - \mathbb{E}_{P(Y)} \left[ \log Q(\hat{Y}) \right] \\
 \end{align*}
 
-$\mathbb{H}_{P} (Y)$ does not depend on predictions $\hat{Y}$ so we only care about $- \mathbb{E}_{P(Y)} \left[ \log P(\hat{Y}) \right]$; Let $P(Y = m) = y_m$
+$\mathbb{H}_{P} (Y)$ does not depend on predictions $\hat{Y}$ so we only care about $- \mathbb{E}_{P(Y)} \left[ \log Q(\hat{Y}) \right]$; Let $P(Y = m) = y_m$
 
 \begin{align*}
 \ell(\mathbf{y}, \hat{\mathbf{y}}) &= 
-- \mathbb{E}_{P(Y)} \left[ \log P(\hat{Y}) \right]
-= - \sum_{m = 1}^{M} P(Y = m) \log P(\hat{Y} = m)\\
+- \mathbb{E}_{P(Y)} \left[ \log Q(\hat{Y}) \right]
+= - \sum_{m = 1}^{M} P(Y = m) \log Q(\hat{Y} = m)\\
 &=-  \sum_{m = 1}^{M} y_m \log (\hat{y}_m) 
 \end{align*}
 
