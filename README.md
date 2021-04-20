@@ -19,7 +19,7 @@ Accompanying video lectures are linked on YouTube
 ## Lecture 2
 
 * Topics: Machine learning basics, Cross-validation, Evaluation, Loss functions
-* [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture02-video.pdf), [Slides as PDF (with fixed issues)](/pdf/dl4nlp2021-lecture02-video-with-fixed-issues.pdf)
+* [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture02-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture02-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/ncoMF4zURSw)
 
 ## Compiling slides to PDF
