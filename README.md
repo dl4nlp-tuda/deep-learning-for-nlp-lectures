@@ -1,8 +1,10 @@
 # Deep Learning for Natural Language Processing - Lectures 2021
 
-This repository contains slides for the course "20-00-0947: Deep Learning for Natural Language Processing" (Technical University of Darmstadt, Summer term 2021)
+This repository contains slides for the course "20-00-0947: Deep Learning for Natural Language Processing" (Technical University of Darmstadt, Summer term 2021). 
 
-The slides are available as PDF as well as LaTeX source code (I've used Beamer because typesetting mathematics in PowerPoint or similar tools is painful)
+This online course is taught by [Ivan Habernal](https://www.trusthlt.org) and [Mohsen Mesgar](mohsen-mesgar.io). 
+
+The slides are available as PDF as well as LaTeX source code (We've used Beamer because typesetting mathematics in PowerPoint or similar tools is painful)
 
 ![Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/CC-BY-SA_icon.svg/88px-CC-BY-SA_icon.svg.png)
 
@@ -21,6 +23,14 @@ Accompanying video lectures are linked on YouTube
 * Topics: Machine learning basics, Cross-validation, Evaluation, Loss functions
 * [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture02-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture02-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/ncoMF4zURSw)
+
+## Lecture 2
+
+* Topics: Training as optimization and (neural) language models 
+* [Slides as PDF (as in video)](/pdf/slides.pdf), 
+[Slides as PDF (updated)](/pdf/dl4nlp2021-lecture02-with-fixed-issues.pdf)
+* [YouTube video]()
+
 
 ## Compiling slides to PDF
 
