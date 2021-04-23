@@ -2,9 +2,9 @@
 
 This repository contains slides for the course "20-00-0947: Deep Learning for Natural Language Processing" (Technical University of Darmstadt, Summer term 2021). 
 
-This online course is taught by [Ivan Habernal](https://www.trusthlt.org) and [Mohsen Mesgar](mohsen-mesgar.io). 
+This online course is taught by [Ivan Habernal](https://www.trusthlt.org) and [Mohsen Mesgar](https://mohsen-mesgar.io). 
 
-The slides are available as PDF as well as LaTeX source code (We've used Beamer because typesetting mathematics in PowerPoint or similar tools is painful)
+The slides are available as PDF as well as LaTeX source code (we've used Beamer because typesetting mathematics in PowerPoint or similar tools is painful)
 
 ![Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/CC-BY-SA_icon.svg/88px-CC-BY-SA_icon.svg.png)
 
