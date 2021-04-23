@@ -27,7 +27,7 @@ Accompanying video lectures are linked on YouTube
 ## Lecture 3
 
 * Topics: Training as optimization and (neural) language models 
-* [Slides as PDF](/pdf/dl4nlp2021-lecture03-video.pdf), 
+* [Slides as PDF](/pdf/dl4nlp2021-lecture03-video.pdf)
 * [YouTube video](https://youtu.be/m3PeX3lYyBc)
 
 
