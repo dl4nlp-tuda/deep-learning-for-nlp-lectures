@@ -30,6 +30,12 @@ Accompanying video lectures are linked on YouTube
 * [Slides as PDF](/pdf/dl4nlp2021-lecture03-video.pdf)
 * [YouTube video](https://youtu.be/m3PeX3lYyBc)
 
+## Lecture 4
+
+* Topics: Text Representations (I)
+* [Slides as PDF](/pdf/dl4nlp2021-lecture04-video.pdf)
+* [YouTube video](https://youtu.be/PiH7JkKWRck)
+
 
 ## Compiling slides to PDF
 
