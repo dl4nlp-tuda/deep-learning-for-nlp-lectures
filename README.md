@@ -35,6 +35,7 @@ Accompanying video lectures are linked on YouTube
 * Topics: Text Representations (I)
 * [Slides as PDF](/pdf/dl4nlp2021-lecture04-video.pdf)
 * [YouTube video](https://youtu.be/PiH7JkKWRck)
+* [Code in PyTorch](/code/lecture04/embedding-layer.py)
 
 
 ## Compiling slides to PDF
