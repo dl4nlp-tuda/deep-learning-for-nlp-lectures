@@ -1,5 +1,3 @@
-
-
 \begin{frame}{Embeddings}
     \begin{itemize}
         \item<1-> by embeddings we mean representing each textual feature as a dense vector in a low dimensional space
@@ -41,7 +39,7 @@
 \end{itemize}
 \begin{figure}
     \centering
-    \includegraphics{final/lecture04/figure/chess.jpg}
+    \includegraphics{./figure/chess.jpg}
 \end{figure}
 \end{frame}
 \begin{frame}{Distributional Hypothesis}
@@ -136,19 +134,19 @@
         \item CBoW stands for Continuous Bag of Words
         \item task: given a context $\rightarrow$ predict a missing word from the context
         
-        \begin{table}
-        \begin{tabular}{l}
-        input:``I $\__$ NLP'' $\rightarrow$ output: ``like''   
-        \\
-        \\
-        \uncover<2->
-        {
-        
-        input: (``I $\__$ NLP'', ``like'') $\rightarrow$ output: 1 and \\ 
-        input: (``I $\__$ NLP'', ``apple'') $\rightarrow$ output: 0
-        }
-        \end{tabular}
-        \end{table}
+            \begin{table}
+                \begin{tabular}{l}
+                    
+                    input: ``I $\_$ NLP'' $\rightarrow$ output: ``like''   
+                    \\
+                    \\
+                    \uncover<2->
+                    {
+                        input: (``I $\_$ NLP'', ``like'') $\rightarrow$ output: 1 and \\ 
+                        input: (``I $\_$ NLP'', ``apple'') $\rightarrow$ output: 0
+                    }
+                \end{tabular}
+            \end{table}
     \end{itemize}
 \end{frame}
 \begin{frame}{CBoW Method}
@@ -158,7 +156,7 @@
                 \item<2-> positive set ($D$): consisting of pairs $(c, w)$ where $c$ is a context and $w$ is the correct value for the missing word
                 \item<3-> negative set ($D^\prime$): consisting of pairs $(c, w)$ where $c$ is a context and $w$ is a random value for the missing word
             \end{itemize}
-            \item<4-> we compute the score estimating similarity between context $c$  and word $w_$ given context-word pair $(c,w)$
+            \item<4-> we compute the score estimating similarity between context $c$  and word $w$ given context-word pair $(c,w)$
         \begin{equation*}
             s(c,w) = e(w)\sum_{w_i \in c} e(w_i)
         \end{equation*}

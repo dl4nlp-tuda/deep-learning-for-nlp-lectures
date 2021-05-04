@@ -16,7 +16,8 @@
         \end{itemize}
 \end{itemize}
 \end{frame}
- \begin{frame}{Practical Hints}
+
+\begin{frame}{Practical Hints}
      \begin{itemize}
          \item<1-> always try out different word embeddings (consider them as a hyperparameter)
          \item<2-> results may vary drastically with different embeddings
@@ -26,17 +27,16 @@
      \end{itemize}
  \end{frame}
 
- \begin{frame}{Embedding Layers in PyTorch}
+\begin{frame}{Embedding Layers in PyTorch}
      \begin{itemize}
          \item<1-> an embedding layer (a.k.a lookup table) maps a sequence of word IDs to a sequence of embedding vectors
          \item<2-> it uses a lookup table, which is a matrix with size $|V|\times d_{emb}$
          \item<3-> the $i$'th row of this matrix contains embeddings of $i$'th word in vocabulary $V$
-         \item<4-> so the only thing we need to do is to replace a word with its index in vocabulary $\rightarrow$ a dictionary does this easily (word\_to\_ix)
+         \item<4-> so the only thing we need to do is to replace a word with its index in vocabulary $\rightarrow$ a dictionary does this easily (word$\_$to$\_$ix)
      \end{itemize}
-     
- \end{frame}
+\end{frame}
 
- \begin{frame}[fragile]{Embedding Layers in PyTorch}
+\begin{frame}[fragile]{Embedding Layers in PyTorch}
     \tiny
      \begin{lstlisting}[language=Python]
     import torch
@@ -57,8 +57,7 @@
     print(hello_embed)
     
     \end{lstlisting}
-
- \end{frame}
+\end{frame}
  
  \begin{frame}[fragile]{Embedding Layers in PyTorch}
   \tiny
@@ -76,80 +75,80 @@ class EmbeddingLayer(nn.Module):
         return embeds
 \end{lstlisting}        
 
- \end{frame}
+\end{frame}
  
- \begin{frame}[fragile]{Embedding Layers in PyTorch}
+\begin{frame}[fragile]{Embedding Layers in PyTorch}
   \tiny
      \begin{lstlisting}[language=Python]
-import torch
-import torch.nn as nn
+    import torch
+    import torch.nn as nn
 
-class EmbeddingLayer(nn.Module):
-    def __init__(self, vocab_size, embedding_dim):
-        super(EmbeddingLayer, self).__init__()
-        self.embeddings = nn.Embedding(vocab_size, embedding_dim)
-    
-    def forward(self, inputs):
-        embeds = self.embeddings(inputs)
-        return embeds
+    class EmbeddingLayer(nn.Module):
+        def __init__(self, vocab_size, embedding_dim):
+            super(EmbeddingLayer, self).__init__()
+            self.embeddings = nn.Embedding(vocab_size, embedding_dim)
+        
+        def forward(self, inputs):
+            embeds = self.embeddings(inputs)
+            return embeds
 
-if __name__ == '__main__':
-    model = EmbeddingLayer(voc_size=10, emb_size=3)
-    inputs = [1,5]
-    inputs_tenseor = torch.tensor(inputs, dtype=torch.long)
-    
-    emb_vectors = model(inputs_tenseor)
-    
-    print(f"the shape of emb vectors is {emb_vectors.shape}")            
-\end{lstlisting}
- \end{frame}
+    if __name__ == '__main__':
+        model = EmbeddingLayer(voc_size=10, emb_size=3)
+        inputs = [1,5]
+        inputs_tenseor = torch.tensor(inputs, dtype=torch.long)
+        
+        emb_vectors = model(inputs_tenseor)
+        
+        print(f"the shape of emb vectors is {emb_vectors.shape}")            
+    \end{lstlisting}
+\end{frame}
 
- \begin{frame}[fragile]{Using Pretrained Embedding Layers  \\ in PyTorch}
+\begin{frame}[fragile]{Using Pretrained Embedding Layers  \\ in PyTorch}
   \tiny
      \begin{lstlisting}[language=Python]
-import torch
-import torch.nn as nn
+    import torch
+    import torch.nn as nn
 
-class EmbeddingLayer(nn.Module):
-    def __init__(self, vocab_size, embedding_dim, weights_matrix):
-        super(EmbeddingLayer, self).__init__()
-        self.embeddings = nn.Embedding(vocab_size, embedding_dim)
+    class EmbeddingLayer(nn.Module):
+        def __init__(self, vocab_size, embedding_dim, weights_matrix):
+            super(EmbeddingLayer, self).__init__()
+            self.embeddings = nn.Embedding(vocab_size, embedding_dim)
+            
+            self.embeddings.load_state_dict({'weight': weights_matrix})
         
-        self.embeddings.load_state_dict({'weight': weights_matrix})
-    
-     
-    def forward(self, inputs):
-        embeds = self.embeddings(inputs)
-        return embeds
-\end{lstlisting}
- \end{frame}
+         
+        def forward(self, inputs):
+            embeds = self.embeddings(inputs)
+            return embeds
+    \end{lstlisting}
+\end{frame}
  
- \begin{frame}[fragile]{Freezing Embedding Layers \\ in PyTorch}
+\begin{frame}[fragile]{Freezing Embedding Layers \\ in PyTorch}
  
   \tiny
      \begin{lstlisting}[language=Python]
-import torch
-import torch.nn as nn
+    import torch
+    import torch.nn as nn
 
-class EmbeddingLayer(nn.Module):
-    def __init__(self, vocab_size, embedding_dim, weights_matrix, freeze=False):
-        super(EmbeddingLayer, self).__init__()
-        self.embeddings = nn.Embedding(vocab_size, embedding_dim)
-        
-        self.embeddings.load_state_dict({'weight': weights_matrix})
-        
-        
-        if freeze:
-            self.embeddings.weight.requires_grad = False
-        
-        
-    def forward(self, inputs):
-        embeds = self.embeddings(inputs)
-        return embeds
-\end{lstlisting}
- \end{frame}
+    class EmbeddingLayer(nn.Module):
+        def __init__(self, vocab_size, embedding_dim, weights_matrix, freeze=False):
+            super(EmbeddingLayer, self).__init__()
+            self.embeddings = nn.Embedding(vocab_size, embedding_dim)
+            
+            self.embeddings.load_state_dict({'weight': weights_matrix})
+            
+            
+            if freeze:
+                self.embeddings.weight.requires_grad = False
+            
+            
+        def forward(self, inputs):
+            embeds = self.embeddings(inputs)
+            return embeds
+    \end{lstlisting}
+\end{frame}
  
- \begin{frame}{Limitations}
+\begin{frame}{Limitations}
  \begin{itemize}
      \item<1-> the algorithms discussed provide very little control over the kind of similarity they include
      \begin{itemize}
@@ -163,8 +162,8 @@ class EmbeddingLayer(nn.Module):
          \item<7-> a model trained on texts only might easily misled by this
      \end{itemize}
  \end{itemize}
- \end{frame}
- \begin{frame}{Limitations}\begin{itemize}
+\end{frame}
+\begin{frame}{Limitations}\begin{itemize}
      \item<1-> text corpora can easily be biased for better or worse $\rightarrow$  so word embeddings can become biased too
      \begin{itemize}
          \item<2-> gender and racial biases are very common
@@ -174,5 +173,6 @@ class EmbeddingLayer(nn.Module):
          \item<4-> in reality, there is no such a thing to have context independent word meaning
          \item<5-> some words have multiple sense e.g., ``bank'' may refer to a financial institution or to the side of a river
      \end{itemize}
- \end{itemize}\end{frame}
+ \end{itemize}
+\end{frame}
  
