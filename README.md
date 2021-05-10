@@ -41,7 +41,7 @@ Accompanying video lectures are linked on YouTube
 
 * Topics: Bilingual and Syntax-Based Word Embeddings
 * [Slides as PDF](/pdf/dl4nlp2021-lecture05-video.pdf)
-* [YouTube video](TBD)
+* [YouTube video](https://youtu.be/lnzftxgTAZo)
 
 
 ## Compiling slides to PDF
