@@ -37,6 +37,12 @@ Accompanying video lectures are linked on YouTube
 * [YouTube video](https://youtu.be/PiH7JkKWRck)
 * [Code in PyTorch](/code/lecture04/embedding-layer.py)
 
+## Lecture 5
+
+* Topics: Bilingual and Syntax-Based Word Embeddings
+* [Slides as PDF](/pdf/dl4nlp2021-lecture05-video.pdf)
+* [YouTube video](TBD)
+
 
 ## Compiling slides to PDF
 
