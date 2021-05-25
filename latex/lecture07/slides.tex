@@ -1,0 +1,81 @@
+\makeatletter\let\ifGm@compatii\relax\makeatother
+\documentclass[final, %
+	% 10pt, % slightly smaller
+	%11pt, % standard font size
+	% 12pt, % slightly bigger
+	% handout, % for producing handouts
+	t, % Place text of slides at the (vertical) top of the slides
+	% c, % Place text of slides at the (vertical) center of the slides
+	xcolor={table,dvipsnames}, % options for xcolor
+]{beamer}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% my theme design is in style.sty file. Go there and see my comments
+\usepackage{style}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{etex}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc} % for correct hyphenation of words with accented letters in European languages 
+\usepackage{textcomp}	 % additional symbols (Text Companion font extension)
+
+% \usepackage{lmodern}               %% --- Latin Modern
+\usepackage{mathptmx}              %% --- Times mit Matheschriften
+\usepackage{multirow}
+% \usepackage{mathpazo}              %% --- Palatino
+
+\usepackage[scaled=.90]{helvet}    %% --- Helvetica (Arial)
+\usepackage{rotating}
+
+
+\usepackage{courier}               %% --- Courier
+\usepackage{amsmath}
+% preamble/Beamer-LaTeX-Settings.tex
+% pictures
+\usepackage[%
+  %final,
+   %draft % do not include images (faster)
+]{graphicx}
+		
+
+
+\usepackage{tabularx}   % enables more options for tables
+\usepackage{booktabs}
+\usepackage{multicol}
+
+% 
+\usepackage[absolute,overlay]{textpos}
+
+
+%%package for braces\usetikzlibrary{decorations.pathreplacing}
+
+%%package for bar charts
+\usepackage{pgfplots}
+
+%% use ellipse as node
+\usetikzlibrary{arrows}
+\usetikzlibrary{shapes}
+
+\usepackage{amsmath,bm}
+% for adding python source code to latex
+\usepackage{listings}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Deep Learning for NLP \\
+Lecture 7: Recurrent Neural Networks
+}
+
+\author{\LARGE{Dr. Mohsen Mesgar} \\
+\vspace{0.5cm}
+\normalsize{Ubiquitous Knowledge Processing Lab (UKP Lab)}}
+\date{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\input{content.tex}
+
+\end{document}
