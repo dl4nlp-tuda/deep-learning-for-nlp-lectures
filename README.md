@@ -37,6 +37,17 @@ Accompanying video lectures are linked on YouTube
 * [YouTube video](https://youtu.be/PiH7JkKWRck)
 * [Code in PyTorch](/code/lecture04/embedding-layer.py)
 
+## Lecture 5
+
+* Topics: Bilingual and Syntax-Based Word Embeddings
+* [Slides as PDF](/pdf/dl4nlp2021-lecture05-video.pdf)
+* [YouTube video](https://youtu.be/lnzftxgTAZo)
+
+## Lecture 6
+
+* Topics: Convolutional Neural Networks
+* [Slides as PDF](/pdf/dl4nlp2021-lecture06-video.pdf)
+* [YouTube video](https://youtu.be/IaWeB4bFa9g)
 
 ## Compiling slides to PDF
 

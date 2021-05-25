@@ -1,0 +1,140 @@
+﻿\usetikzlibrary{matrix}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{fit} % for hightligting by calling "fit"
+
+\tikzset{
+	neuron/.style={
+%		draw,
+		circle,
+		inner sep=0pt,
+		minimum width=0.75cm
+	},
+	layer/.style={
+		matrix of nodes,
+		nodes={neuron},
+		row sep={between origins, 1.2cm}, %1.5cm in general, 2.5cm for backprop task
+		nodes in empty cells
+	},
+	inputword/.style={
+%		draw,
+		rectangle,
+		inner sep=5pt,
+	    fill=lightgray!30,
+%		minimum width=2.1cm,
+%		minimum height=0.7cm
+	},
+	inputlayer/.style={
+		matrix of nodes,
+		nodes={inputword},
+		row sep={between origins, 0.8cm}, %1.5cm in general, 2.5cm for backprop task
+		nodes in empty cells
+	},
+	embeddingsnode/.style={
+%		draw,
+%		rectangle,
+		inner sep=5pt,
+		%		minimum width=2.1cm,
+		%		minimum height=0.7cm
+	},
+	embeddingslayer/.style={
+		matrix of nodes,
+		nodes={embeddingsnode},
+		row sep={between origins, 0.8cm}, %1.5cm in general, 2.5cm for backprop task
+		nodes in empty cells
+	}
+}
+
+	
+	% move to the left by 3 em
+\begin{tikzpicture}[scale=1, every node/.style={scale=1}]
+	\begin{scope}[node distance=0.3cm] % 2cm in general, 3.5cm for backprop task
+	\matrix[inputlayer] (input) {
+		PAD\\
+		the\\
+		movie\\
+		was\\
+		awesome\\
+		PAD\\
+	};
+	
+	\matrix[inputlayer, right=of input] (hidden) {
+		$(0, 0)$ \\
+		$(7, 3)$ \\
+		$(2, 5)$ \\		
+		$(1,9)$ \\
+		$(3,3)$ \\
+		$(0,0)$ \\
+	};
+	
+	\matrix[layer, right=of hidden] (output) {
+		$({\color{red}0.7}, \ \ {\color{blue}0.5})$ \\
+		$({\color{red}0.1}, \ \ {\color{blue}0.2})$ \\
+		$({\color{red}0.7}, \ {\color{blue}-0.2})$ \\
+		$({\color{red}0.8}, \ {\color{blue}-0.9})$ \\
+	};
+
+	\matrix[layer, right=of output] (pool) {
+		$({\color{red}0.8} \ {\color{blue}0.5})$ \\
+	};
+
+	\matrix[inputlayer, right=of pool](softmax) {
+		softmax \\
+	};
+	
+	% dense layer connections
+	\begin{scope}[thin, black!45, ->, >=latex]
+	% input -> hidden
+	\foreach \in in {1,2,3,4,5,6} {
+		\draw (input-\in-1) -- (hidden-\in-1);
+	}
+	\end{scope}
+	
+	\begin{scope}[thick, ->, >=latex, color = gray!50]
+	% input -> hidden
+	\foreach \in in {1,2,3} {
+		\path[draw] (hidden-\in-1.east) -- (output-1-1.west);
+	}
+
+	\foreach \in in {3,4,5} {
+		\path[draw] (hidden-\in-1.east) -- (output-3-1.west);
+	}
+
+	\foreach \in in {4,5,6} {
+		\path[draw] (hidden-\in-1.east) -- (output-4-1.west);
+	}
+
+	\foreach \in in {2,3,4} {
+		\path[draw] (hidden-\in-1.east) -- (output-2-1.west);
+	}
+
+	% input -> hidden
+	\foreach \in in {2,3} {
+		\path[draw] (output-\in-1.east) -- (pool-1-1);
+	}
+
+	\path[draw, color=red] (output-4-1.east) -- (pool-1-1);
+	\path[draw, color=blue] (output-1-1.east) -- (pool-1-1);
+
+	\path[draw] (pool-1-1.east) -- (softmax-1-1);
+
+	\end{scope}
+	
+	
+	% matrix labels
+%	\node at ($(input)!0.5!(hidden)$) {$\mathbf{W}^{(1)}$};
+%	\node at ($(hidden)!0.5!(output)$) {$\mathbf{W}^{(2)}$};
+	
+	
+	% layer descriptions
+	\begin{scope}[every node/.style={align=center,text width=3cm}]
+	\node[above=0cm of input] (inputdsc) {\scriptsize Input};
+	\node[above=0cm of hidden] (hiddendsc) {\scriptsize Embeddings};
+	\node[above=0cm of output] (outputdsc) {\scriptsize Conv.\ + non-linear activation};
+	\node[above=1cm of pool] (pooldesc) {\scriptsize Max pooling};
+	\node[above=1cm of softmax] (softdesc) {\scriptsize Classifier};
+	\end{scope}
+	
+	\end{scope}
+	\end{tikzpicture}
