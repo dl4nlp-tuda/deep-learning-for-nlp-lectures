@@ -49,6 +49,13 @@ Accompanying video lectures are linked on YouTube
 * [Slides as PDF](/pdf/dl4nlp2021-lecture06-video.pdf)
 * [YouTube video](https://youtu.be/IaWeB4bFa9g)
 
+## Lecture 7
+
+* Topics: Recurrent Neural Networks
+* [Slides as PDF](/pdf/dl4nlp2021-lecture07-video.pdf)
+* [YouTube video](https://youtu.be/B19kVTS5SZ0)
+
+
 ## Compiling slides to PDF
 
 If you run a linux distribution (e.g, Ubuntu 20.04 and newer), all packages are provided as part of `texlive`. Install the following packages
