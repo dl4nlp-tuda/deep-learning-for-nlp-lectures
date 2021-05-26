@@ -981,13 +981,19 @@ Multiple hidden units/hidden layer(s)
 			$x_4$\\
 		};
 	
-		\matrix[layer, right=of input] (hidden) {
-			$h_1$ \\
-			$h_2$ \\
-			$h_3$ \\		
+		\matrix[layer, right=of input] (hidden1) {
+			$h_1^{(1)}$ \\
+			$h_2^{(1)}$ \\
+			$h_3^{(1)}$ \\		
+		};
+	
+		\matrix[layer, right=of hidden1] (hidden2) {
+			$h_1^{(2)}$ \\
+			$h_2^{(2)}$ \\
+			$h_3^{(2)}$ \\		
 		};
 			
-		\matrix[layer, right=of hidden] (output) {
+		\matrix[layer, right=of hidden2] (output) {
 			$y_1$ \\
 			$y_2$ \\
 			$y_3$ \\		
@@ -998,14 +1004,21 @@ Multiple hidden units/hidden layer(s)
 		% input -> hidden
 		\foreach \in in {1,2,3,4} {
 			\foreach \done in {1,2,3} {
-				\draw (input-\in-1) -- (hidden-\done-1);
+				\draw (input-\in-1) -- (hidden1-\done-1);
+			}
+		}
+	
+	
+		\foreach \in in {1,2,3} {
+			\foreach \done in {1,2,3} {
+				\draw (hidden1-\in-1) -- (hidden2-\done-1);
 			}
 		}
 
 		% input -> hidden
 		\foreach \in in {1,2,3} {
 			\foreach \done in {1,2,3} {
-				\draw (hidden-\in-1) -- (output-\done-1);
+				\draw (hidden2-\in-1) -- (output-\done-1);
 			}
 		}
 
@@ -1014,14 +1027,16 @@ Multiple hidden units/hidden layer(s)
 		
 		
 		% matrix labels
-		\node at ($(input)!0.5!(hidden)$) {$\mathbf{W}^{(1)}$};
-		\node at ($(hidden)!0.5!(output)$) {$\mathbf{W}^{(2)}$};
+		\node at ($(input)!0.5!(hidden1)$) {$\mathbf{W}^{(1)}$};
+		\node at ($(hidden1)!0.5!(hidden2)$) {$\mathbf{W}^{(2)}$};
+		\node at ($(hidden2)!0.5!(output)$) {$\mathbf{W}^{(3)}$};
 		
 		
 		% layer descriptions
 		\begin{scope}[every node/.style={align=center,text width=3cm}]
 		\node[above=0cm of input] (inputdsc) {\scriptsize Input};
-		\node[above=0cm of hidden] (hiddendsc) {\scriptsize Hidden layer};
+		\node[above=0cm of hidden1] (hiddendsc) {\scriptsize Hidden layer $\mathbf{h}^{(1)}$};
+		\node[above=0cm of hidden2] (hiddendsc) {\scriptsize Hidden layer $\mathbf{h}^{(2)}$};		
 		\node[above=0cm of output] (outputdsc) {\scriptsize Output};
 		\end{scope}
 		
@@ -1092,7 +1107,7 @@ This architecture is known as \textbf{Multi-Layer Perceptron (MLP)}.
 
 
 $$
-\mathbf{h}_1 = \sigma(\mathbf{x} \mathbf{W}^{(1)} + b)
+\mathbf{h}^{(1)} = \sigma(\mathbf{x} \mathbf{W}^{(1)} + b)
 $$
 	
 	where $\sigma()$ is applied element-wise, for example
@@ -1102,7 +1117,7 @@ $$
 2-nd layer computes
 
 $$
-\mathbf{h}_2 = \tau(\mathbf{h}_1 \mathbf{W}^{(2)} + c)
+\mathbf{h}^{(2)} = \tau(\mathbf{h}^{(1)} \mathbf{W}^{(2)} + c)
 $$
 
 (where $\tau$ is non-linear function which may or might not be the same as $\sigma$; $c \in \mathbf{R}$ is bias term)
