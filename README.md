@@ -43,6 +43,11 @@ Accompanying video lectures are linked on YouTube
 * [Slides as PDF](/pdf/dl4nlp2021-lecture05-video.pdf)
 * [YouTube video](https://youtu.be/lnzftxgTAZo)
 
+## Lecture 6
+
+* Topics: Convolutional Neural Networks
+* [Slides as PDF](/pdf/dl4nlp2021-lecture06-video.pdf)
+* [YouTube video](https://youtu.be/IaWeB4bFa9g)
 
 ## Compiling slides to PDF
 

@@ -1,0 +1,26 @@
+\begin{frame}{Applications of RNNs in NLP}
+    \begin{itemize}
+        \item Part-of-Speech (POS) tagging
+        \begin{itemize}
+            \item input: a sequence of words 
+            \item output: a sequence of POS tags (NOUN, VERB, ...)
+        \end{itemize}
+        \item Named Entity Recognition (NER)
+        \begin{itemize}
+            \item input: a sequence of words 
+            \item output: a sequence of NER tags (B-PER, I-PER, O, B-LOC, I-LOC,...)
+        \end{itemize}
+        \item Language Modeling (LM)
+        \begin{itemize}
+            \item input: a sequence of words 
+            \item output: a sequence of words $y_t = x_{t-1}$
+        \end{itemize}
+        
+        \item Sentence Classification
+        \begin{itemize}
+            \item input: a sequence of words 
+            \item output: one label for the whole sequence
+            \item trick: use the hidden state of the last step to represent the whole sentence  
+        \end{itemize}
+    \end{itemize}
+\end{frame}
