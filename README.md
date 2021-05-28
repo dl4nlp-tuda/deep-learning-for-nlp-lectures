@@ -56,6 +56,13 @@ Accompanying video lectures are linked on YouTube
 * [YouTube video](https://youtu.be/B19kVTS5SZ0)
 
 
+## Lecture 8
+
+* Topics: Encoder-Decoder Models
+* [Slides as PDF](/pdf/dl4nlp2021-lecture08-video.pdf)
+* [YouTube video](TO APPEAR)
+
+
 ## Compiling slides to PDF
 
 If you run a linux distribution (e.g, Ubuntu 20.04 and newer), all packages are provided as part of `texlive`. Install the following packages
