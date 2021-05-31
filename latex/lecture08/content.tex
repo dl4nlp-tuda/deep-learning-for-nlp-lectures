@@ -217,7 +217,7 @@ Different types of language models can be used as decoders
             \draw[edge](y1_hat) -- (1,7.5) -- (1,5.0) -- (2,5.0) -- (dec_h2);
             %\draw[edge,myblue, bend left=30](enc_out_box) edge  (dec_h2);
                         
-            \node(dec_h3) at (4,6.0) [layer, minimum width=0.5cm] {$\bm{h_3}$};
+            \node(dec_h3) at (4,6.0) [layer, minimum width=0.5cm] {$\bm{h^d_3}$};
             \node(y3_hat) at (4,7.5) [layer, minimum width=1cm] {$\bm{\hat{y_3}}$};
             \draw[edge](dec_h3) --  (y3_hat);
             \draw[edge](y2_hat) -- (3,7.5) -- (3,5) -- (4,5) -- (dec_h3);
@@ -280,7 +280,7 @@ Different types of language models can be used as decoders
             \draw[edge](y1_hat) -- (1,7.5) -- (1,5.0) -- (2,5.0) -- (dec_h2);
             \draw[edge,myblue, bend left=30](enc_out_box) edge  (dec_h2);
                         
-            \node(dec_h3) at (4,6.0) [layer, minimum width=0.5cm] {$\bm{h_3}$};
+            \node(dec_h3) at (4,6.0) [layer, minimum width=0.5cm] {$\bm{h^d_3}$};
             \node(y3_hat) at (4,7.5) [layer, minimum width=1cm] {$\bm{\hat{y_3}}$};
             \draw[edge](dec_h3) --  (y3_hat);
             \draw[edge](y2_hat) -- (3,7.5) -- (3,5) -- (4,5) -- (dec_h3);
@@ -366,7 +366,7 @@ Different types of language models can be used as decoders
     \item The output of the encoder is known as the context vector.
     \item The dimensionality of the context vector is fixed. 
     \item However, different input texts might have different length. 
-    \item So, considering the hidden state of the RNN encoder may not capture the entire input text
+    \item So, considering the hidden state of the RNN encoder may not capture the entire input text.
     \item This is a problem  especially for long input texts. 
     % \item The other problem is that context vector is fixed for all decoding steps
     % \item However, at any decoding step, it might be more informative to focus on a subset of words in the input sentence
@@ -430,7 +430,7 @@ Different types of language models can be used as decoders
             \draw[edge](y1_hat) -- (1,7.5) -- (1,5.0) -- (2,5.0) -- (dec_h2);
             \draw[edge,myblue, bend left=30](context_vec) edge  (dec_h2);
                         
-            \node(dec_h3) at (4,6.0) [layer, minimum width=0.5cm] {$\bm{h_3}$};
+            \node(dec_h3) at (4,6.0) [layer, minimum width=0.5cm] {$\bm{h^d_3}$};
             \node(y3_hat) at (4,7.5) [layer, minimum width=1cm] {$\bm{\hat{y_3}}$};
             \draw[edge](dec_h3) --  (y3_hat);
             \draw[edge](y2_hat) -- (3,7.5) -- (3,5) -- (4,5) -- (dec_h3);
@@ -515,7 +515,7 @@ Different types of language models can be used as decoders
 
 \begin{frame}{RNN-based Encoder-Decoder}
 \begin{itemize}
-    \item The other problem is that context vector is unique for all decoding steps
+    \item The other problem is that context vector is unique for all decoding steps.
     \item The encoder treats all tokens of the input sentence equally important to produce a context vector. 
     \item However, at any decoding step, the decoder should focus on tokens of the input sentence differently. 
 \end{itemize}
@@ -662,7 +662,7 @@ Different types of language models can be used as decoders
 \vspace*{\fill}
 \textit{\tiny{(Taken from 
 \href{https://arxiv.org/pdf/1601.06733.pdf}{
-\textcolor{blue}{Cheng etl., (2016)}}})}
+\textcolor{blue}{Cheng et al., (2016)}}})}
 \end{itemize}
 \end{frame}
 
