@@ -52,14 +52,14 @@ Accompanying video lectures are linked on YouTube
 ## Lecture 7
 
 * Topics: Recurrent Neural Networks
-* [Slides as PDF](/pdf/dl4nlp2021-lecture07-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture07-with-fixed-issues.pdf)
+* [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture07-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture07-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/B19kVTS5SZ0)
 
 
 ## Lecture 8
 
 * Topics: Encoder-Decoder Models
-* [Slides as PDF](/pdf/dl4nlp2021-lecture08-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture08-with-fixed-issues.pdf)
+* [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture08-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture08-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/GTEJor3RV3I)
 
 
