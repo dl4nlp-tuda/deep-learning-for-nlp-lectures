@@ -221,7 +221,10 @@ Different types of language models can be used as decoders
             \node(y3_hat) at (4,7.5) [layer, minimum width=1cm] {$\bm{\hat{y_3}}$};
             \draw[edge](dec_h3) --  (y3_hat);
             \draw[edge](y2_hat) -- (3,7.5) -- (3,5) -- (4,5) -- (dec_h3);
-
+            
+            
+            \draw[edge] (dec_h1) edge (dec_h2);
+            \draw[edge] (dec_h2) edge (dec_h3);
         \end{tikzpicture}
         }
 \end{frame}
@@ -285,7 +288,8 @@ Different types of language models can be used as decoders
             \draw[edge](dec_h3) --  (y3_hat);
             \draw[edge](y2_hat) -- (3,7.5) -- (3,5) -- (4,5) -- (dec_h3);
             \draw[edge,myblue, bend left=30](enc_out_box) edge  (dec_h3);
-            
+            \draw[edge] (dec_h1) edge (dec_h2);
+            \draw[edge] (dec_h2) edge (dec_h3);
         \end{tikzpicture}
 }
 \end{frame}
@@ -435,7 +439,9 @@ Different types of language models can be used as decoders
             \draw[edge](dec_h3) --  (y3_hat);
             \draw[edge](y2_hat) -- (3,7.5) -- (3,5) -- (4,5) -- (dec_h3);
             \draw[edge,myblue, bend left=30](context_vec) edge  (dec_h3);
-            
+            \draw[edge] (dec_h1) edge (dec_h2);
+            \draw[edge] (dec_h2) edge (dec_h3);
+
         \end{tikzpicture}
 }
 \end{frame}
@@ -574,6 +580,7 @@ Different types of language models can be used as decoders
             \draw[edge,myblue] (enc_h2) -- node[left]{$\alpha_{2,2}$} (mean2);
             \draw[edge,myblue] (enc_h3) -- node[left]{$\alpha_{2,3}$}(mean2);
             \draw[edge,myblue, bend left=20] (mean2) edge node[left,yshift=-0.5cm]{$\bm{c_2}$}(dec_h2);
+            \draw[edge] (dec_h1) edge (dec_h2);
             }
             
             \uncover<3->{
@@ -592,8 +599,12 @@ Different types of language models can be used as decoders
             \draw[edge,myblue] (enc_h2) -- node[left]{$\alpha_{3,2}$} (mean3);
             \draw[edge,myblue] (enc_h3) -- node[left]{$\alpha_{3,3}$}(mean3);
             \draw[edge,myblue, bend left=20] (mean3) edge node[left,yshift=-0.5cm]{$\bm{c_3}$}(dec_h3);
+            \draw[edge] (dec_h1) edge (dec_h2);
+            \draw[edge] (dec_h2) edge (dec_h3);
             }
         
+        
+            
         \end{tikzpicture}
 \end{frame}
 
@@ -736,8 +747,9 @@ Different types of language models can be used as decoders
             \draw[edge,myblue] (enc_h2) --  (mean3);
             \draw[edge,myblue] (enc_h3) -- (mean3);
             \draw[edge,myblue, bend left=20] (mean3) edge node[left,yshift=-0.5cm]{$\bm{c_3}$}(dec_h3);
-
         
+        \draw[edge] (dec_h1) edge (dec_h2);
+        \draw[edge] (dec_h2) edge (dec_h3);
         \end{tikzpicture}
 \end{frame}
 
@@ -758,7 +770,7 @@ Different types of language models can be used as decoders
 
 \begin{frame}{Other Applications}
 \begin{itemize}
-    \item lemmatization: g e s p i e l t $\longrightarrow$  s p i e l e n 
+    \item lemmatizatoin: g e s p i e l t $\longrightarrow$  s p i e l e n 
     \item Spelling correction: i \_ l v o e \_ u  $\longrightarrow$ i \_ l o v e \_ y o u
 \end{itemize}    
 \end{frame}
