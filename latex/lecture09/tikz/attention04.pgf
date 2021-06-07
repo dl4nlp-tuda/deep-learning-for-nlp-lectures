@@ -1,0 +1,101 @@
+\usetikzlibrary{matrix}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{fit} % for hightligting by calling "fit"
+
+\tikzset{
+	mtx/.style={
+		matrix of math nodes,
+		left delimiter={[}, right delimiter={]}
+	},
+	hlt/.style={opacity=0.1, line width=4 mm, line cap=round},
+	hltr/.style={opacity=0.5, rounded corners=2pt, inner sep=-1pt}
+}
+
+\begin{tikzpicture}
+
+\matrix[mtx,  ampersand replacement=\& ] (selfattention) at (2,2) { 
+   \cdots \& h_1 \&  \cdots \\
+   \cdots \& h_2 \&  \cdots \\
+   \cdots \& h_3 \&  \cdots \\
+   \cdots \& h_4 \&  \cdots \\
+   \cdots \& h_5 \&  \cdots \\
+};
+
+
+\matrix[mtx,  ampersand replacement=\&, right=5ex of selfattention] (matrixh) { 
+   \cdots \& h_1 \&  \cdots \\
+   \cdots \& h_2 \&  \cdots \\
+   \cdots \& h_3 \&  \cdots \\
+   \cdots \& h_4 \&  \cdots \\
+   \cdots \& h_5 \&  \cdots \\
+};
+
+\matrix[mtx,  ampersand replacement=\&, right=5ex of matrixh] (residual) { 
+   \cdots \& h_1 \&  \cdots \\
+   \cdots \& h_2 \&  \cdots \\
+   \cdots \& h_3 \&  \cdots \\
+   \cdots \& h_4 \&  \cdots \\
+   \cdots \& h_5 \&  \cdots \\
+};
+
+%\draw[-stealth, color=red] (X-1-1.south west) -| (beta-6-1.south west);
+
+%\node at ($(X.east) !0.5! (matrixh.west)$) {$*$};
+% \node at ($(probabilistic.east)!0.5!(matrixh.west)$) {$\times$};%
+\node at ($(selfattention.east)!0.5!(matrixh.west)$) {$+$};%
+\node at ($(matrixh.east)!0.5!(residual.west)$) {$=$};%
+%\node at ($(raw.north)!0.5!(probabilistic.north)$) {Softmax (per row)};%
+
+
+\begin{scope}[on background layer]
+%\node[hltr, fill=gray, fit=(beta-1-1)] {};
+%\node[hltr, fill=red, fit=(beta-2-1)(beta-3-1)] {};
+%\node[hltr, fill=green, fit=(beta-4-1)(beta-6-1)] {};
+%\node[hltr, fill=gray, fit=(X-1-1)(X-12-1)] {};
+%\node[hltr, fill=orange, fit=(filterg-1-1)(filterg-3-3)] {};
+
+%\node[hltr, fill=orange, fit=(mu-1-1)(mu-1-1)] {};
+%\node[hltr, fill=lightgray, fit=(raw-1-1)(raw-5-5)] {};
+
+\foreach \in in {1,2,3,4,5} {
+\node[hltr, fill=green, fit=(matrixh-\in-1)(matrixh-\in-3)] {};
+}
+
+\foreach \in in {1,2,3,4,5} {
+	\node[hltr, fill=orange, fit=(selfattention-\in-1)(selfattention-\in-3)] {};
+}
+
+\foreach \in in {1,2,3,4,5} {
+	\node[hltr, fill=blue!20, fit=(residual-\in-1)(residual-\in-3)] {};
+}
+\end{scope}
+
+
+% \foreach \in in {1,2,3,4,5} {
+% 	\draw[->, lightgray, thick, dashed] (X-\in-1) to[out = 0, in = 180] (raw-\in-1);
+% }
+
+% \foreach \in in {1,2,3,4,5} {
+% 	\draw[->, lightgray, thick] (X-\in-5) to[out = 0, in = 180] (probabilistic-\in-1);
+% }
+
+% \foreach \in in {1,2,3,4,5} {
+% 	\draw[->, lightgray, thick, dashed] (X-\in-1) to[out = 0, in = 180] (probabilistic-\in-1);
+% }
+
+
+\begin{scope}[every node/.style={align=center,text width=3cm}]
+% \node[below=0.5cm of raw] (outdesc) {\scriptsize Dot product (raw associations)};
+\node[below=0cm of matrixh] (convdesc) {\scriptsize Matrix $H$};
+\node[below=0cm of selfattention] (outdesc2) {\scriptsize Self-attention};
+\node[below=0cm of residual] (outdesc3) {\scriptsize "Residual connections"};
+%\node[above=0cm of hidden] (hiddendsc) {\scriptsize Hidden layer};
+%\node[above=0cm of output] (outputdsc) {\scriptsize Output};
+
+
+\end{scope}
+
+
+\end{tikzpicture}
