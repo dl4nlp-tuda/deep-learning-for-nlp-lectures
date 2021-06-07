@@ -62,6 +62,11 @@ Accompanying video lectures are linked on YouTube
 * [Slides as PDF](/pdf/dl4nlp2021-lecture08-video.pdf)
 * [YouTube video](https://youtu.be/GTEJor3RV3I)
 
+## Lecture 9
+
+* Topics: Transformer architectures and BERT
+* [Slides as PDF](#)
+* [YouTube video](https://youtu.be/IxJGE74wzvI)
 
 ## Compiling slides to PDF
 
