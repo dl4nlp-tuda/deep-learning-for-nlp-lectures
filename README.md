@@ -34,7 +34,7 @@ Accompanying video lectures are linked on YouTube
 * [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture03-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture03-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/m3PeX3lYyBc)
 * Mandatory reading
-  * TODO
+  * Section 4.7 and Section 6 (except Section 6.2) from Goldberg, Y. (2016). A Primer on Neural Network Models for Natural Language Processing. Journal of Artificial Intelligence Research, 57, 345–420. https://doi.org/10.1613/jair.4992
 
 ## Lecture 4
 
@@ -43,7 +43,7 @@ Accompanying video lectures are linked on YouTube
 * [YouTube video](https://youtu.be/PiH7JkKWRck)
 * [Code in PyTorch](/code/lecture04/embedding-layer.py)
 * Mandatory reading
-  * TODO
+  * Section 5 from Goldberg, Y. (2016). A Primer on Neural Network Models for Natural Language Processing. Journal of Artificial Intelligence Research, 57, 345–420. https://doi.org/10.1613/jair.4992
 
 ## Lecture 5
 
@@ -67,7 +67,8 @@ Accompanying video lectures are linked on YouTube
 * [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture07-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture07-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/B19kVTS5SZ0)
 * Mandatory reading
-  * TODO
+  * Reimers, N. & Gurevych, I. (2017). Reporting Score Distributions Makes a Difference: Performance Study of LSTM-networks for Sequence Tagging. In Proc. of EMNLP 2017. 338--348. 
+  https://www.aclweb.org/anthology/D17-1035/
 
 
 ## Lecture 8
@@ -76,8 +77,12 @@ Accompanying video lectures are linked on YouTube
 * [Slides as PDF](/pdf/dl4nlp2021-lecture08-video.pdf)
 * [YouTube video](https://youtu.be/GTEJor3RV3I)
 * Mandatory reading
-  * TODO
-
+  * Cho, K., Gulcehre, B. V. M. C., Bahdanau, D., Schwenk, F. B. H., & Bengio, Y. (2014). Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation. In Proc. of EMNLP 2014, 1724-1734. 
+  https://www.aclweb.org/anthology/D14-1179/
+  * Bahdanau, D., Cho, K. & Bengio, Y. (2016). Neural Machine Translation by Jointly Learning to Align and Translate. ArXiv, 1-15. 
+  https://arxiv.org/pdf/1409.0473.pdf
+  * Sutskever, I., Vinyals, O. & Le, Q. V. (2014). Sequence to Sequence Learning with Neural Networks. In Proc. of NIPS 2014. 1-9. 
+  https://papers.nips.cc/paper/2014/file/a14ac55a4f27472c5d894ec1c3c743d2-Paper.pdf
 
 ## Lecture 9
 
