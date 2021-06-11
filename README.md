@@ -67,7 +67,7 @@ Accompanying video lectures are linked on YouTube
 * [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture07-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture07-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/B19kVTS5SZ0)
 * Mandatory reading
-  * Reimers, N. & Gurevych, I. (2017). Reporting Score Distributions Makes a Difference: Performance Study of LSTM-networks for Sequence Tagging. In Proc. of EMNLP 2017. 338--348. 
+  * Reimers, N. & Gurevych, I. (2017). Reporting Score Distributions Makes a Difference: Performance Study of LSTM-networks for Sequence Tagging. In Proc. of EMNLP 2017, 338--348. 
   https://www.aclweb.org/anthology/D17-1035/
 
 
@@ -81,7 +81,7 @@ Accompanying video lectures are linked on YouTube
   https://www.aclweb.org/anthology/D14-1179/
   * Bahdanau, D., Cho, K. & Bengio, Y. (2016). Neural Machine Translation by Jointly Learning to Align and Translate. ArXiv, 1-15. 
   https://arxiv.org/pdf/1409.0473.pdf
-  * Sutskever, I., Vinyals, O. & Le, Q. V. (2014). Sequence to Sequence Learning with Neural Networks. In Proc. of NIPS 2014. 1-9. 
+  * Sutskever, I., Vinyals, O. & Le, Q. V. (2014). Sequence to Sequence Learning with Neural Networks. In Proc. of NIPS 2014, 1-9. 
   https://papers.nips.cc/paper/2014/file/a14ac55a4f27472c5d894ec1c3c743d2-Paper.pdf
 
 ## Lecture 9
