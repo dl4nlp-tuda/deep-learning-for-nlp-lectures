@@ -17,18 +17,24 @@ Accompanying video lectures are linked on YouTube
 * Topics: Kick-off (challenges in NLP, Deep Learning in NLP, Terminology, History of DL, Perceptron)
 * [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture01-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture01-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/AbmAFprJhJo)
+* Mandatory reading
+  * Section 4 from Goldberg, Y. (2016). A Primer on Neural Network Models for Natural Language Processing. Journal of Artificial Intelligence Research, 57, 345–420. https://doi.org/10.1613/jair.4992
 
 ## Lecture 2
 
 * Topics: Machine learning basics, Cross-validation, Evaluation, Loss functions
 * [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture02-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture02-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/ncoMF4zURSw)
+* Mandatory reading
+  * Chapter 8 from M. P. Deisenroth, A. Faisal, and C. S. Ong (2021). Mathematics for Machine Learning. Cambridge University Press. https://mml-book.com
 
 ## Lecture 3
 
 * Topics: Training as optimization and (neural) language models 
 * [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture03-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture03-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/m3PeX3lYyBc)
+* Mandatory reading
+  * TODO
 
 ## Lecture 4
 
@@ -36,24 +42,32 @@ Accompanying video lectures are linked on YouTube
 * [Slides as PDF](/pdf/dl4nlp2021-lecture04-video.pdf)
 * [YouTube video](https://youtu.be/PiH7JkKWRck)
 * [Code in PyTorch](/code/lecture04/embedding-layer.py)
+* Mandatory reading
+  * TODO
 
 ## Lecture 5
 
 * Topics: Bilingual and Syntax-Based Word Embeddings
 * [Slides as PDF](/pdf/dl4nlp2021-lecture05-video.pdf)
 * [YouTube video](https://youtu.be/lnzftxgTAZo)
+* Mandatory reading
+  * Upadhyay, S., Faruqui, M., Dyer, C., & Roth, D. (2016). Cross-lingual Models of Word Embeddings: An Empirical Comparison. Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), 1661–1670. https://doi.org/10.18653/v1/P16-1157
 
 ## Lecture 6
 
 * Topics: Convolutional Neural Networks
 * [Slides as PDF](/pdf/dl4nlp2021-lecture06-video.pdf)
 * [YouTube video](https://youtu.be/IaWeB4bFa9g)
+* Mandatory reading
+  * Madasu, A., & Anvesh Rao, V. (2019). Sequential Learning of Convolutional Features for Effective Text Classification. Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP), 5657–5666. https://doi.org/10.18653/v1/D19-1567
 
 ## Lecture 7
 
 * Topics: Recurrent Neural Networks
 * [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture07-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture07-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/B19kVTS5SZ0)
+* Mandatory reading
+  * TODO
 
 
 ## Lecture 8
@@ -61,12 +75,18 @@ Accompanying video lectures are linked on YouTube
 * Topics: Encoder-Decoder Models
 * [Slides as PDF](/pdf/dl4nlp2021-lecture08-video.pdf)
 * [YouTube video](https://youtu.be/GTEJor3RV3I)
+* Mandatory reading
+  * TODO
+
 
 ## Lecture 9
 
 * Topics: Transformer architectures and BERT
 * [Slides as PDF](#)
 * [YouTube video](https://youtu.be/IxJGE74wzvI)
+* Mandatory reading
+  * Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers), 4171–4186. https://doi.org/10.18653/v1/N19-1423
+
 
 ## Compiling slides to PDF
 
