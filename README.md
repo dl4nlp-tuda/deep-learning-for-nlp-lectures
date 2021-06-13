@@ -92,6 +92,15 @@ Accompanying video lectures are linked on YouTube
 * Mandatory reading
   * Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers), 4171–4186. https://doi.org/10.18653/v1/N19-1423
 
+## Lecture 10
+
+* Topics: GPT-2 and GPT-3 (aka. "Disentangling hype from reality")
+* Self-study and training critical thinking; no video lecture
+* Mandatory reading
+  * GPT-2 paper: See the PDF in [OpenAI blogpost](https://openai.com/blog/better-language-models/)
+  * GPT-3 paper: Brown et al. (2020). Language Models are Few-Shot Learners. in arXiv. https://arxiv.org/abs/2005.14165
+  * "Attention is all you need" is all you need for understanding the transformer architecture (see also Lecture 9 on BERT)
+  * Helpful video: Yannic Kilcher: ["GPT-3: Language Models are Few-Shot Learners (Paper Explained)"](https://www.youtube.com/watch?v=SY5PvZrJhLE) on YouTube
 
 ## Compiling slides to PDF
 
