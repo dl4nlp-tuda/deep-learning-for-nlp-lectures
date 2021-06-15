@@ -87,7 +87,7 @@ Accompanying video lectures are linked on YouTube
 ## Lecture 9
 
 * Topics: Transformer architectures and BERT
-* [Slides as PDF](#)
+* [Slides as PDF](/pdf/dl4nlp2021-lecture09-video.pdf)
 * [YouTube video](https://youtu.be/IxJGE74wzvI)
 * Mandatory reading
   * Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers), 4171–4186. https://doi.org/10.18653/v1/N19-1423
