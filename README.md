@@ -1,8 +1,8 @@
 # Deep Learning for Natural Language Processing - Lectures 2021
 
-This repository contains slides for the course "20-00-0947: Deep Learning for Natural Language Processing" (Technical University of Darmstadt, Summer term 2021). 
+This repository contains slides for the course "20-00-0947: Deep Learning for Natural Language Processing" (Technical University of Darmstadt, Summer term 2021).
 
-This online course is taught by [Ivan Habernal](https://www.trusthlt.org) and [Mohsen Mesgar](https://mohsen-mesgar.io). 
+This online course is taught by [Ivan Habernal](https://www.trusthlt.org) and [Mohsen Mesgar](https://mohsen-mesgar.io).
 
 The slides are available as PDF as well as LaTeX source code (we've used Beamer because typesetting mathematics in PowerPoint or similar tools is painful)
 
@@ -30,7 +30,7 @@ Accompanying video lectures are linked on YouTube
 
 ## Lecture 3
 
-* Topics: Training as optimization and (neural) language models 
+* Topics: Training as optimization and (neural) language models
 * [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture03-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture03-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/m3PeX3lYyBc)
 * Mandatory reading
@@ -67,7 +67,7 @@ Accompanying video lectures are linked on YouTube
 * [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture07-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture07-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/B19kVTS5SZ0)
 * Mandatory reading
-  * Reimers, N. & Gurevych, I. (2017). Reporting Score Distributions Makes a Difference: Performance Study of LSTM-networks for Sequence Tagging. In Proc. of EMNLP 2017, 338--348. 
+  * Reimers, N. & Gurevych, I. (2017). Reporting Score Distributions Makes a Difference: Performance Study of LSTM-networks for Sequence Tagging. In Proc. of EMNLP 2017, 338--348.
   https://www.aclweb.org/anthology/D17-1035/
 
 
@@ -77,11 +77,11 @@ Accompanying video lectures are linked on YouTube
 * [Slides as PDF](/pdf/dl4nlp2021-lecture08-video.pdf)
 * [YouTube video](https://youtu.be/GTEJor3RV3I)
 * Mandatory reading
-  * Cho, K., Gulcehre, B. V. M. C., Bahdanau, D., Schwenk, F. B. H., & Bengio, Y. (2014). Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation. In Proc. of EMNLP 2014, 1724-1734. 
+  * Cho, K., Gulcehre, B. V. M. C., Bahdanau, D., Schwenk, F. B. H., & Bengio, Y. (2014). Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation. In Proc. of EMNLP 2014, 1724-1734.
   https://www.aclweb.org/anthology/D14-1179/
-  * Bahdanau, D., Cho, K. & Bengio, Y. (2016). Neural Machine Translation by Jointly Learning to Align and Translate. ArXiv, 1-15. 
+  * Bahdanau, D., Cho, K. & Bengio, Y. (2016). Neural Machine Translation by Jointly Learning to Align and Translate. ArXiv, 1-15.
   https://arxiv.org/pdf/1409.0473.pdf
-  * Sutskever, I., Vinyals, O. & Le, Q. V. (2014). Sequence to Sequence Learning with Neural Networks. In Proc. of NIPS 2014, 1-9. 
+  * Sutskever, I., Vinyals, O. & Le, Q. V. (2014). Sequence to Sequence Learning with Neural Networks. In Proc. of NIPS 2014, 1-9.
   https://papers.nips.cc/paper/2014/file/a14ac55a4f27472c5d894ec1c3c743d2-Paper.pdf
 
 ## Lecture 9
@@ -101,6 +101,17 @@ Accompanying video lectures are linked on YouTube
   * GPT-3 paper: Brown et al. (2020). Language Models are Few-Shot Learners. in arXiv. https://arxiv.org/abs/2005.14165
   * "Attention is all you need" is all you need for understanding the transformer architecture (see also Lecture 9 on BERT)
   * Helpful video: Yannic Kilcher: ["GPT-3: Language Models are Few-Shot Learners (Paper Explained)"](https://www.youtube.com/watch?v=SY5PvZrJhLE) on YouTube
+
+## Lecture 11
+
+* Guest lecture: Nils Reimers (Huggingface)
+* Topics: Sentence BERT
+* [Slides as PDF](/pdf/dl4nlp2021-lecture11-video.pdf)
+* [YouTube video part 1](https://youtu.be/qmN1fJ7Fdmo), [YouTube video part 2](https://youtu.be/0RV-q0--NLs), [YouTube video part 3](https://youtu.be/t4Gf4LruVZ4)
+* Mandatory reading
+  * Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks. Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP), 3980–3990. https://doi.org/10.18653/v1/D19-1410
+
+
 
 ## Compiling slides to PDF
 
