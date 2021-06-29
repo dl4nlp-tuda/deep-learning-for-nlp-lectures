@@ -111,7 +111,14 @@ Accompanying video lectures are linked on YouTube
 * Mandatory reading
   * Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks. Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP), 3980–3990. https://doi.org/10.18653/v1/D19-1410
 
+## Lecture 12
 
+* Guest lecture: Thy Tran, PhD (UKP Lab, TU Darmstadt)
+* Topics: Generation-based Conversational AI
+* [Slides as PDF](/pdf/dl4nlp2021-lecture12-video.pdf)
+* [YouTube video](https://www.youtube.com/watch?v=QgCA4P5vPWs)
+* Mandatory reading
+  * Roller, S., Dinan, E., Goyal, N., Ju, D., Williamson, M., Liu, Y., … Weston, J. (2021). Recipes for Building an Open-Domain Chatbot. Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics: Main Volume, 300–325. Retrieved from https://www.aclweb.org/anthology/2021.eacl-main.24
 
 ## Compiling slides to PDF
 
