@@ -1,6 +1,6 @@
-# Deep Learning for Natural Language Processing - Lectures 2021
+# Deep Learning for Natural Language Processing - Lectures 2022
 
-This repository contains slides for the course "20-00-0947: Deep Learning for Natural Language Processing" (Technical University of Darmstadt, Summer term 2021).
+This repository contains slides for the course "20-00-0947: Deep Learning for Natural Language Processing" (Technical University of Darmstadt, Summer term 2022).
 
 This online course is taught by [Ivan Habernal](https://www.trusthlt.org) and [Mohsen Mesgar](https://mohsen-mesgar.io).
 
@@ -11,6 +11,8 @@ The slides are available as PDF as well as LaTeX source code (we've used Beamer 
 The content is licenced under [Creative Commons CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) which means that you can re-use, adapt, modify, or publish it further, provided you keep the license and give proper credits.
 
 Accompanying video lectures are linked on YouTube
+
+**Note: The following list of lectures is copied & pasted from the 2021 version and will be updated during the semester. If you're interested in previous years, checkout the respective Git branches, e.g., `2021-archive`**
 
 ## Lecture 1
 
