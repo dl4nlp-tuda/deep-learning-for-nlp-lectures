@@ -2,7 +2,7 @@
 
 This repository contains slides for the course "20-00-0947: Deep Learning for Natural Language Processing" (Technical University of Darmstadt, Summer term 2022).
 
-This online course is taught by [Ivan Habernal](https://www.trusthlt.org) and [Mohsen Mesgar](https://mohsen-mesgar.io).
+This hybrid (online/in-person) course is taught by [Ivan Habernal](https://www.trusthlt.org).
 
 The slides are available as PDF as well as LaTeX source code (we've used Beamer because typesetting mathematics in PowerPoint or similar tools is painful)
 
@@ -17,18 +17,25 @@ Accompanying video lectures are linked on YouTube
 ## Lecture 1
 
 * Topics: Kick-off (challenges in NLP, Deep Learning in NLP, Terminology, History of DL, Perceptron)
-* [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture01-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture01-with-fixed-issues.pdf)
-* [YouTube video](https://youtu.be/AbmAFprJhJo)
-* Mandatory reading
+* [Slides as PDF (as in video 2021)](/pdf/dl4nlp2021-lecture01-video.pdf), [Slides as PDF (updated 2021)](/pdf/dl4nlp2021-lecture01-with-fixed-issues.pdf)
+* [YouTube video 2021](https://youtu.be/AbmAFprJhJo)
+* Recommended reading
   * Section 4 from Goldberg, Y. (2016). A Primer on Neural Network Models for Natural Language Processing. Journal of Artificial Intelligence Research, 57, 345–420. https://doi.org/10.1613/jair.4992
 
 ## Lecture 2
 
 * Topics: Machine learning basics, Cross-validation, Evaluation, Loss functions
-* [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture02-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture02-with-fixed-issues.pdf)
-* [YouTube video](https://youtu.be/ncoMF4zURSw)
+* [Slides as PDF (as in video 2021)](/pdf/dl4nlp2021-lecture02-video.pdf), [Slides as PDF (updated 2021)](/pdf/dl4nlp2021-lecture02-with-fixed-issues.pdf)
+* [YouTube video 2021](https://youtu.be/ncoMF4zURSw)
+* [Slides as PDF (in-person lecture 2022)](/pdf/dl4nlp2022-lecture02-in-person.pdf)
 * Mandatory reading
   * Chapter 8 from M. P. Deisenroth, A. Faisal, and C. S. Ong (2021). Mathematics for Machine Learning. Cambridge University Press. https://mml-book.com
+
+
+# Upcoming lectures
+
+Subject to updating on a weekly basis
+
 
 ## Lecture 3
 
