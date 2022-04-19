@@ -12,7 +12,7 @@ The content is licenced under [Creative Commons CC BY-SA 4.0](https://creativeco
 
 Accompanying video lectures are linked on YouTube
 
-**Note: The following list of lectures is copied & pasted from the 2021 version and will be updated during the semester. If you're interested in previous years, checkout the respective Git branches, e.g., `2021-archive`**
+**Note:** The following list of lectures is continuously updated from the previous version during the semester. If you're interested in the 2021 version, checkout the latest [2021 Git commit](https://github.com/dl4nlp-tuda/deep-learning-for-nlp-lectures/tree/3f471592f7a6dddae08b85091927b30f2efe74b0).
 
 ## Lecture 1
 
