@@ -31,19 +31,19 @@ Accompanying video lectures are linked on YouTube
 * Mandatory reading
   * Chapter 8 from M. P. Deisenroth, A. Faisal, and C. S. Ong (2021). Mathematics for Machine Learning. Cambridge University Press. https://mml-book.com
 
+## Lecture 3
+
+* Topics: Training as optimization and (neural) language models
+* [Slides as PDF (as in video 2021)](/pdf/dl4nlp2021-lecture03-video.pdf), [Slides as PDF (updated) 2021](/pdf/dl4nlp2021-lecture03-with-fixed-issues.pdf)
+* [YouTube video 2021](https://youtu.be/m3PeX3lYyBc)
+* [Slides as PDF (in-person lecture 2022)](/pdf/dl4nlp2022-lecture03-in-person.pdf)
+* Optional reading
+  * Section 4.7 and Section 6 (except Section 6.2) from Goldberg, Y. (2016). A Primer on Neural Network Models for Natural Language Processing. Journal of Artificial Intelligence Research, 57, 345–420. https://doi.org/10.1613/jair.4992
 
 # Upcoming lectures
 
 Subject to updating on a weekly basis
 
-
-## Lecture 3
-
-* Topics: Training as optimization and (neural) language models
-* [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture03-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture03-with-fixed-issues.pdf)
-* [YouTube video](https://youtu.be/m3PeX3lYyBc)
-* Mandatory reading
-  * Section 4.7 and Section 6 (except Section 6.2) from Goldberg, Y. (2016). A Primer on Neural Network Models for Natural Language Processing. Journal of Artificial Intelligence Research, 57, 345–420. https://doi.org/10.1613/jair.4992
 
 ## Lecture 4
 
