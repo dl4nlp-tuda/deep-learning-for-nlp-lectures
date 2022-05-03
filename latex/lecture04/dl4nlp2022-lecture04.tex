@@ -1,0 +1,824 @@
+% !TeX program = lualatex
+% Lualatex is important to render Fira fonts; with pdflatex it's just the regular one
+\documentclass[12pt, handout]{beamer}
+%\documentclass[12pt]{beamer}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+% adjust the background to be completely white
+\setbeamercolor{background canvas}{bg=white}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+% typeset mathematics on serif
+\usefonttheme[onlymath]{serif}
+
+% better bibliography using biber as backend
+\usepackage[natbib=true,backend=biber,style=authoryear-icomp,maxbibnames=30,maxcitenames=3,uniquelist=false,giveninits=true,doi=false,url=true,dashed=false,isbn=false]{biblatex}
+% shared bibliogrphy
+\addbibresource{../dl4nlp-bibliography.bib}
+% disable "ibid" for repeated citations
+\boolfalse{citetracker}
+
+\definecolor{76abdf}{RGB}{118, 171, 223}
+
+\setbeamercolor{frametitle}{bg=76abdf, fg=white}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+% POS tags
+\newcommand*\POS[1]{\textsubscript{\texttt{#1}}} % tag with part of speech
+
+% parse tree
+\usepackage{qtree}
+
+% NNEts
+\usepackage{tikz}
+\usetikzlibrary{matrix, positioning, calc}
+
+\tikzset{
+	neuron/.style={
+		draw,
+		circle,
+		inner sep=0pt,
+		minimum width=0.75cm
+	},
+	layer/.style={
+		matrix of nodes,
+		nodes={neuron},
+		row sep={between origins, 1.2cm}, %1.5cm in general, 2.5cm for backprop task
+		nodes in empty cells
+	}
+}
+
+% for derivatives, https://tex.stackexchange.com/a/412442
+\usepackage{physics}
+
+% argmin, argmax
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
+\title{Deep Learning for Natural Language Processing}
+\subtitle{Lecture 4 -- Word embeddings}
+\date{May 3, 2022}
+\author{Dr.\ Ivan Habernal}
+\institute{Trustworthy Human Language Technologies  \hfill \includegraphics[height=.8cm]{img/logo-trusthlt.pdf} \\
+Department of Computer Science\\
+Technical University of Darmstadt \hfill \texttt{www.trusthlt.org} }
+%\titlegraphic{\hfill }
+
+\begin{document}
+
+\maketitle
+
+
+
+\begin{frame}{What's the problem}
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}
+	
+	\node(x) at (0, 0) [] {$x_{1:n}$};
+	\node(y) at (0, -0.75) [] {$y_{1:n}$};
+	
+	
+	\node(lr) at (3,-0.75) [draw, minimum width=2cm, minimum height=2cm]{learning algorithm};
+	
+	\draw[->,thick] (x) to (lr);
+	\draw[->,thick] (y) to (lr);
+	
+	\node(f) at (6.0, -0.75) [] {$f()$};
+	\draw[->,thick] (lr) to (f);
+	
+	\end{tikzpicture}
+\end{figure}
+
+Input to neural models $f()$: numerical vector but NLP work with texts
+
+\bigskip
+
+How can we represent texts via numerical vectors? 
+
+\end{frame}
+
+
+\begin{frame}{This lecture}
+	\tableofcontents
+\end{frame}
+
+
+
+\begin{frame}{Text Representation}
+
+Vector representation of a text should ideally reflect various linguistic properties of the text
+
+\begin{tikzpicture}
+\node[] () at (0,1) {};
+\node[] (text) at (0,0) {text};
+\node[draw] (feat_ext) at (4,0) {feature function};
+\node[] (x) at (7,0) {$x$};
+\node[] (f) at (9,0) {$f()$};
+
+
+\draw[->] (text) -- (feat_ext);
+\draw[->] (feat_ext) -- (x);
+\draw[->] (x) -- (f);
+\end{tikzpicture}  
+
+In this lecture we focus on  feature functions rather than learning algorithms
+
+\end{frame}
+
+\begin{frame}{Terminology}
+
+\textbf{Letters}: smallest units in a language $\rightarrow$ a,b,c,...
+
+\textbf{Tokens} and \textbf{words}: tokens are outputs of a tokenizer and words are meaning-bearing units
+
+\begin{itemize}
+	\item note: in this course we use the terms ``word" and ``token" interchangeably 
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Terminology}
+	
+\textbf{Lemma}: the dictionary entry of the word $\rightarrow$ ``book" is the lemma of ``booking", ``booked", and ``books"
+\begin{itemize}
+\item How to obtain lemmas? Use morphological analyzers 
+\item Available for many languages
+\item Lemmatization may not work for any sequence of letters, e.g., for mis-spelling
+\end{itemize}
+	
+\textbf{Stems}: a shorter venison of a word defined based on some language-specific heuristic $\rightarrow$ ``pictur'' is the stem of ``pictures'', ``pictured'', and ``picture''
+\begin{itemize}
+	\item Stemmer's output need not be a valid word
+\end{itemize}
+	
+\end{frame}
+
+\begin{frame}{lexical resources}
+
+\textbf{Lexical resources}: provide information about words and their relations
+
+
+Dictionaries
+
+WordNet for English
+\begin{itemize}
+	\item Semantic knowledge about words
+	\item Each word is associated with one or several synsets
+	\item Synsets are linked to each other according to semantic relations  between their words
+	\item Semantic relations are: hypernym (more specific),  hyponym (less specific), antonyms, etc.
+	\item Contains nouns, verbs, adjectives, and adverbs
+	\item Manually created
+\end{itemize}
+
+\end{frame}
+
+\section{"Classic" features for text representation}
+
+\begin{frame}{Common Features for Textual Data}
+What information can  we extract directly from  a word
+
+\begin{itemize}
+	\item Letters comprising a word and their order
+	\item Length of word
+	\item Is the first letter capitalized?
+	\item Does word include hyphen? 
+\end{itemize}
+	
+\end{frame}
+\begin{frame}{Bag-of-Words}
+
+Bag-of-Words (BoW): histogram of words as a feature vector
+
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.25]{./figure/bow.jpg}
+		\end{figure}
+BOW does not care about the order of words
+
+
+\vspace*{\fill}
+\textit{\tiny{(Taken from:\url{https://www.programmersought.com/article/4304366575/)}}}
+\end{frame}
+
+\begin{frame}{TF-IDF}
+
+TF-IDF: Term Frequency - Inverse Document Frequency
+
+Let $d$ be a document from a given corpus $D$
+
+Map word $w$ of $d$ to a number as follows:
+		
+\begin{equation*}
+\frac{\#(w,d)}{\sum_{w^\prime}  \#(w^\prime, d)} \times \log\frac{|D|}{|\{ d\in D: w \in d\}|}
+\end{equation*}
+
+N-grams: instead of using the frequency of a word, we use the frequency of $N$ sequence of words 
+
+N=2 $\rightarrow$ bi-gram; N=3 $\rightarrow$ tri-gram
+\end{frame}
+
+\begin{frame}{Common Features for Textual Data}
+
+Context: each piece of a text occurs within a larger text which is known as context
+
+How to encode contextual information?
+
+Using position of a word within a sentence or a document
+
+Using the words that appear in an immediate context of a word
+
+\begin{itemize}
+	\item Immediate context: a window of $k$ words surrounding the target word
+	\item ``the cat \underline{sat} on the mat'' , $k$=2 $\rightarrow$ $\{$ word-minus-2=the, word-minus-1=cat, word-plus-1=on, word-plus-2=the $\}$
+\end{itemize}
+
+\end{frame}
+\begin{frame}{Common Features for Textual Data}
+	what information can we extract from the relation of text with external source of information?
+	\begin{itemize}
+		\item is a word in a list of common person names in Germany? 
+		\item is a word a female or male person name?
+		\item what is the lemma of the word?
+		\item what is the stem of the word?
+		\item what information do lexical resources give us about the word?
+	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Different Types of Features}
+
+Numerical features 
+		\begin{itemize}
+			\item Value of a feature is a number, e.g., the frequency of a word in a text
+		\end{itemize}
+	
+Categorical features
+
+		\begin{itemize}
+			\item Value of a feature is from a set of values
+			\item "What is the POS of a word? "
+		\end{itemize}
+		
+How to encode categorical features?
+
+		\begin{itemize}
+			\item One-hot encoding
+			\item Dense embedding
+		\end{itemize}
+		
+\end{frame}
+
+
+\begin{frame}{One-hot Encoding}  
+
+Assume that values of a feature is in categories $\{ v_0, v_1, v_2 \}$
+
+Encode the space of feature values via vectors in which 
+
+		\begin{itemize}
+			\item each entry is either $0$ or $1$
+			\item each entry is associated with one of the categories
+			\item only one item in a vector can be $1$, the rest is $0$
+		\end{itemize}
+
+Example:
+		\begin{itemize}
+			\item $v_0 = [1, 0, 0]$
+			\item $v_1 = [0, 1, 0]$
+			\item $v_2 = [0, 0, 1]$
+		\end{itemize}
+\end{frame}
+\begin{frame}{Example: Categorical Labels}
+
+Fet $f()$ take a vector $x$ which encodes a text and also return a vector $\hat{y}$ representing the topic of the text which can be from $\{$news, sport, science, politic$\}$
+
+How can we represent topic labels using one-hot encoding? 
+
+		\begin{itemize}
+			\item news = $[1,0,0,0]$
+			\item sport = $[0,1,0,0]$
+			\item science = $[0,0,1,0]$
+			\item politic = $[0,0,0,1]$
+		\end{itemize}
+		
+What is the length of one-hot vectors for a feature with $k$ categories?  
+		
+
+\end{frame}
+\begin{frame}{Example: Word Encodings}
+
+Let $V$ be vocabulary of a language 
+
+We take $V$ as categories a word can take in a text
+
+Let $V= \{v_0, v_1, v_2,...,v_{|V|-1} \}$
+		\begin{itemize}
+			\item $v_0 = [1,0,0,..., 0]$
+			\item $v_1 = [0,1,0,..., 0]$
+			\item $v_2 = [0,0,1,..., 0]$
+			\item $\ldots$
+			\item $v_{|V|-1} = [0,0,0,..., 1]$
+		\end{itemize}
+
+We can easily represent a text via BOW and then represent each word in BOW with its one-hot vector
+
+How can we define vocabulary $V$ given a corpus $D$?
+
+\end{frame}
+
+\definecolor{myblue}{RGB}{1,70,153}
+
+
+
+\begin{frame}{One-hot Encodings}
+	\begin{itemize}
+		\item<1-> word vectors are very sparse 
+		\item<2-> semantic relations between words are not encoded in word vectors
+		\item<3-> it's better to use one-hot representations for a few distinct features where we expect no correlation between features
+\end{itemize}\end{frame}
+
+\begin{frame}{Dense Encodings}
+	\begin{itemize}
+		\item<1-> a categorical feature is embedded as a vector in a $d$ dimensional space
+		\item<2-> assuming categories $C = \{ c_0,c_1,..., c_{|C|-1} \}$, $d=4$
+		\begin{itemize}
+			\item<3-> $c_0 = [+0.1,-0.2,+0.3,+0.5]$
+			\item<4-> $c_1 = [-0.2-0.1,+0.1,+0.2]$
+			\item<4-> ...
+			\item<4-> $c_{|C|-1} = [+0.2,-0.2,-0.1,+0.3]$
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+\begin{frame}{Example: Word Encodings}
+	\begin{itemize}
+		\item<1-> assuming vocabulary $V = \{ v_0,v_1,..., v_{|V|-1} \}$, $d=4$
+		\begin{itemize}
+			\item<2-> $v_0 = [+0.1,-0.2,+0.3,+0.5]$
+			\item<2-> $v_1 = [-0.2-0.1,+0.1,+0.2]$
+			\item<2-> ...
+			\item<2-> $v_{|V|-1} = [+0.2,-0.2,-0.1,+0.3]$
+		\end{itemize}
+		\item<3-> in the one-hot method we represent each word with a sparse vector of size $|V|$
+		\item<4-> in dense encoding method we represent each word with a dense vector with a small size $d$
+	\end{itemize}
+\end{frame}
+\begin{frame}{Dense Encodings}
+	\begin{itemize}
+		\item<1-> dimensionality of vectors is $d$
+		\item<2-> model training will cause similar features to have similar vectors
+		\item<3-> it's mainly useful when we expect some correlations between features $\rightarrow$ ``cat'' and ``dog'' are semantically related
+		\item<4-> is also useful when we have a large number of features $\rightarrow$ for example vocabulary
+	\end{itemize}
+\end{frame}
+
+\section{Word embeddings}
+
+
+\begin{frame}{Word Embeddings}
+	\begin{itemize}
+		\item dense representations of words in an embedding space is known as word embeddings
+		\item how to obtain word embeddings?  
+	\end{itemize}
+\end{frame}
+\begin{frame}{Random Initizalization}
+	\begin{itemize}
+		\item<1-> we initialize the embedding vectors to random values
+		\item<2-> values are uniformly sampled from numbers in the range
+		\begin{itemize}
+			\item<3->  $[-\frac{1}{2d}, +\frac{1}{2d} ] $ where $d$ is the number of dimensions (Mikolov et al., 2013)
+			\item<4->  $[-\frac{\sqrt{6}}{\sqrt{d}}, +\frac{\sqrt{6}}{\sqrt{d}} ] $ (xavier initialization)
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+\begin{frame}{Word Embeddings}
+	\begin{itemize}
+		\item<1-> dense representations of words in an embedding space is known as word embeddings
+		\item<2-> these vectors can be obtained by random initialization and tuned for any NLP task
+		\item<3-> however, we as human beings can define semantic relations between words independent of any NLP task
+		\begin{itemize}
+			\item e.g., ``blue'' and  'black'' are colors
+			\item e.g., ``dog'' is more similar to ``cat'' than to ``chair'' 
+			\item e.g., ``easy'' is the opposite of ``difficult''
+		\end{itemize}
+		\item<4-> how can we find word embeddings such that vectors of words with similar meaning be close to each other in the embedding space?
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Distributional Hypothesis}
+	\begin{itemize}
+		\item<1-> words that occur in the same contexts tend to have similar meanings (Harris, 1945)
+		\item<2-> how can we model the distributional hypothesis?
+	\end{itemize}
+\end{frame}
+\begin{frame}{Word-Context Matrix}
+	\begin{itemize}
+		\item<1-> we count how often a word has occurred with a context in texts from a large corpus
+		\item<2-> context is defined by a window over words
+		\item<3-> let $V$ be the set of words in vocabulary and $C$ be the set of possible contexts
+		\item<4-> word-context matrix $M$ is a two dimensional matrix whose rows are associated with $V$ and columns with $C$
+		\item<5-> each entry of the matrix indicates how often a word co-occurs with a context in the given corpus
+		\item<6-> this matrix is also known as co-occurrence matrix
+	\end{itemize}
+\end{frame}
+
+\section{Count-based embeddings}
+
+\begin{frame}{Word-Context Matrix}
+	\begin{itemize}
+		\item corpus:
+		\begin{itemize}
+			\item I like DL
+			\item I like NLP
+			\item I love ML
+			\item I love NLP
+		\end{itemize}
+		\item window size = 1
+		
+	\end{itemize}
+	\uncover<2->
+	{
+		\begin{table}[!h]
+			\centering
+			\begin{tabular}{l|cccccc}
+				&  I & like & love & DL & NLP &ML  \\
+				\hline
+				I & 0 & 2 & 2 & 0 &0 &0  \\
+				like & 2 & 0 & 0 & 1 & 1 &0 \\
+				love & 2 & 0 & 0 & 0 & 1 & 1 \\
+				DL & 0 & 1 & 0 & 0 & 0 & 0 \\
+				NLP & 0 & 1 & 1 & 0 & 0  & 0\\
+				ML & 0 & 0 & 1 & 0 & 0 & 0\\
+				\hline
+			\end{tabular}
+		\end{table}
+	}
+\end{frame}
+
+
+
+
+\begin{frame}{Word-Context Matrix}
+	\begin{itemize}
+		\item corpus:
+		\begin{itemize}
+			\item I like DL
+			\item I like NLP
+			\item I love ML
+			\item I love NLP
+		\end{itemize}
+		\item window size = 1
+		
+	\end{itemize}
+	\uncover<1->
+	{
+		\begin{table}[!h]
+			\centering
+			\begin{tabular}{l|cccccc}
+				&  I & like & love & DL & NLP &ML  \\
+				\hline
+				I & 0 & 2 & 2 & 0 &0 &0  \\
+				\textcolor{myblue}{like} & \textcolor{myblue}{2} & \textcolor{myblue}{0} & \textcolor{myblue}{0} & \textcolor{myblue}{1} & \textcolor{myblue}{1} & \textcolor{myblue}{0} \\
+				\textcolor{red}{love} & \textcolor{red}{2} & \textcolor{red}{0} & \textcolor{red}{0} & \textcolor{red}{0} & \textcolor{red}{1} & \textcolor{red}{1} \\
+				DL & 0 & 1 & 0 & 0 & 0 & 0 \\
+				NLP & 0 & 1 & 1 & 0 & 0  & 0\\
+				ML & 0 & 0 & 1 & 0 & 0 & 0\\
+				\hline
+			\end{tabular}
+		\end{table}
+	}
+\end{frame}
+
+\begin{frame}{Count-based Embeddings}
+	\begin{itemize}
+		\item<1-> for a large corpus, the size of matrix is very large 
+		\item<2-> the matrix could be sparse too
+		\item<3-> to encounter this, we may use dimensionality reduction techniques 
+		\item<4-> however, for adding a new word we need to enlarge the matrix and apply dimensionality reduction again
+	\end{itemize}
+\end{frame}
+\begin{frame}{CBoW Method}
+	\begin{itemize}
+		\item CBoW stands for Continuous Bag of Words
+		\item task: given a context $\rightarrow$ predict a missing word from the context
+		
+		\begin{table}
+			\begin{tabular}{l}
+				
+				input: ``I $\_$ NLP'' $\rightarrow$ output: ``like''   
+				\\
+				\\
+				\uncover<2->
+				{
+					input: (``I $\_$ NLP'', ``like'') $\rightarrow$ output: 1 and \\ 
+					input: (``I $\_$ NLP'', ``apple'') $\rightarrow$ output: 0
+				}
+			\end{tabular}
+		\end{table}
+	\end{itemize}
+\end{frame}
+
+\section{Continuous bag of words and Skip-Gram}
+
+\begin{frame}{CBoW Method}
+	\begin{itemize}
+		\item<1-> given a corpus, we create two sets:
+		\begin{itemize}
+			\item<2-> positive set ($D$): consisting of pairs $(c, w)$ where $c$ is a context and $w$ is the correct value for the missing word
+			\item<3-> negative set ($D^\prime$): consisting of pairs $(c, w)$ where $c$ is a context and $w$ is a random value for the missing word
+		\end{itemize}
+		\item<4-> we compute the score estimating similarity between context $c$  and word $w$ given context-word pair $(c,w)$
+		\begin{equation*}
+		s(c,w) = e(w)\sum_{w_i \in c} e(w_i)
+		\end{equation*}
+		where $e$ is a function that maps each word to its embeddings
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{CBoW Method}
+	\begin{itemize}
+		\item<4-> we compute the score estimating similarity between context $c$  and word $w$ given context-word pair $(c,w)$
+		\begin{equation*}
+		s(c,w) = e(w)\sum_{w_i \in c} e(w_i)
+		\end{equation*}
+		where $e$ is a function that maps each word to its embeddings
+		\item Example
+		\begin{equation*}
+		s(\text{I }\_\text{ NLP},\text{like}) = e(\text{like})(e(\text{I})+e(\text{NLP}))
+		\end{equation*}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{CBoW Method}
+Use the sigmoid function to map the score to a probability
+\begin{equation*}
+P(y=1|(c,w)) = \frac{1}{1+ e^{-s(c,w)}}
+\end{equation*}
+		
+Minimize the following loss
+\begin{equation*}
+\begin{aligned}
+L(\Theta) =  &-\frac{1}{|D|}\sum_{(c,w)\in D}\log \Pr(y=1|(c,w)) \\
+&- \frac{1}{|D^\prime|}\sum_{(c,w)\in D^\prime}\log \Pr(y=0|(c,w))
+\end{aligned}
+\end{equation*}
+\end{frame}
+
+\begin{frame}{Skip-Gram Method}
+
+Treat words of a context independent from each other
+\begin{equation*}
+P(y=1|(c,w)) = \prod_{c_i \in c} P(y=1|(w,c_i)) = \prod_{c_i \in c} \frac{1}{1+e^{-e(w)e(c_i)}}
+\end{equation*}
+
+Loss in Skip-Gram is identical to that in CBoW
+
+We fine-tune parameters (word embeddings) using SGD
+
+\end{frame}
+\begin{frame}{CBoW and Skip-Gram}
+	\begin{itemize}
+		\item<1-> CBoW loses the order information between context's elements
+		\item<2-> CBoW allows the use of variable-length contexts
+		\item<3-> Skip-Gram decouples the dependence between context elements even further than CBoW
+		\item<4-> Skip-Gram treats each context's element as an independent context
+	\end{itemize}
+\end{frame}
+\begin{frame}{Context Matters!}
+	\begin{itemize}
+		\item<1-> context of a word translates to its surrounding words in a sentence or paragraph
+		\item<2-> window-based context: for a word  we consider all words in a window of length $2m+1$ centred on the word as context
+		\item<3-> the size of window: large windows tend to capture more topical similarities and small windows capture syntactic similarities 
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Context Matters!}
+	\begin{itemize}
+		\item<4-> contexts can be defined based on text units, for example, words that occur in the same sentence, paragraph, or text
+		\item<5-> contexts can also be defined based on syntax of a sentence for example using parse tree or dependency tree of a sentence
+		\item<6-> contexts of a word can be foreign words that are aligned to the word in multilingual corpora
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Word2Vec Software Package}
+	\begin{itemize}
+		\item<1-> the implementations of CBoW and Skip-Gram methods exist in Word2Vec
+		\item<1-> \url{https://code.google.com/archive/p/word2vec/}
+		\item<2-> Skip-Gram is more effective in practice
+	\end{itemize}
+\end{frame}
+\begin{frame}{GLoVe (Pennington et al., 2014)}\begin{itemize}
+		\item GloVe: Global Vectors for Word Representation
+		\item GloVe is an unsupervised method for obtaining word embeddings
+		\item GloVe aims at reconciling the advantages of corpus-wide co-occurrence counts and local context windows
+		\item \url{https://nlp.stanford.edu/projects/glove/}
+	\end{itemize}
+\end{frame}
+\begin{frame}{Evaluating Word Embeddings}
+	\begin{itemize}
+		\item<1-> intrinsic
+		\begin{itemize}
+			\item<2-> word similarity tasks
+			\item<2-> word analogy tasks
+		\end{itemize}
+		\item<3-> extrinsic
+		\begin{itemize}
+			\item<4-> on a downstream NLP task, we compare the performance of two models that differ only in the word embeddings they use
+			\item<5-> named entity recognition (NER): accuracy
+			\item<6-> machine translation (MT): BLEU score
+			\item<7-> summarization: ROUGE score
+			\item<8-> information retrieval (IR): precision - recall - F1 score
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\section{Evalution}
+
+\begin{frame}{Word Similarity Tasks}
+	\begin{itemize}
+		\item<1-> similar words should have similar representations
+		\item<1-> dataset: \url{http://alfonseca.org/eng/research/wordsim353.html}
+		\item<2->  word-1 and word-2 $\rightarrow$ similarity score $\in$ [0, 10]
+		\item<3-> our function $f()$ should map two words to a similarity score using the distance between the word vectors of the words 
+		\item<4-> cosine similarity
+		\begin{equation*}
+		\text{sim}(w_i,w_j) = \frac{e(w_i) e(w_j)}{||e(w_i)||^2 ||e(w_j)||^2}
+		\end{equation*} 
+	\end{itemize}
+\end{frame}
+\begin{frame}{Word Analogy Tasks}
+	\begin{itemize}
+		\item<1-> A is to B as C to ?
+		\item<2-> Germany is to Berlin as France is to ?
+		\item<2-> dataset:
+		\url{http://download.tensorflow.org/data/questions-words.txt}
+		\item<3-> capital-common-countries
+		\begin{itemize}
+			\item<3-> Athens Greece Baghdad  $\rightarrow$ Iraq
+			\item<3-> Athens Greece Berlin  $\rightarrow$ Germany
+		\end{itemize}
+		\item<4-> family
+		\begin{itemize}
+			\item<4-> boy girl brother $\rightarrow$ sister
+			\item<4-> brother sister dad $\rightarrow$ mom
+		\end{itemize}
+		\item<5-> currency, adj-to-adverb, comparative, ...
+	\end{itemize}
+\end{frame}
+\begin{frame}{Finding the Prototype of  \\ a Group of Words}
+	\begin{itemize}
+		\item<1-> if we have a group of words $g = \{ w_1, w_2, ..., w_k \}$
+		\item<2-> the prototype of this group can be computed as follows
+		\begin{equation*}
+		\text{proto}(g) = \frac{1}{k} \sum_{i \in 1..k} e(w_i)
+		\end{equation*}
+		where $e$ maps a word to its  embeddings
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Finding Similar Words}
+	\begin{itemize}
+		\item<4-> cosine similarity
+		\begin{equation*}
+		\text{sim}(w_i,w_j) = \frac{e(w_i) e(w_j)}{||e(w_i)||^2 ||e(w_j)||^2}
+		\end{equation*} 
+		\item words found by embedding-based similarities can be filtered with other types of word similarities 
+	\end{itemize}
+\end{frame}
+\begin{frame}{Short Text Similarities}
+	
+$d_1 = \{ w^1_1, w^1_2, ..., w^1_m \}$ and $d_2 = \{ w^2_1, w^2_2, ..., w^2_n \}$
+
+\begin{equation*}
+\text{sim}(d_1, d_2) = \frac{1}{m n}\sum_{i = 1}^m \sum_{j=1}^{n} \text{cos} \left( e(w_i^1), e(w_j^2) \right)
+\end{equation*}
+		
+
+\end{frame} 
+
+
+ \begin{frame}{Pre-Trained Embeddings}
+	\begin{itemize}
+		\item Word2Vec
+		\begin{itemize}
+			\item trained on Google News (100 billion tokens)
+		\end{itemize}
+		\item GloVe
+		\begin{itemize}
+			\item trained on Wikipedia (6 billion tokens)
+			\item trained on CommonCrawl (42 and 840 billion tokens)
+			\item trained on Twitter (27 million tokens)
+		\end{itemize}
+		\item many other pre-trained embeddings for different languages 
+		\begin{itemize}
+			\item \url{https://fasttext.cc/docs/en/crawl-vectors.html}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Practical Hints}
+	\begin{itemize}
+		\item<1-> always try out different word embeddings (consider them as a hyperparameter)
+		\item<2-> results may vary drastically with different embeddings
+		\item<3-> consider source of corpora used to train word embeddings (larger is not always better, a smaller but more domain-focused can be more effective)
+		\item<4-> consider what contexts  were used to define similarities 
+		\item<5-> it's better to use the same tokenization and text normalization methods that  were used for creating word embeddings
+	\end{itemize}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Limitations}
+	\begin{itemize}
+		\item<1-> the algorithms discussed provide very little control over the kind of similarity they include
+		\begin{itemize}
+			\item<2-> ``cat'' is more similar to ``dog'' than to ``tiger'' as they both are pets
+			\item<3-> ``cat'' is more similar to ``tiger'' than to ``dog'' as they both as felines
+		\end{itemize}
+		\item<4-> many of the trivial properties of words are ignored because people are less likely to mention known information than they are to mention novel one
+		
+	\end{itemize}
+\end{frame}
+\begin{frame}{Limitations}\begin{itemize}
+		\item<1-> text corpora can easily be biased for better or worse $\rightarrow$  so word embeddings can become biased too
+		\begin{itemize}
+			\item<2-> gender and racial biases are very common
+		\end{itemize}
+		\item<3-> these word vectors are context independent
+		\begin{itemize}
+			\item<4-> in reality, there is no such a thing to have context independent word meaning
+			\item<5-> some words have multiple sense e.g., ``bank'' may refer to a financial institution or to the side of a river
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Summary}
+
+Common features used for converting textual data into numerical vectors
+
+Basics of word embeddings
+		\begin{itemize}
+			\item How to get them? 
+			\item Where to use them?
+			\item How to use them?
+		\end{itemize}
+
+Limitations
+
+\end{frame}
+
+
+%\begin{frame}[allowframebreaks]{References}
+%\printbibliography
+%  \bibliography{demo}
+%  \bibliographystyle{abbrv}
+%\end{frame}
+
+\begin{frame}{License and credits}
+	
+	\begin{columns}
+		\begin{column}{0.7\textwidth}
+			Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+		\end{column}
+		\begin{column}{0.2\textwidth}
+			\includegraphics[width=0.9\linewidth]{img/cc-by-sa-icon.pdf}
+		\end{column}
+	\end{columns}
+	
+	\bigskip
+	
+	Credits
+	
+	\begin{scriptsize}
+		
+		Ivan Habernal, Mohsen Mesgar, Steffen Eger
+		
+		Content from ACL Anthology papers licensed under CC-BY \url{https://www.aclweb.org/anthology}
+		
+		Pictures courtesy of TODO
+		
+	\end{scriptsize}
+	
+\end{frame}
+
+
+
+\end{document}
+
