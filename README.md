@@ -50,18 +50,20 @@ Accompanying video lectures are linked on YouTube
 * Optional reading
   * Section 5 from Goldberg, Y. (2016). A Primer on Neural Network Models for Natural Language Processing. Journal of Artificial Intelligence Research, 57, 345–420. https://doi.org/10.1613/jair.4992
 
-# Upcoming lectures
-
-Subject to updating on a weekly basis
-
 
 ## Lecture 5
 
 * Topics: Bilingual and Syntax-Based Word Embeddings
-* [Slides as PDF](/pdf/dl4nlp2021-lecture05-video.pdf)
-* [YouTube video](https://youtu.be/lnzftxgTAZo)
-* Mandatory reading
+* [Slides as PDF (as in video 2021)](/pdf/dl4nlp2021-lecture05-video.pdf)
+* [YouTube video (2021)](https://youtu.be/lnzftxgTAZo)
+* [Slides as PDF (in-person lecture 2022)](/pdf/dl4nlp2022-lecture05-in-person.pdf)
+* Optional reading
   * Upadhyay, S., Faruqui, M., Dyer, C., & Roth, D. (2016). Cross-lingual Models of Word Embeddings: An Empirical Comparison. Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), 1661–1670. https://doi.org/10.18653/v1/P16-1157
+
+# Upcoming lectures
+
+Subject to updating on a weekly basis
+
 
 ## Lecture 6
 
