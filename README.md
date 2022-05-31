@@ -60,9 +60,6 @@ Accompanying video lectures are linked on YouTube
 * Optional reading
   * Upadhyay, S., Faruqui, M., Dyer, C., & Roth, D. (2016). Cross-lingual Models of Word Embeddings: An Empirical Comparison. Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), 1661–1670. https://doi.org/10.18653/v1/P16-1157
 
-# Upcoming lectures
-
-Subject to updating on a weekly basis
 
 
 ## Lecture 6
@@ -78,9 +75,14 @@ Subject to updating on a weekly basis
 * Topics: Recurrent Neural Networks
 * [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture07-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture07-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/B19kVTS5SZ0)
-* Mandatory reading
+* [Slides as PDF (in-person lecture 2022)](/pdf/dl4nlp2022-lecture07-in-person.pdf)
+* Optional reading
   * Reimers, N. & Gurevych, I. (2017). Reporting Score Distributions Makes a Difference: Performance Study of LSTM-networks for Sequence Tagging. In Proc. of EMNLP 2017, 338--348.
   https://www.aclweb.org/anthology/D17-1035/
+
+# Upcoming lectures
+
+Subject to updating on a weekly basis
 
 
 ## Lecture 8
