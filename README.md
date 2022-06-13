@@ -80,17 +80,13 @@ Accompanying video lectures are linked on YouTube
   * Reimers, N. & Gurevych, I. (2017). Reporting Score Distributions Makes a Difference: Performance Study of LSTM-networks for Sequence Tagging. In Proc. of EMNLP 2017, 338--348.
   https://www.aclweb.org/anthology/D17-1035/
 
-# Upcoming lectures
-
-Subject to updating on a weekly basis
-
 
 ## Lecture 8
 
 * Topics: Encoder-Decoder Models
 * [Slides as PDF](/pdf/dl4nlp2021-lecture08-video.pdf)
 * [YouTube video](https://youtu.be/GTEJor3RV3I)
-* Mandatory reading
+* Optional reading
   * Cho, K., Gulcehre, B. V. M. C., Bahdanau, D., Schwenk, F. B. H., & Bengio, Y. (2014). Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation. In Proc. of EMNLP 2014, 1724-1734.
   https://www.aclweb.org/anthology/D14-1179/
   * Bahdanau, D., Cho, K. & Bengio, Y. (2016). Neural Machine Translation by Jointly Learning to Align and Translate. ArXiv, 1-15.
@@ -105,6 +101,11 @@ Subject to updating on a weekly basis
 * [YouTube video](https://youtu.be/IxJGE74wzvI)
 * Mandatory reading
   * Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers), 4171–4186. https://doi.org/10.18653/v1/N19-1423
+
+
+# Upcoming lectures
+
+Subject to updating on a weekly basis
 
 ## Lecture 10
 
