@@ -75,7 +75,7 @@ Accompanying video lectures are linked on YouTube
 * Topics: Recurrent Neural Networks
 * [Slides as PDF (as in video)](/pdf/dl4nlp2021-lecture07-video.pdf), [Slides as PDF (updated)](/pdf/dl4nlp2021-lecture07-with-fixed-issues.pdf)
 * [YouTube video](https://youtu.be/B19kVTS5SZ0)
-* [Slides as PDF (in-person lecture 2022)](/pdf/dl4nlp2022-lecture07-in-person.pdf)
+* [Slides as PDF (in-person lecture 2022)](pdf/dl4nlp2022-lecture07-with-fixed-issues.pdf)
 * Optional reading
   * Reimers, N. & Gurevych, I. (2017). Reporting Score Distributions Makes a Difference: Performance Study of LSTM-networks for Sequence Tagging. In Proc. of EMNLP 2017, 338--348.
   https://www.aclweb.org/anthology/D17-1035/
