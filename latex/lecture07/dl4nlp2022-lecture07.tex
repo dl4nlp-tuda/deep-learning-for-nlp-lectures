@@ -420,7 +420,7 @@ So RNNs can capture left-to-right order of input symbols
 		\node(h1) at (0,3) [layer, minimum width=1.5cm] {$\bm{h_1}$};
 		\node(h1_value) at (0,3.5) {$\begin{bmatrix}1 & 1\end{bmatrix}$};
 		\node(y1_hat) at (0,6) [layer, minimum width=1cm] {$\bm{\hat{y_1}}$};
-		\node(y_hat_value) at (0,6.5) {$\begin{bmatrix}0.37 & 0.37 &  0.19 & 0.05\end{bmatrix}$};
+		\node(y_hat_value) at (0,6.5) {$\begin{bmatrix}0.28 & 0.28 & 0.15 & 0.28\end{bmatrix}$};
 		\draw[edge](x1) -- node[left]{$\bm{U} = \begin{bmatrix}  1 & 1 \\ 2 & 0 \\ 0.5 & 1 \end{bmatrix}$} (h1);
 		\draw[edge](h1) -- node[left]{$\bm{V} = \begin{bmatrix}  0 & 1 & 0 & 0  \\ 1 & 0 & \frac{1}{3} & 1 \end{bmatrix} $} (y1_hat);
 		
@@ -430,7 +430,9 @@ So RNNs can capture left-to-right order of input symbols
 		\node(h2) at (5,3) [layer, minimum width=1.5cm] {$\bm{h_2}$};
 		\node(h2_value) at (5,3.5) {$ \begin{bmatrix}5 & 4\end{bmatrix}$};
 		\node(y2_hat) at (5,6) [layer, minimum width=1cm] {$\bm{\hat{y_2}}$};
-		\node(y2_hat_value) at (5,6.5) {$ \begin{bmatrix}0.26 &  0.71 & 0.01 & 0.00 \end{bmatrix}$}; 
+		\node(y2_hat_value) at (5,6.5) {$ \begin{bmatrix}0.21 & 0.57 & 0.01 & 0.21 \end{bmatrix}$}; 
+		
+
 		\draw[edge](x2) -- node[left]{$\bm{U} = \begin{bmatrix}  1 & 1 \\ 2 & 0 \\ 0.5 & 1 \end{bmatrix}$} (h2);
 		\draw[edge](h2) -- node[left]{$\bm{V} = \begin{bmatrix}  0 & 1 & 0 & 0  \\ 1 & 0 & \frac{1}{3} & 1 \end{bmatrix} $} (y2_hat);
 		\draw[edge](h1) -- node[above]{\textcolor{myblue}{$\bm{W} =  \begin{bmatrix}  0 & 1 \\ 1 & 0 \end{bmatrix} $}} (h2);
@@ -441,14 +443,11 @@ So RNNs can capture left-to-right order of input symbols
 		\node(h3) at (10,3) [layer, minimum width=1.5cm] {$\bm{h_3}$};
 		\node(h3_value) at (10,3.5) {$ \begin{bmatrix} 3.5 & 7 \end{bmatrix}$};
 		\node(y3_hat) at (10,6) [layer, minimum width=1cm] {$\bm{\hat{y_3}}$};
-		\node(y3_hat_value) at (10,6.5) {$ \begin{bmatrix}0.96 &  0.02 & 0.01 & 0.00 \end{bmatrix}$}; 
+		\node(y3_hat_value) at (10,6.5) {$ \begin{bmatrix}0.49 & 0.01 & 0.00 & 0.49 \end{bmatrix}$};
+		% 7  3.5  7/3  7 -> 0.49 0.01 0.00 0.49
 		\draw[edge](x3) -- node[left]{$\bm{U} = \begin{bmatrix}  1 & 1 \\ 2 & 0 \\ 0.5 & 1 \end{bmatrix}$} (h3);
 		\draw[edge](h3) -- node[left]{$\bm{V} = \begin{bmatrix}  0 & 1 & 0 & 0  \\ 1 & 0 & \frac{1}{3} & 1 \end{bmatrix} $} (y3_hat);
 		\draw[edge](h2) -- node[above]{\textcolor{myblue}{$\bm{W} =  \begin{bmatrix}  0 & 1 \\ 1 & 0 \end{bmatrix} $}} (h3);
-		
-		\node(h_formula) at (5,-2) {$\bm{h_t} = \texttt{ReLU} \big( \bm{x_tU} + \bm{h_{t-1}W}+\bm{b_h} \big) $};
-		
-		\node(y_hat_formula) at (5,-3) {$\bm{\hat{y}_t} = \texttt{softmax} \big( \bm{h_t}\bm{V} + \bm{b_{\hat{y}}} \big) $};
 		
 		\node(y1_value) at (0,7) {
 			$ \bm{y_1} = \begin{bmatrix} 1 &  0 & 0 & 0 \end{bmatrix}$}; 
@@ -458,21 +457,30 @@ So RNNs can capture left-to-right order of input symbols
 			$ \bm{y_3} =  \begin{bmatrix} 0 &  0 & 0 & 1 \end{bmatrix}$}; 
 		
 		\node(l1) at (0,7.5) {
-			$ l_1 = - \log (0.37 )$}; 
+			$ l_1 = - \log (0.28 )$}; 
 		
 		\node(l2) at (5,7.5) {
-			$ l_2 = - \log (0.71 )$}; 
+			$ l_2 = - \log (0.57 )$}; 
 		
 		\node(l3) at (10,7.5) {
-			$ l_3 = - \log (0.0 )$}; 
-		
-		\node(l) at (5,-3.5) {
-			$ loss = \frac{-1}{3} (\log (0.37) + \log(0.71) + \log(0.0) $}; 
-		
+			$ l_3 = - \log (0.49 )$}; 
 		
 		\end{tikzpicture}
-		
-	}
+}
+\begin{align*}
+\bm{h_t} = \mathrm{ReLU} \big( \bm{x_tU} + \bm{h_{t-1}W}+\bm{b_h} \big)
+\qquad
+\bm{\hat{y}_t} = \mathrm{softmax} \big( \bm{h_t}\bm{V} + \bm{b_{\hat{y}}} \big)
+\\
+\ell = - \frac{1}{3} (\log (0.28) + \log(0.57) + \log(0.49)
+\end{align*}
+
+%\node(y_hat_formula) at (5,-2.5) {$\bm{\hat{y}_t} = \texttt{softmax} \big( \bm{h_t}\bm{V} + \bm{b_{\hat{y}}} \big) $};
+%\node(l) at (5,-3) {
+%	$ \ell = \frac{-1}{3} (\log (0.28) + \log(0.57) + \log(0.49) $}; 
+
+
+
 \end{frame}
 
 
