@@ -103,11 +103,31 @@ Accompanying video lectures are linked on YouTube
   * Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers), 4171–4186. https://doi.org/10.18653/v1/N19-1423
 
 
+## Lecture 10
+
+* Guest lecture: Nils Reimers (Huggingface)
+* Topics: Sentence BERT
+* [Slides as PDF](/pdf/dl4nlp2021-lecture11-video.pdf)
+* [YouTube video part 1](https://youtu.be/qmN1fJ7Fdmo), [YouTube video part 2](https://youtu.be/0RV-q0--NLs), [YouTube video part 3](https://youtu.be/t4Gf4LruVZ4)
+* Mandatory reading
+  * Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks. Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP), 3980–3990. https://doi.org/10.18653/v1/D19-1410
+
+
 # Upcoming lectures
 
 Subject to updating on a weekly basis
 
-## Lecture 10
+## Lecture 11
+
+* Guest lecture: Timour Igamberdiev
+* Topics: Privacy-preserving DL for NLP
+
+## Lecture 12
+
+* Guest lecture: Haritz Puerto
+* Topics: Question answering
+
+## Lecture 13
 
 * Topics: GPT-2 and GPT-3 (aka. "Disentangling hype from reality")
 * Self-study and training critical thinking; no video lecture
@@ -117,23 +137,7 @@ Subject to updating on a weekly basis
   * "Attention is all you need" is all you need for understanding the transformer architecture (see also Lecture 9 on BERT)
   * Helpful video: Yannic Kilcher: ["GPT-3: Language Models are Few-Shot Learners (Paper Explained)"](https://www.youtube.com/watch?v=SY5PvZrJhLE) on YouTube
 
-## Lecture 11
 
-* Guest lecture: Nils Reimers (Huggingface)
-* Topics: Sentence BERT
-* [Slides as PDF](/pdf/dl4nlp2021-lecture11-video.pdf)
-* [YouTube video part 1](https://youtu.be/qmN1fJ7Fdmo), [YouTube video part 2](https://youtu.be/0RV-q0--NLs), [YouTube video part 3](https://youtu.be/t4Gf4LruVZ4)
-* Mandatory reading
-  * Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks. Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP), 3980–3990. https://doi.org/10.18653/v1/D19-1410
-
-## Lecture 12
-
-* Guest lecture: Thy Tran, PhD (UKP Lab, TU Darmstadt)
-* Topics: Generation-based Conversational AI
-* [Slides as PDF](/pdf/dl4nlp2021-lecture12-video.pdf)
-* [YouTube video](https://www.youtube.com/watch?v=QgCA4P5vPWs)
-* Mandatory reading
-  * Roller, S., Dinan, E., Goyal, N., Ju, D., Williamson, M., Liu, Y., … Weston, J. (2021). Recipes for Building an Open-Domain Chatbot. Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics: Main Volume, 300–325. Retrieved from https://www.aclweb.org/anthology/2021.eacl-main.24
 
 ## Compiling slides to PDF
 
