@@ -112,15 +112,16 @@ Accompanying video lectures are linked on YouTube
 * Mandatory reading
   * Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks. Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP), 3980–3990. https://doi.org/10.18653/v1/D19-1410
 
+## Lecture 11
+
+* Guest lecture: Timour Igamberdiev
+* Topics: Privacy-preserving DL for NLP
+* [Slides as PDF (in-person lecture 2022)](/pdf/dl4nlp2022-lecture11-in-person.pdf)
 
 # Upcoming lectures
 
 Subject to updating on a weekly basis
 
-## Lecture 11
-
-* Guest lecture: Timour Igamberdiev
-* Topics: Privacy-preserving DL for NLP
 
 ## Lecture 12
 
