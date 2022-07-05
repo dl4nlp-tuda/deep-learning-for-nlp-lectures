@@ -116,17 +116,20 @@ Accompanying video lectures are linked on YouTube
 
 * Guest lecture: Timour Igamberdiev
 * Topics: Privacy-preserving DL for NLP
-* [Slides as PDF (in-person lecture 2022)](/pdf/dl4nlp2022-lecture11-in-person.pdf)
-
-# Upcoming lectures
-
-Subject to updating on a weekly basis
 
 
 ## Lecture 12
 
 * Guest lecture: Haritz Puerto
 * Topics: Question answering
+* [Slides as PDF (in-person lecture 2022)](/pdf/Intro2QA.pdf)
+
+
+
+# Upcoming lectures
+
+Subject to updating on a weekly basis
+
 
 ## Lecture 13
 
