@@ -125,12 +125,6 @@ Accompanying video lectures are linked on YouTube
 * [Slides as PDF (in-person lecture 2022)](/pdf/dl4nlp2022-lecture12-in-person.pdf)
 
 
-
-# Upcoming lectures
-
-Subject to updating on a weekly basis
-
-
 ## Lecture 13
 
 * Topics: GPT-2 and GPT-3 (aka. "Disentangling hype from reality")
