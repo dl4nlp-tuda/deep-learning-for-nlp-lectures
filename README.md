@@ -6,7 +6,7 @@ This hybrid (online/in-person) course is taught by [Ivan Habernal](https://www.t
 
 The slides are available as PDF as well as LaTeX source code (we've used Beamer because typesetting mathematics in PowerPoint or similar tools is painful)
 
-![Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/CC-BY-SA_icon.svg/88px-CC-BY-SA_icon.svg.png)
+![Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/CC_BY-SA_icon.svg/88px-CC_BY-SA_icon.svg.png)
 
 The content is licenced under [Creative Commons CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) which means that you can re-use, adapt, modify, or publish it further, provided you keep the license and give proper credits.
 
@@ -27,7 +27,7 @@ Accompanying video lectures are linked on YouTube
 * Topics: Machine learning basics, Cross-validation, Evaluation, Loss functions
 * [Slides as PDF (as in video 2021)](/pdf/dl4nlp2021-lecture02-video.pdf), [Slides as PDF (updated 2021)](/pdf/dl4nlp2021-lecture02-with-fixed-issues.pdf)
 * [YouTube video 2021](https://youtu.be/ncoMF4zURSw)
-* [Slides as PDF (in-person lecture 2022)](/pdf/dl4nlp2022-lecture02-in-person.pdf)
+* [Slides as PDF (in-person lecture 2022)](/pdf/dl4nlp2022-lecture02-in-person.pdf), [updated slides](/pdf/dl4nlp2022-lecture02-in-person-with-fixed-issues.pdf)
 * Mandatory reading
   * Chapter 8 from M. P. Deisenroth, A. Faisal, and C. S. Ong (2021). Mathematics for Machine Learning. Cambridge University Press. https://mml-book.com
 
