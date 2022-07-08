@@ -567,7 +567,7 @@ Probability of the last token conditioned on $n-1$ preceding words
 
 $k$th order Markov-assumption: next word in a sequence depends only on the last $k$ words
 		\begin{equation*}
-		\Pr(w_{i}|w_{1:i-1}) \approx \Pr(w_i | w_{(i-1)-k:i-1})
+		\Pr(w_{i}|w_{1:i-1}) \approx \Pr(w_i | w_{i--k:i-1})
 		\end{equation*}
 
 Probability of a sequence of tokens $w_{1:n}$
