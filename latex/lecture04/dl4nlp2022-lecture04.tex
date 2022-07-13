@@ -655,7 +655,7 @@ We fine-tune parameters (word embeddings) using SGD
 		\item<3-> our function $f()$ should map two words to a similarity score using the distance between the word vectors of the words 
 		\item<4-> cosine similarity
 		\begin{equation*}
-		\text{sim}(w_i,w_j) = \frac{e(w_i) e(w_j)}{||e(w_i)||^2 ||e(w_j)||^2}
+		\text{sim}(w_i,w_j) = \frac{e(w_i) \cdot e(w_j)}{\norm{e(w_i)} \norm{e(w_j)}}
 		\end{equation*} 
 	\end{itemize}
 \end{frame}
@@ -693,7 +693,7 @@ We fine-tune parameters (word embeddings) using SGD
 	\begin{itemize}
 		\item<4-> cosine similarity
 		\begin{equation*}
-		\text{sim}(w_i,w_j) = \frac{e(w_i) e(w_j)}{||e(w_i)||^2 ||e(w_j)||^2}
+		\text{sim}(w_i,w_j) = \frac{e(w_i) \cdot e(w_j)}{\norm{e(w_i)} \norm{e(w_j)}}
 		\end{equation*} 
 		\item words found by embedding-based similarities can be filtered with other types of word similarities 
 	\end{itemize}

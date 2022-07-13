@@ -46,7 +46,7 @@ Accompanying video lectures are linked on YouTube
 * Topics: Word embeddings
 * [Slides as PDF (as in video 2021)](/pdf/dl4nlp2021-lecture04-video.pdf)
 * [YouTube video (2021)](https://youtu.be/PiH7JkKWRck)
-* [Slides as PDF (in-person lecture 2022)](/pdf/dl4nlp2022-lecture04-in-person.pdf)
+* [Slides as PDF (in-person lecture 2022)](/pdf/dl4nlp2022-lecture04-in-person.pdf), [updated slides](/pdf/dl4nlp2022-lecture04-in-person-with-fixed-issues.pdf)
 * Optional reading
   * Section 5 from Goldberg, Y. (2016). A Primer on Neural Network Models for Natural Language Processing. Journal of Artificial Intelligence Research, 57, 345–420. https://doi.org/10.1613/jair.4992
 
