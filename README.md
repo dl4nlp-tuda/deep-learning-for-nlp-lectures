@@ -2,7 +2,7 @@
 
 This repository contains slides for the course "20-00-0947: Deep Learning for Natural Language Processing" (Technical University of Darmstadt, Summer term 2023).
 
-This course is jointly lectured by [Ivan Habernal](https://www.trusthlt.org) and Martin Tutek (UKP Lab).
+This course is jointly lectured by [Ivan Habernal](https://www.trusthlt.org) and [Martin Tutek](https://www.informatik.tu-darmstadt.de/ukp/ukp_home/staff_ukp/ukp_home_content_staff_1_details_124480.en.jsp).
 
 The slides are available as PDF as well as LaTeX source code (we've used Beamer because typesetting mathematics in PowerPoint or similar tools is painful). See the instructions below if you want to compile the slides yourselves.
 
