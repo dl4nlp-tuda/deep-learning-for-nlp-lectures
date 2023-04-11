@@ -12,18 +12,11 @@ The content is licenced under [Creative Commons CC BY-SA 4.0](https://creativeco
 
 **Note:** The following content is continuously updated as the summer term progresses. If you're interested in the full previous 2022 content, checkout the latest [2022 Git commit](https://github.com/dl4nlp-tuda/deep-learning-for-nlp-lectures/tree/a59910534ac600a6e8c22fbcde6ae8223a87cda9).
 
-## Lecture 1
+## Lecture 1: NLP tasks and evaluation
 
 April 11, 2023
 
-TO BE UPDATED
-
-* Topics: Kick-off (challenges in NLP, Deep Learning in NLP, Terminology, History of DL, Perceptron)
-* [Slides as PDF (as in video 2021)](/pdf/dl4nlp2021-lecture01-video.pdf), [Slides as PDF (updated 2021)](/pdf/dl4nlp2021-lecture01-with-fixed-issues.pdf)
-* [YouTube video 2021](https://youtu.be/AbmAFprJhJo)
-
-
-
+* [Slides as PDF](/pdf/dl4nlp2023-lecture01.pdf)
 
 ## Compiling slides to PDF
 
