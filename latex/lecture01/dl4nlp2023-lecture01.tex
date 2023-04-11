@@ -1,0 +1,1217 @@
+% !TeX program = lualatex
+% !BIB program = biber
+% Lualatex is important to render Fira fonts; with pdflatex it's just the regular one
+% ratio: https://tex.stackexchange.com/questions/14336/
+\documentclass[12pt,aspectratio=169,handout]{beamer}
+%\documentclass[12pt,aspectratio=169]{beamer}
+
+% adjust for 16:9
+% https://tex.stackexchange.com/questions/354022/modifying-the-margins-of-all-slides-in-beamer
+\setbeamersize{text margin left=0.3cm,text margin right=4.5cm} 
+
+%\usepackage{xcolor}
+
+%%% better TOC
+\usetheme[subsectionpage=progressbar]{metropolis}
+
+% name in footer
+\setbeamertemplate{frame numbering}{\insertframenumber ~ | Dr.\ Ivan Habernal}
+
+% blocks with background globally
+\metroset{block=fill}
+
+% adjust the background to be completely white
+\setbeamercolor{background canvas}{bg=white}
+
+% typeset mathematics on serif
+\usefonttheme[onlymath]{serif}
+
+% better bibliography using biber as backend
+\usepackage[natbib=true,backend=biber,style=authoryear-icomp,maxbibnames=30,maxcitenames=9,uniquelist=false,giveninits=true,doi=false,url=false,dashed=false,isbn=false]{biblatex}
+% shared bibliography
+\addbibresource{../dl4nlp-bibliography.bib}
+% disable "ibid" for repeated citations
+\boolfalse{citetracker}
+
+\definecolor{76abdf}{RGB}{118, 171, 223}
+
+\setbeamercolor{frametitle}{bg=76abdf, fg=white}
+
+\usepackage{xspace}
+
+
+% for derivatives, https://tex.stackexchange.com/a/412442
+\usepackage{physics}
+
+\usepackage{tikz}
+\usetikzlibrary{matrix, positioning}
+
+
+% sub-figures
+\usepackage{caption}
+\usepackage{subcaption}
+
+% book tabs
+\usepackage{booktabs}
+
+
+% show TOC at every section start
+\AtBeginSection{
+	\frame{
+		\vspace{2em}
+		\sectionpage
+		\hspace*{2.2em}\begin{minipage}{10cm}
+			\tableofcontents[currentsection]
+		\end{minipage}
+	}
+}
+
+
+
+\title{Deep Learning for Natural Language Processing}
+\subtitle{Lecture 1 --- NLP tasks and evaluation}
+\date{April 11, 2023}
+\author{Dr.\ Ivan Habernal}
+\institute{Trustworthy Human Language Technologies  \hfill \includegraphics[height=.8cm]{img/logo-trusthlt.pdf} \\
+Department of Computer Science\\
+Technical University of Darmstadt \hfill \texttt{www.trusthlt.org} }
+%\titlegraphic{\hfill }
+
+\begin{document}
+
+\maketitle
+
+
+%\begin{frame}{Table of contents}
+%\setbeamertemplate{section in toc}[sections numbered]
+%\tableofcontents[hideallsubsections]
+%\end{frame}
+
+
+\iffalse
+
+\section{Deep Learning for Natural Language Processing}
+
+\begin{frame}{Deep Learning for Natural Language Processing}
+	
+	
+Deep Learning = neural networks, sub-field of machine learning
+
+NLP = Analysis of language
+	
+\end{frame}
+
+\iffalse
+\begin{frame}{History of Deep Learning 1}
+
+Early booming (1950s -- early 1960s)
+
+\begin{itemize}
+	\item Rosenblatt (1958) -- Perceptron
+	\item Widrow and Hoff (1960, 1962) --  Learning rule based on gradient descent
+\end{itemize}
+
+Setback (mid 1960s late 1970s)
+
+\begin{itemize}
+	\item Serious problems with perceptron model (Minsky’s book 1969)
+	\item Can’t even represent simple functions
+\end{itemize}
+
+
+Renewed enthusiasm (1980s)
+
+\begin{itemize}
+	\item New techniques (Backpropagation for “deep nets”)
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{History of Deep Learning 2}
+	
+Out-of-fashion -- again (1990s to mid 2000s)
+
+\begin{itemize}
+	\item Other techniques were considered superior and more understandable; Support Vector Machines, Integer linear programming, etc.
+	\item So much out of fashion, some good CS journals immediately rejected papers on neural networks without review (as reported by Geoffrey Hinton)
+	\item Played no role in top NLP conferences
+\end{itemize}
+
+Since mid 2000: huge progress for “deep learning”
+
+\begin{itemize}
+	\item Hinton and Salakhutdinov (2006): one can actually train deep nets
+	\item Since ~2013: Word embeddings, work of Mikolov et al. 
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{History of Deep Learning 3}
+	
+Since mid 2010: huge progress for “deep learning”
+
+Why?
+\begin{itemize}
+	\item More data
+	\item Faster computers, better hardware (GPU)
+	\item Unsupervised pre-training
+	\item Better optimization techniques, better understanding of the approaches, …
+\end{itemize}
+	
+\end{frame}
+
+
+\begin{frame}{Deep learning in NLP}
+	
+Occurrences of “neural” and “network” in titles in the ACL Anthology
+
+
+\begin{figure}
+\includegraphics[width=0.7\linewidth]{img/screenshot_2021-03-24_15-06-54}	
+\end{figure}
+	
+\end{frame}
+
+
+\begin{frame}{DL Example: Machine translation}
+\begin{figure}
+\includegraphics[width=0.9\linewidth]{img/screenshot_2021-03-24_15-09-30}
+\end{figure}
+	
+\end{frame}
+
+\begin{frame}{Not everything works!}
+Depending on characteristics of your task, traditional approaches may still be preferable or superior
+
+\begin{itemize}
+	\item Neural nets seem to particularly excel on “difficult” tasks, less on simple tasks (task difficulty)
+	\item Other factors such as training data size may play a crucial role	
+\end{itemize}
+
+Neural Networks are also prone to fooling
+
+\begin{figure}
+\includegraphics[width=0.6\linewidth]{img/screenshot_2021-03-24_15-12-45.png}
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}{Examples of low-level NLP problems/tasks}
+
+Sequence tagging
+
+\begin{itemize}
+	\item POS-tagging (part of speech)
+\end{itemize}
+
+
+	
+\begin{exampleblock}{Example}
+	Time flies   like   an   arrow.\\Fruit   flies   like   a   banana.
+\end{exampleblock}
+
+\bigskip
+
+\begin{exampleblock}{Example}
+		Time\POS{NN} flies\POS{VBZ}  like\POS{IN}   an\POS{DT}   arrow\POS{NN}.		\\ Fruit\POS{NN}   flies\POS{NN}   like\POS{VB}   a\POS{DT}   banana\POS{NN}.
+\end{exampleblock}
+
+\begin{footnotesize}
+IN = Preposition or subordinating conjunction (conjunction here); VBZ = Verb, 3rd person singular present; DT = determiner; NN = singular noun
+\end{footnotesize}
+
+\end{frame}
+\fi
+
+
+\begin{frame}{Examples of low-level NLP problems/tasks}
+	
+Sequence tagging
+
+\begin{itemize}
+	\item POS-tagging (part of speech)
+\end{itemize}
+
+Structure prediction
+\begin{itemize}
+	\item Chunking/Parsing
+\end{itemize}
+
+
+Semantics
+\begin{itemize}
+	\item Word sense disambiguation
+\end{itemize}
+
+	
+	
+\end{frame}
+
+
+\begin{frame}{High-level NLP tasks}
+
+
+\begin{itemize}
+	\item Information Extraction
+	\begin{itemize}
+		\item search, event detection, textual entailment
+	\end{itemize}
+	\item Writing Assistance 
+	\begin{itemize}
+		\item spell checking, grammar checking, auto-completion
+	\end{itemize}
+	\item Text Classification
+	\begin{itemize}
+		\item spam, sentiment, author, plagiarism
+	\end{itemize}
+	\item Natural language understanding 
+	\begin{itemize}
+		\item metaphor analysis, argumentation mining, question-answering
+	\end{itemize}
+	\item Natural language generation
+	\begin{itemize}
+		\item summarization, tutoring systems, chat bots
+	\end{itemize}
+	\item Multilinguality
+	\begin{itemize}
+		\item machine translation, cross-lingual information retrieval
+	\end{itemize}
+\end{itemize}
+
+	
+\end{frame}
+
+\begin{frame}{Summary}
+	
+TODO
+
+\end{frame}
+
+\fi
+
+\section{Motivation}
+
+\begin{frame}{Why study deep learning for NLP?}
+
+\begin{enumerate}
+	\item GPT-4
+\end{enumerate}
+
+\end{frame}
+
+% shrink size
+\begin{frame}[shrink=20]{Preliminary course roadmap}
+
+\begin{enumerate}
+	\item NLP tasks and evaluation
+	\item Mathematical foundations of deep learning
+	\item Text classification 1: Log-linear models
+	\item Text classification 2: Deep neural networks
+	\item Text generation 1: LMs and word embeddings
+	\item Text classification 3: Encoding with RNNs
+	\item Text generation 2: Autoregressive RNNs and attention
+	\item Text classification 4: Self-attention and BERT
+	\item Text generation 3: Transformers
+	\item Text generation 4: Decoder-only models and GPT
+	\item Contemporary LLMs: Prompting and in-context learning
+	\item No planned lecture (buffer)
+	\item Guest lecture 1: Privacy-preserving NLP (Timour Igamberdiev)
+	\item Guest lecture 2: Ethics of LLMs (Thomas Arnold)
+\end{enumerate}
+
+
+	
+\end{frame}
+
+\section{Course logistics}
+
+
+\begin{frame}{Lecturers and tutors}
+
+Lecturers\footnote{\url{firstname.lastname@tu-darmstatdt.de}}
+
+\begin{itemize}
+	\item Dr.\ Ivan Habernal (TrustHLT group)
+	\item Dr.\ Martin Tutek (UKP lab)
+\end{itemize}
+
+Tutors
+
+\begin{itemize}
+	\item Marlon Malter, Minh Vu Pham, Doan Nam Long Vu, Yanran Chen, Hatice İrem Diril
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Online resources}
+	
+\begin{itemize}
+	\item Moodle for homeworks, announcements, and forum: \url{https://moodle.informatik.tu-darmstadt.de/course/view.php?id=1461}
+	\item GitHub for lectures: \url{https://github.com/dl4nlp-tuda/deep-learning-for-nlp-lectures}
+	\item Discord as much faster forum: \url{https://discord.gg/hubQ4jUQJR}
+	\item Lectures recorded and published on YouTube
+\end{itemize}
+	
+\end{frame}
+
+\begin{frame}{Textbooks and resources}
+	
+\begin{itemize}
+	\item Recommended for each topic or lecture separately
+	\item We'll use freely available resources (almost exclusively)
+\end{itemize}
+
+Top-notch research in NLP is "open source"
+
+\begin{itemize}
+	\item Association for Computational Linguistics (ACL) conferences in the "Anthology": \url{https://aclanthology.org/}
+	\item \url{https://arXiv.org}
+\end{itemize}
+	
+\end{frame}
+
+
+
+\begin{frame}{Exercises and Homeworks}
+	
+Exercises (EX)
+
+\begin{itemize}
+	\item Deepen your understanding of the matter
+	\item Not graded
+\end{itemize}
+
+Homeworks (HW)
+
+\begin{itemize}
+	\item Get hands dirty
+	\item Submit in groups of two
+	\item $\geq 70\%$ of HW points $\to$ eligible for 0.3/0.4 exam bonus
+	\item \textbf{Follow announcements and instructions on Moodle}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Final exam}
+	
+	
+\begin{itemize}
+\item Monday, July 31, 2023, 11.30 -- 13.00
+\item Lichtwiese, L402/1 , L402/2 , L402/201 , L402/202
+\item Register via TUCaN as usual
+\item Exam questions: En
+\item Answers: En or De
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{It's your course, too!}
+	
+Your feedback is very important
+
+\begin{itemize}
+	\item Talk to us (live, discord, forum, e-mail)
+	\item We'll post anonymous feedback forms regularly
+	\item Slides issues: Just open bug/PR on GitHub
+\end{itemize}
+
+
+\end{frame}
+
+
+
+\begin{frame}{Trustworthy Human Language Technologies}
+	
+	\includegraphics[height=.8cm]{img/logo-trusthlt.pdf} \hfill \url{www.trusthlt.org}
+	
+	\bigskip
+
+\begin{block}{Research focus}
+\begin{itemize}
+	
+	\item Privacy-preserving NLP (differential privacy; deep learning; representation learning; graph networks)	
+	\item Argument mining "that matters" (legal argument mining; ethical argumentation)
+	
+\end{itemize}	
+\end{block}
+
+
+	\bigskip
+	
+	Master thesis? HiWi job? Get in touch!
+	
+	\url{ivan.habernal@tu-darmstadt.de}
+	
+\end{frame}
+
+
+
+\section{Overview of typical NLP tasks}
+
+
+\begin{frame}{Why are we learning this?}
+	
+Important question to ask before we even start!
+
+\bigskip
+
+Deep learning is a tool and we need to understand
+
+\begin{itemize}
+	\item why we need this tool in the first place
+	\item how do we know we have the right tool (it's doing its job well)
+\end{itemize}
+
+
+\end{frame}
+
+
+\begin{frame}{Coarse typology}
+Text classification and text generation
+\end{frame}
+
+\subsection{Text classification tasks}
+
+\begin{frame}{ Sentiment classification of movie reviews}
+
+Binary classification of reviews from IMDB
+
+\begin{example}
+	\textbf{Text:} Read the book, forget the movie! \\
+	\textbf{Label:} Negative
+\end{example}	
+
+$\to$ semantic compositionality, long-range dependencies
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Maas.et.al.2011} \par};
+\end{tikzpicture}
+
+\begin{itemize}
+\item IMDB is the MNIST of NLP (the limus paper), 25k training, 25k test data points, balanced
+\item Why was it interesting?
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{ Task and dataset are used as synonyms}
+
+``The IMDB dataset" --- must be properly cited! (incl.\ link)
+
+\begin{block}{Where to get datasets?}
+\url{https://huggingface.co/datasets}
+
+\includegraphics[width=0.97\linewidth]{img/hfdata.png}
+\end{block}
+
+\end{frame}
+
+\begin{frame}{ Natural Language Inference}
+
+Two sentences: entailment, contradiction, or neutral?
+
+\begin{example}
+\textbf{Text:} A soccer game with multiple males playing. \\
+\textbf{Hypothesis:} Some men are playing sport. \\
+\textbf{Label:} Entailment
+\end{example}
+
+
+The ``standard" NLI paper and dataset from Stanford: SNLI
+
+\begin{itemize}
+	\item 570k human-written English sentence pairs
+	\item manually labeled for balanced classification
+\end{itemize}
+
+
+How is SNLI data different from the IMDB?
+
+\begin{itemize}
+	\item IMDB data that was ``annotated for free" by each author
+\end{itemize}
+
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Bowman.et.al.2015} \par};
+\end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}{Side step 1: Gold standard data}
+
+\begin{itemize}
+	\item Many datasets are annotated by experts, super costly
+	\item Each example by multiple annotators, then the final ``gold" label is decided upon
+\end{itemize}
+
+\bigskip
+
+How to measure task subjectivity and annotation quality?
+
+\begin{block}{Inter-Annotator Agreement}
+Take chance agreement into account
+\begin{itemize}
+	\item Cohen's Kappa, Scott's Pi, Krippendorff's Alpha, Krippendorff's Unitized Alpha \citep{Artstein.Poesio.2008.CoLi}
+\end{itemize}
+	
+\end{block}
+
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Habernal.et.al.2023.AILaw} 
+\bigskip \newline	
+\fullcite{Artstein.Poesio.2008.CoLi} \par};
+\end{tikzpicture}
+\end{frame}
+
+
+
+\begin{frame}{ Side step 2: Who creates these tasks and why?}
+
+\begin{itemize}
+	\item Mostly researchers
+	\item Mostly for phenomena in language and to which extent NLP can ``solve" them
+	\item Shared datasets became popular with machine learning in NLP
+\end{itemize}
+
+Tasks are classified into various (arbitrary) taxonomies with (mostly agreed upon) names, for example
+
+\begin{itemize}
+	\item Sentiment analysis $\in$ text classification
+	\item SNLI $\in$ sentence-pair classification
+\end{itemize}
+
+
+\end{frame}
+
+\begin{frame}[fragile]{ Deeper in sentences: NER}
+
+Named entity recognition: Find entities of predefined types
+
+\begin{example}
+\begin{verbatim}
+ U.N.         Organization
+ official     
+ Ekeus        Person
+ heads        
+ for          
+ Baghdat      Location
+ .            
+\end{verbatim}
+\end{example}
+
+How to model and annotate such a task?
+
+\begin{tikzpicture}[overlay, remember picture] 
+	\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{TjongKimSang.DeMeulder.2003} \par};
+\end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}[fragile]{NER: Sequence labeling task}
+
+Tokenize, assign each word a type
+
+\begin{example}
+\begin{verbatim}
+ U.N.         I-ORG
+ official     O
+ Ekeus        I-PER
+ heads        O
+ for          O
+ Baghdat      I-LOC
+ .            O
+\end{verbatim}
+\end{example}
+
+CoNLL 2003: Four entities (PER, ORG, LOC, MISC)
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{TjongKimSang.DeMeulder.2003} \par};
+\end{tikzpicture}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{NER: BIO encoding}
+	
+What if two consequent tokens are same type?
+
+\bigskip
+	
+\begin{quote}
+``Whenever two entities of type XXX are immediately next to each other, the first word of the second entity will be tagged B-XXX in order to show that it starts another entity''
+\end{quote}
+
+
+BIO encoding
+
+\bigskip
+
+An instance of Multi-class classification on token level
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{TjongKimSang.DeMeulder.2003} \par};
+\end{tikzpicture}	
+\end{frame}
+
+
+
+\begin{frame}{SuperGLUE}
+	
+SuperGLUE --- popular benchmark collection of various tasks/datasets in English
+	
+%	SuperGLUE We use a subset of the SuperGLUE (Wang et al., 2019) evaluation suite of classification tasks, specifically:
+
+\bigskip
+
+\begin{quote}
+``The goal of SuperGLUE is to provide a simple, robust evaluation metric of any method capable of being applied to a broad range of \textbf{language understanding} tasks.''
+\end{quote}
+	
+%In BLOOM:
+%Ax-b, Ax-g, BoolQ, CB, WiC, WSC, and RTE tasks.
+	
+
+\begin{tikzpicture}[overlay, remember picture] 
+	\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Wang.et.al.2019.NeurIPS} \par};
+\end{tikzpicture}
+	
+\end{frame}
+
+\begin{frame}{Recognizing Textual Entailment (RTE)}
+	
+	Two-class (binary) classification
+	
+	Whether or not the Text entails the Hypothesis
+	
+	\begin{example}
+		\textbf{Text:} Dana Reeve, the widow of the actor Christopher Reeve, has died of lung cancer at age 44, according to the Christopher Reeve Foundation. \\
+		\textbf{Hypothesis:} Christopher Reeve had an accident. \\
+		\textbf{Entailment:} False
+	\end{example}
+	
+	\begin{tikzpicture}[overlay, remember picture] 
+		\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Dagan.et.al.2009.NLE} \par};
+	\end{tikzpicture}
+	
+
+Note: SNLI adapted RTE!
+	
+\end{frame}
+
+
+\begin{frame}{Coreference resolution (WSC --- Winograd Schema Challenge)}
+	
+	Examples consist of a sentence with a pronoun and a list of noun phrases from the sentence
+	
+	Determine the correct referrent of the pronoun
+	
+	\begin{example}
+		\textbf{Text:} Mark told \underline{Pete} many lies about himself, which Pete included in his book. \underline{He} should have been more truthful.
+		
+		\textbf{Coreference:} False
+	\end{example}	
+	
+	$\to$ everyday knowledge and commonsense reasoning to solve
+	
+	\begin{tikzpicture}[overlay, remember picture] 
+		\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Levesque.et.al.2012} \par};
+	\end{tikzpicture}
+	
+\end{frame}
+
+
+\begin{frame}{BoolQ}
+	
+Each example: short passage and a yes/no question about the passage
+
+\begin{example}
+Q: Has the UK been hit by a hurricane? \\
+P: The Great Storm of 1987 was a violent extratropical cyclone which caused casualties in England, France and the Channel Islands ... \\
+A: Yes. [An example event is given.]
+\end{example}
+	
+$\to$ complex, non-factoid information, requires difficult entailment-like inference to solve
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Clark.et.al.2019.NAACL} \par};
+\end{tikzpicture}
+
+\end{frame}
+
+
+
+\begin{frame}{MultiRC: Multi-Sentence Reading Comprehension}
+
+Each example consists of
+\begin{itemize}
+	\item Context paragraph
+	\item Question about that paragraph
+	\item List of possible answers (true/false)
+\end{itemize}
+
+Desirable properties:
+\begin{enumerate}
+	\item Multiple possible correct answers $\to$ each question-answer pair must be evaluated independent of other pairs
+	\item Answering each question requires drawing facts from multiple context sentences
+\end{enumerate}
+
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Khashabi.et.al.2018.NAACL} \par};
+\end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}{Extractive Question Answering: SQuAD 2.0}
+	
+\begin{footnotesize}
+\begin{example}
+Endangered Species Act Paragraph: ``... Other legislation followed, including the Migratory Bird Conservation Act of 1929, a \textbf{1937 treaty} prohibiting the hunting ofright and gray whales, and the \underline{Bald Eagle Protection Act of 1940}. These \underline{later laws} had a low cost to society---the species were relatively rare---and little \textbf{opposition} was raised."
+
+Question 1: ``Which laws faced significant \textbf{opposition}?" \\
+Plausible Answer: \underline{later laws}
+
+Question 2: ``What was the name ofthe \textbf{1937 treaty}?" \\
+Plausible Answer: \underline{Bald Eagle Protection Act}
+\end{example}
+\end{footnotesize}
+
+Unanswerable questions w/ plausible (but incorrect) answers. Relevant keywords are \textbf{bold}.
+
+	
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Rajpurkar.et.al.2018.ACL} \par};
+\end{tikzpicture}
+	
+\end{frame}
+
+
+\subsection{Text generation tasks}
+
+
+\begin{frame}{Machine translation}
+
+Machine translation is still hard! (Feb 2023)
+\includegraphics[width=13em]{img/mtex.jpg}
+
+Standard datasets from WMT (formerly Workshop on MT)
+
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Bojar.et.al.2018.WMT} \par};
+\end{tikzpicture}
+
+\end{frame}
+
+
+\begin{frame}{Machine translation}
+	
+
+\includegraphics[width=15cm]{img/mt2.png}
+	
+	
+Source: \fullcite{Koehn.2020}
+	
+\end{frame}
+
+
+\begin{frame}{(Abstractive) Document summarization}
+
+Popular dataset: CNN/Daily Mail
+
+\begin{itemize}
+	\item Online news articles (781 tokens on average)
+	\item Paired with multi-sentence summaries (3.75 sentences or 56 tokens on average)
+	\item 287k training pairs, 13k validation pairs, 11k test pairs
+\end{itemize}
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Hermann.et.al.2015.NeurIPS} \par};
+\end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}{Dialogue: PersonaChat}
+	
+165k utterances; Task: next utterance prediction
+	
+\includegraphics[width=\linewidth]{img/dial1.png}
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Zhang.et.al.2018.ACL} \par};
+\end{tikzpicture}
+
+\end{frame}
+
+
+
+\subsection{Classification as generation}
+
+\begin{frame}{Unifying classification and generation}
+
+Any task incl.\ classification $\to$ "text-to-text" format
+
+\begin{example}[Translation En-De]
+Input: \emph{translate English to German: That is good.} \\
+Expected output text: \emph{Das ist gut.}
+\end{example}
+
+\begin{example}[MNLI]
+Input: \emph{mnli premise: I hate pigeons. hypothesis: My feelings towards pigeons are filled with animosity.}
+Expected output text: \emph{entailment}
+\end{example}
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Raffel.et.al.2020.JMLR} \par};
+\end{tikzpicture}
+
+\end{frame}
+
+
+
+\section{Evaluation}
+
+
+\begin{frame}{ Train/Dev/Test data splits}
+
+Training and Test data
+
+Development (Validation) set used for optimizing hyper-parameters
+
+\tikzstyle{box} = [rectangle, draw, black, text width=3cm]
+\tikzstyle{train} = [fill=blue!10]
+\tikzstyle{dev} = [fill=yellow!10]
+\tikzstyle{test} = [fill=red!10]
+
+\begin{figure}
+
+\begin{tikzpicture}[node distance=0.8cm]
+	\node (f13) [box, train] {Train};
+	\node (f14) [box, dev, below of=f13] {Validation};
+	\node (f15) [box, test, below of=f14] {Test};
+	
+\end{tikzpicture}
+
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}{Cross validation}
+
+\textbf{K-fold cross-validation} partitions the data into $K$ chunks
+
+$K - 1$ of which form the training set $\mathcal{R}$
+
+The last chunk serves as the test set $\mathcal{V}$ (or validation)
+
+\bigskip
+
+\tikzstyle{box} = [rectangle, draw, black, text width=1.5cm]
+\tikzstyle{train} = [fill=blue!10]
+\tikzstyle{test} = [fill=red!10]
+
+\begin{figure}
+	\begin{scriptsize}
+		\begin{tikzpicture}[node distance=0.5cm]
+			\node (f10) [] {Fold 1};
+			\node (f11) [box, train, below of=f10] {Train};
+			\node (f12) [box, train, below of=f11] {Train};
+			\node (f13) [box, train, below of=f12] {Train};
+			\node (f14) [box, train, below of=f13] {Train};
+			\node (f15) [box, test, below of=f14] {Test};
+			
+			\node (f20) [right=1.6cm, right of=f10] {Fold 2};
+			\node (f21) [box, train, below of=f20] {Train};
+			\node (f22) [box, train, below of=f21] {Train};
+			\node (f23) [box, train, below of=f22] {Train};
+			\node (f24) [box, test, below of=f23] {Test};
+			\node (f25) [box, train, below of=f24] {Train};
+			
+			\node (f30) [right=1.6cm, right of=f20] {Fold 3};
+			\node (f31) [box, train, below of=f30] {Train};
+			\node (f32) [box, train, below of=f31] {Train};
+			\node (f33) [box, test, below of=f32] {Test};
+			\node (f34) [box, train, below of=f33] {Train};
+			\node (f35) [box, train, below of=f34] {Train};
+			
+			\node (f40) [right=1.6cm, right of=f30] {Fold 4};
+			\node (f41) [box, train, below of=f40] {Train};
+			\node (f42) [box, test, below of=f41] {Test};
+			\node (f43) [box, train, below of=f42] {Train};
+			\node (f44) [box, train, below of=f43] {Train};
+			\node (f45) [box, train, below of=f44] {Train};
+			
+			\node (f50) [right=1.6cm, right of=f40] {Fold 5};
+			\node (f51) [box, test, below of=f50] {Test};
+			\node (f52) [box, train, below of=f51] {Train};
+			\node (f53) [box, train, below of=f52] {Train};
+			\node (f54) [box, train, below of=f53] {Train};
+			\node (f55) [box, train, below of=f54] {Train};
+		\end{tikzpicture}
+	\end{scriptsize}
+	\caption{Example of 5-fold CV}
+\end{figure}
+
+\end{frame}
+
+\subsection{Evaluation of text classification}
+
+
+\begin{frame}{Confusion matrix (binary case)}
+
+Two classes: Positive and Negative
+
+\begin{block}{Confusion matrix}
+\begin{tabular}{l|cc}
+& Pred. Negative & Pred. Positive \\ \toprule
+Act. Negative & True negative (TN) & False positive (FP) \\
+Act. Positive & False negative (FN) & True positive (TP) \\
+\end{tabular}
+\end{block}
+
+\bigskip
+
+Act. Negative = Actually negative = Gold label
+
+Ordering of columns and rows is \textbf{arbitrary}!
+
+\end{frame}
+
+
+\begin{frame}{Accuracy}
+
+Accuracy of classifier $f$ on test set $T$:
+$$
+\mathrm{Acc}_T(f) = \frac{1}{|T|} \sum_{i = 1}^{|T|} I (f(x_i), y_i)
+$$
+	
+\begin{example}[Disease detection]
+	\begin{tabular}{l|rr}
+		& Pred. Negative & Pred. Positive \\ \toprule
+		Act. Negative & 168 & 33 \\
+		Act. Positive & 48 & 37 \\
+	\end{tabular}
+\end{example}
+
+$37 + 48 + 33 + 168 = 286$ $\to$ Test set size $|T| = 286$
+$\mathrm{Acc}_T(f) = \frac{1}{286} (37 + 168) = 0.7186$
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Japkowicz.Shah.2011} \par};
+\end{tikzpicture}
+	
+\end{frame}
+
+
+\begin{frame}{Precision, recall, F-1 score}
+	
+\begin{block}{Confusion matrix}
+	\begin{tabular}{l|cc}
+		& Pred. Negative & Pred. Positive \\ \toprule
+		Act. Negative & True negative (TN) & False positive (FP) \\
+		Act. Positive & False negative (FN) & True positive (TP) \\
+	\end{tabular}
+\end{block}
+	
+Precision (for class positive) = TP / (TP + FP)
+
+Recall (for class positive) = TP / (TP + FN)
+
+F-1 score (for class positive) = 2PR / (P + R)
+	
+\end{frame}
+
+
+\begin{frame}{Confusion matrix -- multi-class}
+	
+\begin{tabular}{r|rrrrrrr}
+	& prediction: &\rotatebox{90}{\emph{money-fx}}&\rotatebox{90}{\emph{trade}}&\rotatebox{90}{\emph{interest}}&\rotatebox{90}{\emph{wheat}}&\rotatebox{90}{\emph{corn}}&\rotatebox{90}{\emph{grain}}\\
+	true class:&&&&&&&\\\hline
+	\emph{money-fx} && 95 & 0 & 10 & 0 & 0 & 0\\
+	\emph{trade} && 1 & 1 & 90 & 0 & 1 & 0\\
+	\emph{interest} && 13 & 0 & 0 & 0 & 0 & 0\\
+	\emph{wheat} && 0 & 0 & 1 & 34 & 3 & 7\\
+	\emph{corn} && 1 & 0 & 2 & 13 & 26 & 5\\
+	\emph{grain} && 0 & 0 & 2 & 14 & 5 & 10
+\end{tabular}
+	
+\end{frame}
+
+
+\begin{frame}{Confusion matrix -- multi-class}
+
+We can unambiguously compute Precision and Recall for each class
+
+How to get the F-1 score for the complete test set across classes?
+
+Macro-averaging (average of F-1 scores), or micro-averaging
+
+These details might get tricky so always report exactly what you do!
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Sokolova.Lapalme.2009} \par};
+\end{tikzpicture}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Evaluation of text generation}
+
+
+\begin{frame}{More text generation tasks}
+
+\includegraphics[width=\linewidth]{img/nlg1.png}
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Sai.et.al.2023.CSUR} \par};
+\end{tikzpicture}
+
+\end{frame}
+
+
+\begin{frame}{Evaluating text generation is hard}
+	
+\includegraphics[width=1.3\linewidth]{img/nlg2.png}
+	
+\end{frame}
+
+
+\begin{frame}{BLEU (Bilingual Evaluation Understudy)}
+
+Among the first and most popular metrics proposed for automatic evaluation of MT systems
+
+\begin{itemize}
+	\item Precision-based metric that computes the n-gram overlap between the reference and the hypothesis
+	\item In particular, BLEU is the ratio of the number of overlapping n-grams to the total number of n-grams in the hypothesis.
+\end{itemize}
+
+
+Corpus-level metric, i.e., BLEU gives a score over the entire corpus (as opposed to scoring individual sentences)
+
+Major drawbacks of BLEU: (i) it does not take recall into account and (ii) it only allows exact n-gram matching
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Papineni.et.al.2002.ACL} \par};
+\end{tikzpicture}
+
+\end{frame}
+
+
+\begin{frame}{ROUGE (Recall-Oriented Understudy for Gisting Evaluation)}
+	
+ROUGE metric includes a set of variants: ROUGE-N, ROUGE-L, ROUGE-W, and ROUGE-S
+
+\begin{itemize}
+	\item ROUGE-N is similar to BLEU-N in counting the n-gram matches between the hypothesis and reference, however, it is a recall-based measure unlike BLEU which is precision-based
+	\item ROUGE-L measures the longest common subsequence (LCS) between a pair of sentences	
+\end{itemize}
+
+\begin{tikzpicture}[overlay, remember picture] 
+	\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Lin.2004} \par};
+\end{tikzpicture}
+
+
+\end{frame}
+
+
+\subsection{Caveats of NLP benchmarking}
+
+
+\begin{frame}{The `gold' data paradigm might not always fit}
+
+The assumption of a ground truth makes sense when humans highly agree on the answer
+
+\begin{itemize}
+	\item ``Does this image contain a bird?"
+	\item ``Is `learn' a verb?"
+	\item ``What is the capital of Italy?"
+\end{itemize}
+
+This assumption often does not make sense, especially when language is involved
+
+\begin{itemize}
+	\item Questions determining a word sense
+	\item ``Is this comment toxic?"
+\end{itemize}
+
+\emph{Human label variation impacts all steps of the traditional ML pipeline, and is an opportunity, not a problem}
+
+\begin{tikzpicture}[overlay, remember picture] 
+	\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Plank.2022.EMNLP} \par};
+\end{tikzpicture}
+
+\end{frame} \begin{frame}{ Human annotators are biased}
+
+Datasets are often constructed using a small number of annotators, and humans are biased
+
+\begin{itemize}
+	\item Concerns about data diversity, especially when workers freely generate sentences
+	\item Models do not generalize well to examples from annotators that did not contribute to the training set
+\end{itemize}
+
+\begin{tikzpicture}[overlay, remember picture] 
+	\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Geva.et.al.2019.EMNLP} \par};
+\end{tikzpicture}
+
+\end{frame} \begin{frame}{Artifacts in datasets}
+
+Datasets have artifacts (spurious statistics) that can be exploited
+
+\includegraphics[width=8cm]{img/arct.png}
+
+
+
+\begin{tikzpicture}[overlay, remember picture] 
+	\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Habernal.et.al.2018.NAACL.ARCT} 
+		\bigskip \newline	
+		\fullcite{Niven.Kao.2019.ACL} \par};
+\end{tikzpicture}
+
+
+\end{frame}
+
+
+\section*{Recap}
+
+\begin{frame}{Take aways: We set up the scene}
+	
+\begin{itemize}
+	\item Vast amount of tasks and datasets
+	\item Data quality matters
+	\item Understanding the data, annotators, task matters too
+	\item Deep familiarity with common evaluation metrics is essential
+	\item Getting better scores is just a beginning of the story
+	\item Evaluating generation is an art
+\end{itemize}
+	
+\end{frame}
+
+%\begin{frame}[allowframebreaks]{References}
+%\printbibliography
+%\end{frame}
+
+\end{document}
+
