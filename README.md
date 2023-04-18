@@ -89,3 +89,7 @@ lualatex dl4nlp2021-lecture*.tex && lualatex dl4nlp2021-lecture*.tex
 ```
 
 which generates the PDF in your local folder (e.g, `/tmp/slides`).
+
+### Compiling handouts
+
+We're uploading the PDFs as presented in the lecture. You can compile the slides in a concise way using the `handout` settings. Just commment/uncomment the respective line at the beginning of the tex file of the lecture slides.
