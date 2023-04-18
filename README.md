@@ -18,6 +18,11 @@ April 11, 2023
 
 * [Slides as PDF](/pdf/dl4nlp2023-lecture01.pdf)
 
+## Lecture 2: Mathematical foundations of deep learning
+
+April 18, 2023
+
+
 ## Compiling slides to PDF
 
 If you run a linux distribution (e.g, Ubuntu 20.04 and newer), all packages are provided as part of `texlive`. Install the following packages
