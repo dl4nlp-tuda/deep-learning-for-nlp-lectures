@@ -16,7 +16,7 @@ The content is licenced under [Creative Commons CC BY-SA 4.0](https://creativeco
 
 April 11, 2023
 
-* [Slides as PDF](/pdf/dl4nlp2023-lecture01.pdf)
+* [Slides as PDF](/pdf/dl4nlp2023-lecture01.pdf), [YouTube recording](https://www.youtube.com/watch?v=-cku_A34-qE)
 
 ## Lecture 2: Mathematical foundations of deep learning
 
