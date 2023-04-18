@@ -22,6 +22,7 @@ April 11, 2023
 
 April 18, 2023
 
+* [Slides as PDF](/pdf/dl4nlp2023-lecture02.pdf)
 
 ## Compiling slides to PDF
 
