@@ -26,6 +26,10 @@ April 18, 2023
 
 ## FAQ
 
+* What are some essential pre-requisites?
+  * Math: Derivatives and partial derivatives. We cover them in Lecture 2. If you need more, I would recommend these sources:
+    * *Jeremy Kun: A Programmer's Introduction to Mathematics.* Absolutely amazing book. Pay-what-you-want for the PDF book. https://pimbook.org/
+    * *Deisenroth, A. Aldo Faisal, and Cheng Soon Ong: Mathematics for Machine Learning*. Excellent resource, freely available. Might be a bit dense. https://mml-book.github.io/
 * Can I have the slide deck without "unfolding" the content over multiple pages?
   * You can compile the slides with the `handout` parameter, see below the section [Compiling handouts](#compiling-handouts).
 * Where do I find the code for plotting the functions?
