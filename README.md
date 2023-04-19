@@ -24,6 +24,11 @@ April 18, 2023
 
 * [Slides as PDF](/pdf/dl4nlp2023-lecture02.pdf)
 
+## FAQ
+
+* Can I have the slide deck without "unfolding" the content over multiple pages?
+  * You can compile the slides with the `handout` parameter, see below the section [Compiling handouts](#compiling-handouts)
+
 ## Compiling slides to PDF
 
 If you run a linux distribution (e.g, Ubuntu 20.04 and newer), all packages are provided as part of `texlive`. Install the following packages
