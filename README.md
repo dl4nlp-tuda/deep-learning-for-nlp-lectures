@@ -27,7 +27,9 @@ April 18, 2023
 ## FAQ
 
 * Can I have the slide deck without "unfolding" the content over multiple pages?
-  * You can compile the slides with the `handout` parameter, see below the section [Compiling handouts](#compiling-handouts)
+  * You can compile the slides with the `handout` parameter, see below the section [Compiling handouts](#compiling-handouts).
+* Where do I find the code for plotting the functions?
+  * Most of the plots are generated in Python/Jupyter (in Colab). The links are included as comments in the respective LaTeX sources for the slides.
 
 ## Compiling slides to PDF
 
