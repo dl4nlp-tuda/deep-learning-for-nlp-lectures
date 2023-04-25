@@ -24,6 +24,14 @@ April 18, 2023
 
 * [Slides as PDF](/pdf/dl4nlp2023-lecture02.pdf), [YouTube recording](https://www.youtube.com/watch?v=XbFNcvWdCTw)
 
+
+## Lecture 3: Text classification 1: Log-linear models
+
+April 25, 2023
+
+* [Slides as PDF](/pdf/dl4nlp2023-lecture03.pdf)
+
+
 ## FAQ
 
 * What are some essential pre-requisites?
