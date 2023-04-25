@@ -1,0 +1,1084 @@
+% !TeX program = lualatex
+% !BIB program = biber
+% Lualatex is important to render Fira fonts; with pdflatex it's just the regular one
+% ratio 16:9 -- https://tex.stackexchange.com/questions/14336/
+
+% compile two versions, inspired by https://tex.stackexchange.com/a/1501
+% use the script "compile-pdf.sh"
+\newif\ifhandout
+% if flags.tex does not exist, create an empty file to be able to compile in TeXstudio
+\input{flags}
+
+\ifhandout
+	\documentclass[12pt,aspectratio=169,handout]{beamer}
+\else
+	\documentclass[12pt,aspectratio=169]{beamer}
+\fi
+
+% adjust for 16:9
+% https://tex.stackexchange.com/questions/354022/modifying-the-margins-of-all-slides-in-beamer
+\setbeamersize{text margin left=0.3cm,text margin right=4.5cm} 
+
+%\usepackage{xcolor}
+
+%%% better TOC
+\usetheme[subsectionpage=progressbar]{metropolis}
+
+% name in footer
+\setbeamertemplate{frame numbering}{\insertframenumber ~ | Dr.\ Ivan Habernal}
+
+% blocks with background globally
+\metroset{block=fill}
+
+% adjust the background to be completely white
+\setbeamercolor{background canvas}{bg=white}
+
+% typeset mathematics on serif
+\usefonttheme[onlymath]{serif}
+
+% better bibliography using biber as backend
+\usepackage[natbib=true,backend=biber,style=authoryear-icomp,maxbibnames=30,maxcitenames=9,uniquelist=false,giveninits=true,doi=false,url=false,dashed=false,isbn=false]{biblatex}
+% shared bibliography
+\addbibresource{../dl4nlp-bibliography.bib}
+% disable "ibid" for repeated citations
+\boolfalse{citetracker}
+
+\definecolor{76abdf}{RGB}{118, 171, 223}
+
+\setbeamercolor{frametitle}{bg=76abdf, fg=white}
+
+\usepackage{xspace}
+
+
+% for derivatives, https://tex.stackexchange.com/a/412442
+\usepackage{physics}
+
+\usepackage{tikz}
+\usetikzlibrary{matrix, positioning}
+\usetikzlibrary{angles,quotes} % for angles
+\usetikzlibrary{backgrounds} % background
+\usetikzlibrary{decorations.pathreplacing} % curly braces
+\usetikzlibrary{calligraphy}
+\usetikzlibrary{calc} % for neural nets
+
+% for plotting functions
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+% sub-figures
+\usepackage{caption}
+\usepackage{subcaption}
+
+% book tabs
+\usepackage{booktabs}
+
+
+% show TOC at every section start
+\AtBeginSection{
+	\frame{
+		\vspace{2em}
+		\sectionpage
+		\hspace*{2.2em}\begin{minipage}{10cm}
+			\tableofcontents[currentsection]
+		\end{minipage}
+	}
+}
+
+% argmin, argmax
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{arg\!\max}
+\DeclareMathOperator*{\argmin}{arg\!\min}
+
+% bold math
+\usepackage{bm}
+
+% for \mathclap
+\usepackage{mathtools}
+
+% algorithms
+\usepackage[noend]{algpseudocode}
+
+
+% for neurons and layers in tikz
+\tikzset{
+	neuron/.style={draw, circle, inner sep=0pt, minimum width=0.75cm, fill=blue!20},
+	param/.style={draw, circle, inner sep=0pt, minimum width=0.75cm, fill=green!20},
+	constant/.style={draw, circle, inner sep=0pt, minimum width=0.75cm, fill=black!15},
+}
+
+
+\title{Deep Learning for Natural Language Processing}
+\subtitle{Lecture 3 --- Text classification 1: Log-linear models}
+\date{April 25, 2023}
+\author{Dr.\ Ivan Habernal}
+\institute{Trustworthy Human Language Technologies  \hfill \includegraphics[height=.8cm]{img/logo-trusthlt.pdf} \\
+Department of Computer Science\\
+Technical University of Darmstadt \hfill \texttt{www.trusthlt.org} }
+%\titlegraphic{\hfill }
+
+\begin{document}
+
+\maketitle
+
+
+\section{Feedback}
+
+\begin{frame}{Thank you for your feedback!}
+\begin{itemize}
+	\item Microphone
+	\item Connection of lecture 2 to NLP
+	\item Streaming
+	\item Background knowledge (Lec 2 boring/hard)
+	\item App / Live questions
+\end{itemize}	
+\end{frame}
+
+
+\section{Motivation}
+
+\begin{frame}{What are we going to achieve}
+Example task: Binary sentiment classification into positive and negative
+
+Recall the IMDB dataset
+
+We will learn a simple yet powerful supervised machine learning model
+
+\begin{itemize}
+	\item Known as logistic regression, maximum entropy classifier
+	\item In fact, it is a single-layer neural network
+	\item An essential important building block of deep neural networks
+\end{itemize}
+
+
+\end{frame}
+
+
+
+
+\section{The challenges of NLP}
+
+\begin{frame}{Ambiguity and variability of human language}
+
+Highly ambiguous
+\begin{example}
+Compare ``I ate pizza with friends'' to ``I ate pizza with olives''
+\end{example}
+
+
+Highly variable
+\begin{example}
+The core message of ``I ate pizza with friends'' can be expressed as
+``friends and I shared some pizza''
+\end{example}
+
+Humans --- great users of language, very poor at formally understanding and describing rules that govern language
+
+
+\begin{tikzpicture}[overlay, remember picture] 
+\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Goldberg.2017} \par};
+\end{tikzpicture}	
+	
+\end{frame}
+
+
+
+
+\begin{frame}{Supervised machine learning to save us...}
+	
+The best known set of methods for dealing with language data $\to$ supervised machine learning algorithms
+\begin{itemize}
+	\item ML attempts to infer patterns and regularities from a set of pre-annotated input--output pairs
+	\item ML excels at problem domains where a good set of rules is very hard to
+	define but annotating the expected output for a given input is relatively simple
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{...but language is even more challenging}
+
+Natural language exhibits properties that make it even more challenging for ML
+
+\begin{enumerate}
+	\item Discrete
+	\item Compositional
+	\item Sparse
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Language is symbolic and discrete}
+
+Basic elements of written language: \textbf{characters}
+
+Characters form \textbf{words} that denote objects, concepts, events, actions, and ideas
+
+\begin{block}{Characters and words are discrete symbols}
+\begin{itemize}
+	\item Words such as ``hamburger'' or ``pizza'' each evoke in us a certain mental representations
+	\item But they are distinct symbols, whose meaning is external to them, to be interpreted in our heads
+	\item No inherent relation between ``hamburger'' and ``pizza'' can be inferred from the symbols or letters themselves
+\end{itemize}
+\end{block}
+	
+\end{frame}
+
+\begin{frame}{Characters and words are discrete symbols}
+
+Compare that to concepts such as \textbf{color} (in machine vision), or acoustic
+signals --- these concepts are \textbf{continuous}
+
+\begin{itemize}
+	\item Colorful image to gray-scale image using a simple mathematical operation
+	\item We can to compare two different colors based on inherent properties such as hue and intensity
+\end{itemize}
+
+\begin{block}{This cannot be easily done with words}
+There is no simple operation to move from the word ``red'' to the word ``pink'' without using a large lookup table or a dictionary
+\end{block}
+
+\end{frame}
+
+
+\begin{frame}{Language is compositional}
+Letters $\to$ words $\to$ phrases $\to$ sentences
+
+The meaning of a phrase can be larger than the meaning of the individual words,	and follows a set of intricate rules
+
+\begin{example}
+Multi-word expressions (``New York'', ``look something up'') \\
+Idioms (``kick the bucket'', ``blue chip'')
+\end{example}
+	
+To interpret a text, we need to work beyond the level of letters and words, and look at long sequences of words such as sentences, or even complete documents.
+\end{frame}
+
+
+\begin{frame}{Data sparseness}
+
+Combinations of words to form meanings $\to \infty$
+
+\begin{itemize}
+	\item We could never enumerate all possible valid sentences
+\end{itemize}
+
+
+No clear way of generalizing from one sentence to another, or defining the similarity between sentences, that does not depend on their meaning which is unobserved to us
+
+
+\begin{block}{Challenging when learning from examples}
+Even with a huge example set we are very likely to observe events that never occurred in the example set and that are very different
+\end{block}
+
+\end{frame}
+
+\section{Towards supervised machine learning on text data}
+
+\begin{frame}{Mathematical notation}
+
+\begin{block}{Scalars, vectors, matrices}
+
+Lowercase letters represent scalars: $x, y, b$
+	
+Bold lowercase letters represent vectors: $\bm{w}, \bm{x}, \bm{b}$
+
+Bold uppercase letters represent matrices: $\bm{W}, \bm{X}$
+
+\end{block}
+
+\begin{block}{Indexing}
+	
+$[ . ]$ as the index operator of vectors and matrice
+
+$\bm{b}_{[i]}$ is the $i$-th element of vector $\bm{b}$
+
+$\bm{W}_{[i,j]}$ is the $i$-th row, $j$-th column of matrix $\bm{W}$
+\end{block}
+
+\end{frame}
+
+
+\begin{frame}{Notation}
+	
+\begin{block}{Sequences}
+
+$\bm{x}_{1:n}$ is a sequence of vectors $\bm{x}_1, \ldots, \bm{x}_n$
+
+$[\bm{v}_1 ; \bm{v}_2]$ is vector concatenation
+	
+\end{block}
+	
+\begin{block}{Note! We use vectors as \emph{row} vectors}
+%Unless otherwise stated, vectors are (somewhat unorthodox) \textbf{row} vectors
+$$
+\bm{x} \in \mathbb{R}^{d}
+$$
+\end{block}
+
+Example $d = 5$:
+$$
+\bm{x} = \begin{pmatrix}
+1 & 2 & 3 & 4 & 5
+\end{pmatrix}
+$$
+which is simply a list (1-d array) of numbers $(1, 2, 3, 4, 5)$
+
+\end{frame}
+
+\begin{frame}{Multiplication example}
+	
+$$
+\bm{x} \in \mathbb{R}^{d_{in}} \qquad
+\bm{W} \in \mathbb{R}^{d_{in} \times d_{out}} \qquad
+\bm{b} \in \mathbb{R}^{d_{out}}
+$$
+
+
+\begin{block}{Example: $\bm{y} = \bm{x} \bm{W} + \bm{b}$, $d_{in} = 3$, $d_{out} = 2$}
+	$$
+	\begin{pmatrix}
+		\bm{x}_{[1]} & \bm{x}_{[2]} & \bm{x}_{[3]}
+	\end{pmatrix}
+	\begin{pmatrix}
+		\bm{W}_{[1,1]} & \bm{W}_{[1,2]} \\
+		\bm{W}_{[2,1]} & \bm{W}_{[2,2]} \\
+		\bm{W}_{[3,1]} & \bm{W}_{[3,2]} \\
+	\end{pmatrix}
+	+
+	\begin{pmatrix}
+		\bm{b}_{[1]} & \bm{b}_{[2]}
+	\end{pmatrix}
+	=
+	\begin{pmatrix}
+		\bm{y}_{[1]} & \bm{y}_{[2]}
+	\end{pmatrix}
+	$$
+\end{block}
+	
+\end{frame}
+
+
+
+\begin{frame}{Multiplication simplified with dot product $\bm{u} \cdot \bm{v} = \sum_i \bm{u}_{[i]} \bm{v}_{[i]}$}
+	
+\begin{block}{Example: $\bm{y} = \bm{x} \bm{W} + \bm{b}$, $d_{in} = 3$, $d_{out} = 1$}
+$\bm{x} \in \mathbb{R}^{d_{in}} \qquad
+\bm{W} \in \mathbb{R}^{d_{in} \times d_{out}} \qquad
+\bm{b} \in \mathbb{R}^{d_{out}}$
+	$$
+	\begin{pmatrix}
+		\bm{x}_{[1]} & \bm{x}_{[2]} & \bm{x}_{[3]}
+	\end{pmatrix}
+	\begin{pmatrix}
+		\bm{W}_{[1,1]}  \\
+		\bm{W}_{[2,1]}  \\
+		\bm{W}_{[3,1]}  \\
+	\end{pmatrix}
+	+ b
+	= y
+	$$
+\end{block}
+
+
+\begin{block}{Equivalent dot product: $y = \bm{x} \cdot \bm{w} + b$, $d_{in} = 3$, $d_{out} = 1$}
+$\bm{x} \in \mathbb{R}^{d_{in}} \qquad
+\bm{w} \in \mathbb{R}^{d_{out}} \qquad
+b \in \mathbb{R}$
+	$$
+	\begin{pmatrix}
+		\bm{x}_{[1]} & \bm{x}_{[2]} & \bm{x}_{[3]}
+	\end{pmatrix}
+	\cdot
+	\begin{pmatrix}
+		\bm{w}_{[1]} & \bm{w}_{[2]} & \bm{w}_{[3]}
+	\end{pmatrix}
+	+ b
+	= y
+	$$
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Towards supervised classification setup}
+
+%Goal: Design an algorithm whose input is a set of labeled examples, and its output is a function that receives an instance and produces the desired label
+
+We often restrict ourselves to search over specific families of functions, e.g., the space of all linear functions with $d_{in}$ inputs and $d_{out}$ outputs
+
+
+\begin{itemize}
+	\item By restricting to a specific hypothesis class, we are injecting the learner with \textbf{inductive bias} (a set of assumptions about the form of the desired solution)
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{High-dimensional linear functions}
+Function $f(\bm{x}) : \mathbb{R}^{d_{in}} \to \mathbb{R}^{d_{out}}$
+$$f(\bm{x}) \text{ or }
+f(\bm{x}; \underbrace{\bm{W}, \bm{b}}_{\mathclap{\text{Explicit parameters}}})
+= \bm{x} \bm{W} + \bm{b}$$
+where
+$\bm{x} \in \mathbb{R}^{d_{in}} \qquad
+\bm{W} \in \mathbb{R}^{d_{in} \times d_{out}} \qquad
+\bm{b} \in \mathbb{R}^{d_{out}}$
+
+Vector $\bm{x}$ is the \textbf{input}, matrix $\bm{W}$ and vector $\bm{b}$ are the \textbf{parameters} --- typically denoted $\Theta = \bm{W}, \bm{b}$
+
+\begin{block}{Goal of learning}
+Set the values of the parameters $\bm{W}$ and $\bm{b}$ such that
+the function behaves as intended on a collection of input values
+$\bm{x}_{1:k} = \bm{x}_1, \ldots, \bm{x}_k$ 
+and the corresponding desired outputs
+$\bm{y}_{1:k} = \bm{y}_1, \ldots, \bm{y}_k$
+\end{block}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Binary classification}
+
+Function $f(\bm{x}) : \mathbb{R}^{d_{in}} \to \mathbb{R}$
+$$f(\bm{x}) \text{ or }
+f(\bm{x}; \underbrace{\bm{w}, \bm{b}}_{\mathclap{\text{Explicit parameters}}})
+= \bm{x} \cdot \bm{w} + b$$
+
+However, for binary text classification
+\begin{itemize}
+	\item Our input is in the form of a natural language text
+	\item Our labels are two categories, e.g., positive and negative
+\end{itemize}
+
+\begin{block}{Let's start with the labels}
+Very easy: Just arbitrarily map the categories into $0$ and $1$ (e.g., negative = $0$, positive = $1$)
+\end{block}
+
+\end{frame}
+
+
+
+\section{Numerical representation of natural language text}
+
+
+\begin{frame}{Goal: Transform text into a fixed-size vector of real numbers}
+
+What's our setup:
+$$f(\bm{x}) : \mathbb{R}^{d_{in}} \to \mathbb{R} \qquad
+f(\bm{x}) = \bm{x} \cdot \bm{w} + b$$
+
+What we need:
+$$\bm{x} \in \mathbb{R}^{d_{in}}$$
+
+What we have:
+
+\emph{One of my favorite movies ever,The Shawshank Redemption is a modern day classic as it tells the story of two inmates who become friends and find solace over the years in which this movie takes place.Based on a Stephen King novel, ...}
+
+\end{frame}
+
+
+\begin{frame}{What is a ``word''?}
+
+A matter of debate among linguists, answer not always clear
+
+Very simplistic definition: words are sequences of letters separated by whitespace
+
+But: \texttt{dog}, \texttt{dog?}, \texttt{dog.}, and \texttt{dog)} would be different words
+
+Better: words separated by whitespace or punctuation
+
+A process called \textbf{tokenization} splits text into tokens based on whitespace and punctuation
+
+\begin{itemize}
+	\item English: the job of the tokenizer is quite simple
+	\item Hebrew, Arabic: sometimes without whitespace
+	\item Chinese: no whitespaces at all
+\end{itemize}
+
+
+\begin{tikzpicture}[overlay, remember picture] 
+	\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Goldberg.2017} \par};
+\end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}{Tokens}
+	
+Symbols \texttt{cat} and \texttt{Cat} have the same meaning, but are they the same word?
+
+Something like \texttt{New York}, is it two words, or one?
+
+\begin{itemize}
+	\item We distinguish between words and tokens
+	\item We refer to the output of a tokenizer as a token, and to the meaning-bearing units as words
+\end{itemize}
+
+\begin{block}{Keep in mind}
+We use the term \textbf{word} very loosely, and take it to be interchangeable with \textbf{token}.
+
+In reality, the story is more complex than that.	
+\end{block}
+	
+\end{frame}
+
+
+
+\begin{frame}{Vocabulary}
+
+We build a fix-sized static \textbf{vocabulary} (e.g., by tokenizing training data)
+
+\begin{itemize}
+	\item Typical sizes: 20,000 -- 100,000 words
+\end{itemize}
+
+\bigskip
+
+Each word has a unique fixed index
+$$
+V = \begin{pmatrix}
+\text{a}_1 & \text{abandon}_2 & \ldots & \text{cat}_{852} & \ldots & \text{zone}_{2,999} & \text{zoo}_{3,000}
+\end{pmatrix}
+$$
+
+\end{frame}
+
+\begin{frame}{(Averaged) Bag-of-words}
+$$
+\bm{x} = \frac{1}{|D|} \sum_{i =1}^{|D|} \bm{x}^{D_{[i]}}
+$$
+$D_{[i]}$ -- word in doc $D$ at position $i$, $\bm{x}^{D_{[i]}}$ -- one-hot vector
+
+\begin{block}{Example: a cat sat $\to$ \texttt{a}, \texttt{cat}, \texttt{sat}}
+$
+V = \begin{pmatrix}
+	\text{a}_1 & \text{abandon}_2 & \ldots & \text{cat}_{852} & \ldots & \text{zone}_{2,999} & \text{zoo}_{3,000}
+\end{pmatrix}
+$
+$
+\begin{aligned}
+\text{a} & = \bm{x}^{D_{[1]}} =
+\begin{pmatrix}
+1_1 & 0_2 & 0_3 & \ldots & 0_{2,999} & 0_{3,000}
+\end{pmatrix} \\
+\text{cat} &= \bm{x}^{D_{[2]}} =
+\begin{pmatrix}
+0_1 & \ldots & 1_{852} & \ldots & 0_{2,999} & 0_{3,000}
+\end{pmatrix} \\
+\text{sat} &= \bm{x}^{D_{[3]}} =
+\begin{pmatrix}
+0_1 & \ldots & 1_{2,179} & \ldots & 0_{2,999} & 0_{3,000}
+\end{pmatrix}
+\end{aligned}
+$
+
+
+
+	
+\end{block}
+
+	
+\end{frame}
+
+
+\begin{frame}{Averaged bag-of-words example: $\bm{x} \in \mathbb{R}^{3,000}$}
+
+\begin{block}{Example: a cat sat $\to$ \texttt{a}, \texttt{cat}, \texttt{sat}}
+
+$
+\begin{aligned}
+	\text{a} & = \bm{x}^{D_{[1]}} =
+	\begin{pmatrix}
+		1_1 & 0_2 & 0_3 & \ldots & 0_{2,999} & 0_{3,000}
+	\end{pmatrix} \\
+	\text{cat} &= \bm{x}^{D_{[2]}} =
+	\begin{pmatrix}
+		0_1 & \ldots & 1_{852} & \ldots & 0_{2,999} & 0_{3,000}
+	\end{pmatrix} \\
+	\text{sat} &= \bm{x}^{D_{[3]}} =
+	\begin{pmatrix}
+		0_1 & \ldots & 1_{2,179} & \ldots & 0_{2,999} & 0_{3,000}
+	\end{pmatrix}
+\end{aligned}
+$
+	
+\end{block}
+$$
+\begin{aligned}
+\bm{x} &= \frac{1}{|D|} \sum_{i =1}^{|D|} \bm{x}^{D_{[i]}} \\
+&= \begin{pmatrix}
+	0.33_1 & 0_2 & \ldots & 0_{851} & 0.33_{852} & 0_{853} & \ldots & 0.33_{2,179} & \ldots & 0_{3,000}
+\end{pmatrix}	
+\end{aligned}
+$$
+	
+
+		
+\end{frame}
+
+
+\begin{frame}{Out-of-vocabulary (\texttt{UNK}) tokens}
+	
+Words in a language are very unevenly distributed (Zipf's law)
+
+\begin{itemize}
+	\item There is always a large `tail' of rare words
+\end{itemize}
+
+When building the vocabulary, use the most frequent words, all others represented by an unknown token (\texttt{UNK} or \texttt{OOV})
+
+
+\begin{block}{Example vocabulary, most common 3,000 words and \texttt{UNK}}
+$
+V = \begin{pmatrix}
+	\text{a}_1 & \text{abandon}_2 & \ldots & \text{zone}_{2,999} & \text{zoo}_{3,000} & \text{UNK}_{3,001}
+\end{pmatrix}
+$
+\end{block}
+
+\begin{itemize}
+	\item In machine translation, how to translate the \texttt{UNK} word?
+\end{itemize}
+
+\begin{tikzpicture}[overlay, remember picture] 
+	\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Koehn.2020} \par};
+\end{tikzpicture}	
+	
+
+\end{frame}
+
+
+\begin{frame}{Subword units: Byte-pair encoding}
+
+\begin{enumerate}
+	\item The words in the corpus are split into characters (marking original spaces with a special space character) --- this is the initial vocabulary $V$
+	\item The most frequent pair of characters is merged and added to $V$
+	\item Repeat 2 for a fixed given number of times
+	\item Each of these steps increases $V$ by one, beyond the original inventory of single characters
+\end{enumerate}
+
+When done over large corpora with multiple languages and writing systems, BPE prevents OOV!
+
+\end{frame}
+
+
+\begin{frame}{Byte-pair encoding example on a toy corpus (part 1)}
+
+\texttt{t h i s \_ f a t \_ c a t \_ w i t h \_ t h e \_ h a t \_ i s \_ i n \_ t h e \_ c a v e  \_ o f \_ t h e \_ t h i n \_ b a t}
+
+Most frequent: \texttt{t h} (6 times), merge into a single token
+
+\texttt{th i s \_ f a t \_ c a t \_ w i th \_ th e \_ h a t \_ i s \_ i n \_ th e \_ c a v e  \_ o f \_ th e \_ th i n \_ b a t}
+
+Most frequent: \texttt{a t} (4 times), merge into a single token
+
+\texttt{th i s \_ f at \_ c at \_ w i th \_ th e \_ h at \_ i s \_ i n \_ th e \_ c a v e  \_ o f \_ th e \_ th i n \_ b at}
+
+
+Now the most frequent token pair is th e, which occurs 3 times.
+Merging these creates a full word.
+th i s f at c at w i th the h at i s i n the c a v e o f the
+th i n b at
+
+
+\end{frame}
+
+\begin{frame}{Byte-pair encoding example on a toy corpus (part 2)}
+	
+\texttt{th i s \_ f at \_ c at \_ w i th \_ th e \_ h at \_ i s \_ i n \_ th e \_ c a v e  \_ o f \_ th e \_ th i n \_ b at}
+
+Most frequent: \texttt{th e} (3 times), merge into a single token
+
+\texttt{th i s \_ f at \_ c at \_ w i th \_ the \_ h at \_ i s \_ i n \_ the \_ c a v e  \_ o f \_ the \_ th i n \_ b at}
+
+$V = \{
+\text{\texttt{t, h, i, s, \_, f, a, c, w, e, n, v, o, f, b, th, at, the}}
+\}$
+
+
+\begin{tikzpicture}[overlay, remember picture] 
+	\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize At the end of this process, the most frequent words will emerge as single tokens, while rare words consist of still unmerged subwords \par};
+\end{tikzpicture}	
+
+\end{frame}
+
+\begin{frame}{SentencePiece: A variant of byte pair encoding}
+
+\begin{block}{Byte-pair example. Word splits indicated with \texttt{@@}.}
+\texttt{[the] [relationship] [between] [Obama] [and] [Net@@] [any@@] [ahu] [is] [not] [exactly] [friendly] [.]}
+\end{block}
+
+SentencePiece escapes the whitespace with \texttt{\_} and tokenizes the input into an arbitrary subword sequence
+
+\begin{block}{SentencePiece example of "Hello world."}
+\texttt{[Hello] [\_wor] [ld] [.]}
+\end{block}
+
+Lossless tokenization --- all the information to reproduce the normalized
+text is preserved
+
+\begin{tikzpicture}[overlay, remember picture] 
+	\node at (current page.north east)[anchor = north east, text width=4cm, yshift=-1.3cm] {\scriptsize \fullcite{Kudo.Richardson.2018.EMNLP} \par};
+\end{tikzpicture}	
+
+\end{frame}
+
+\begin{frame}{Recap: Transform text into a fixed-size vector of real numbers}
+	
+What's our setup:
+$$f(\bm{x}) : \mathbb{R}^{d_{in}} \to \mathbb{R} \qquad
+f(\bm{x}) = \bm{x} \cdot \bm{w} + b$$
+
+What we need:
+$$\bm{x} \in \mathbb{R}^{d_{in}}$$
+	
+What we have:
+	
+\emph{One of my favorite movies ever,The Shawshank Redemption is a modern day classic  ...}
+
+Simple solution:
+
+\begin{itemize}
+	\item Bag-of-words (tokenized), $d_{in} = |V|$
+\end{itemize}
+	
+\end{frame}
+
+
+
+
+\section{Binary text classification}
+
+
+\subsection{Binary classification as a function}
+
+\begin{frame}{Linear function and its derivatives}
+	
+We have this linear function
+$$f(\bm{x}) : \mathbb{R}^{d_{in}} \to \mathbb{R} \qquad
+f(\bm{x}) = \bm{x} \cdot \bm{w} + b = \bm{x}_{[1]} \bm{w}_{[1]} + \ldots + \bm{x}_{[d_{in}]} \bm{w}_{[d_{in}]} + b $$
+
+\begin{block}{Derivatives wrt.\ parameters $\bm{w}$ and $b$}
+$$
+\dv{f}{\bm{w}_{[i]}} = \bm{x}_{[i]} \qquad \dv{f}{b} = 1
+$$
+\end{block}
+
+
+\end{frame}
+
+
+\begin{frame}{Non-linear mapping to $[0, 1]$}
+
+We have this linear function
+$$f(\bm{x}) : \mathbb{R}^{d_{in}} \to \mathbb{R} \qquad
+f(\bm{x}) = \bm{x} \cdot \bm{w} + b$$
+which has an unbounded range $(-\infty, +\infty)$
+
+\bigskip
+
+However, each example's label is $y \in \{0, 1\}$
+
+\end{frame}
+
+
+\begin{frame}{Sigmoid (logistic) function}
+
+\begin{block}{Sigmoid function $\sigma(t) : \mathbb{R} \to \mathbb{R}$}
+	$$
+	\sigma(t) = \frac{\exp(t)}{\exp(t) + 1} = \frac{1}{1 + \exp(-t)}
+	$$
+\end{block}
+
+
+\begin{figure}
+\begin{tikzpicture}
+
+\begin{axis}[
+	xmin = -10, xmax = 10,
+	ymin = 0, ymax = 1,
+	xtick distance = 5,
+	ytick distance = 0.5,
+	grid = both,
+	minor tick num = 5,
+	major grid style = {lightgray},
+	minor grid style = {lightgray!25},
+	width = 0.9\textwidth,
+	height = 0.35\textwidth,
+	legend pos = north west
+	]
+	
+	\addplot[
+	domain = -10:10,
+	samples = 200,
+	smooth,
+	thick,
+	blue,
+	] {1/(1 + exp(-1 * x))};
+	
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
+Odd function, range of $\sigma(t) \in [0, 1]$, 
+
+	
+\end{frame}
+
+\begin{frame}{Sigmoid $\sigma(t) = \frac{1}{1 + \exp(-t)}$}
+
+\begin{block}{Derivative of sigmoid wrt.\ its input}
+$$
+\begin{aligned}
+\dv{\sigma}{t}
+&=\frac {\exp(t) \cdot (1+\exp(t)) - \exp(t) \cdot \exp(t)}{(1+\exp(t))^{2}} \\
+&= \ldots \\
+&= \sigma(t) \cdot \left( 1- \sigma(t) \right)
+\end{aligned}
+$$	
+\end{block}
+
+
+
+\end{frame}
+
+\begin{frame}{Our binary text classification function}
+
+Linear function through sigmoid --- log-linear model
+$$
+\hat{y} = \sigma(f(\bm{x})) = \frac{1}{1 + \exp(- (\bm{x} \cdot \bm{w} + b))}
+$$	
+
+\begin{figure}
+\begin{tikzpicture}	
+	%\node (a1) [draw, circle, inner sep=0pt, minimum width=0.75cm, fill=green!20] {$a_1$};
+	\node (x) [constant] {$\bm{x}$};
+	\node (w) [param, below of=x] {$\bm{w}$};
+	\node (b) [param, below of=w] {$b$};
+	
+	\node (f) [neuron, right of=w, xshift=1.5cm] {$\bm{x} \cdot \bm{w} + b$};
+	\node (s) [neuron, right of=f, xshift=1.5cm] {$\sigma$};
+	
+	\begin{scope}[thick, black, ->, >=latex]
+		\draw (x) -- (f);
+		\draw (w) -- (f);
+		\draw (b) -- (f);
+		\draw (f) -- (s);
+	\end{scope}	
+\end{tikzpicture}
+\caption{Computational graph; green circles are trainable parameters, gray are inputs}
+\end{figure}
+	
+\end{frame}
+
+\begin{frame}{Decision rule of log-linear model}
+	
+Log-linear model
+$
+\hat{y} = \sigma(f(\bm{x})) = \frac{1}{1 + \exp(- (\bm{x} \cdot \bm{w} + b))}
+$	
+
+\begin{itemize}
+	\item Prediction = 1 if $\hat{y} > 0.5$	
+	\item Prediction = 0 if $\hat{y} < 0.5$
+\end{itemize}
+
+\bigskip
+
+Natural interpretation: Conditional probability of prediction = 1 given the input $\bm{x}$
+$$
+\begin{aligned}
+\sigma(f(\bm{x})) &= \Pr(\hat{y} = 1 | \bm{x}) \\
+1 - \sigma(f(\bm{x})) &= \Pr(\hat{y} = 0 | \bm{x})
+\end{aligned}
+$$
+
+\end{frame}
+
+\subsection{Finding the best model's parameters}
+
+\begin{frame}{The loss function}
+	
+Loss function: Quantifies the loss suffered when predicting $\hat{y}$ while the true label is $y$ for a single example. In binary classification:
+$$
+L(\hat{y}, y): \mathbb{R}^2 \to \mathbb{R}
+$$
+
+
+Given a labeled training set 
+$(\bm{x}_{1:n}, \bm{y}_{1:n})$, 
+a per-instance loss function $L$ and a
+parameterized function $f(\bm{x}; \Theta)$ we define the corpus-wide loss with respect to the parameters $\Theta$ as the average loss over all training examples
+$$
+\mathcal{L}(\Theta) = \frac{1}{n} \sum_{i =1}^{n} L (f(\bm{x}_i; \Theta), y_i)
+$$
+\end{frame}
+
+\begin{frame}{Training as optimization}
+$$
+\mathcal{L}(\Theta) = \frac{1}{n} \sum_{i =1}^{n} L (f(\bm{x}_i; \Theta), y_i)
+$$
+
+The training examples are fixed, and the values of the parameters determine the loss
+
+The goal of the training algorithm is to set the values of the parameters $\Theta$‚ such that
+the value of $\mathcal{L}$ is minimized
+$$
+\hat{\Theta} = \argmin_{\Theta} \mathcal{L}(\Theta) = \argmin_{\Theta} \frac{1}{n} \sum_{i =1}^{n} L (f(\bm{x}_i; \Theta), y_i)
+$$
+
+
+\end{frame}
+
+\begin{frame}{Binary cross-entropy loss (logistic loss)}
+$$
+L_{\text{logistic}} = - y \log \hat{y} - (1 - y) \log (1 - \hat{y})
+$$
+
+\begin{block}{Partial derivative wrt.\ input $\hat{y}$}
+$$
+\dv{L_{\text{Logistic}}}{\hat{y}} =
+- \left(
+\frac{y}{\hat{y}} - \frac{1 - y}{1 - \hat{y}}
+\right)
+=
+- \frac{y - \hat{y}}{ \hat{y} (1 - \hat{y})}
+$$
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Full computational graph}
+\begin{figure}
+	\begin{tikzpicture}	
+		%\node (a1) [draw, circle, inner sep=0pt, minimum width=0.75cm, fill=green!20] {$a_1$};
+		\node (x) [constant] {$\bm{x}$};
+		\node (w) [param, below of=x] {$\bm{w}$};
+		\node (b) [param, below of=w] {$b$};
+		
+		\node (f) [neuron, right of=w, xshift=1.5cm] {$\bm{x} \cdot \bm{w} + b$};
+		\node (s) [neuron, right of=f, xshift=1.5cm] {$\sigma$};
+		
+		\node (l) [neuron, right of=s, xshift=1cm] {$L$};
+		\node (y) [constant, below of=s] {$y$};
+		
+		\begin{scope}[thick, black, ->, >=latex]
+			\draw (x) -- (f);
+			\draw (w) -- (f);
+			\draw (b) -- (f);
+			\draw (f) -- (s);
+			\draw (s) -- (l);
+			\draw (y) -- (l);
+		\end{scope}	
+	\end{tikzpicture}
+	\caption{Computational graph; green circles are trainable parameters, gray are constant inputs}
+\end{figure}
+
+How can we minimize this function?
+
+\begin{itemize}
+	\item Recall Lecture 2: (a) Gradient descent and (b) backpropagation
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{(Online) Stochastic Gradient Descent}
+
+\begin{algorithmic}[1]
+	\Function{SGD}{$f(\bm{x}; \Theta)$, $(\bm{x}_1, \ldots, \bm{x}_n)$, $(\bm{y}_1, \ldots, \bm{y}_n)$, $L$}
+	\While{stopping criteria not met}
+		\State Sample a training example $\bm{x}_i, \bm{y}_i$
+		\State Compute the loss $L(f(\bm{x}_i; \Theta), \bm{y}_i)$
+		\State $\hat{\bm{g}} \gets$ gradient of $L(f(\bm{x}_i; \Theta), \bm{y}_i)$ wrt.\ $\Theta$
+		\State $\Theta \gets \Theta - \eta_t \hat{\bm{g}}$
+	\EndWhile
+	\State \Return $\Theta$
+	\EndFunction
+\end{algorithmic}
+
+Loss in line 4 is based on a \textbf{single training example} $\to$ a rough estimate of the corpus loss $\mathcal{L}$ we aim to minimize
+
+The noise in the loss computation may result in inaccurate gradients
+
+\end{frame}
+
+
+
+\begin{frame}{Minibatch Stochastic Gradient Descent}
+	
+	\begin{algorithmic}[1]
+		\Function{mbSGD}{$f(\bm{x}; \Theta)$, $(\bm{x}_1, \ldots, \bm{x}_n)$, $(\bm{y}_1, \ldots, \bm{y}_n)$, $L$}
+		\While{stopping criteria not met}
+		\State Sample $m$ examples $\{ (\bm{x}_1, \bm{y}_1), \ldots (\bm{x}_m, \bm{y}_m) \}$
+		\State $\hat{\bm{g}} \gets 0$
+		\For{$i = 1$ to $m$}
+			\State Compute the loss $L(f(\bm{x}_i; \Theta), \bm{y}_i)$
+			\State $\hat{\bm{g}} \gets \hat{\bm{g}}\ + $ gradient of $\frac{1}{m} L(f(\bm{x}_i; \Theta), \bm{y}_i)$ wrt.\ $\Theta$
+		\EndFor
+		\State $\Theta \gets \Theta - \eta_t \hat{\bm{g}}$
+		\EndWhile
+		\State \Return $\Theta$
+		\EndFunction
+	\end{algorithmic}
+	
+
+\end{frame}
+
+\begin{frame}{Properties of Minibatch Stochastic Gradient Descent}
+
+The minibatch size can vary in size from $m = 1$ to $m = n$
+
+Higher values provide better estimates of the corpus-wide gradients, while smaller values allow more updates and in turn faster convergence
+
+Lines 6+7: May be easily parallelized
+
+\end{frame}
+
+
+
+\section*{Recap}
+
+\begin{frame}{Take aways}
+	
+\begin{itemize}
+	\item Tokenization is tricky	
+	\item Simplest representation of text as bag-of-word features
+	\item Binary classification as a linear function of words and a sigmoid
+	\item Binary cross-entropy (logistic) loss
+	\item Training as minimizing the loss using minibatch SGD and backpropagation
+\end{itemize}
+	
+\end{frame}
+
+
+
+\begin{frame}{License and credits}
+
+	\begin{columns}
+		\begin{column}{0.7\textwidth}
+			Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+		\end{column}
+		\begin{column}{0.2\textwidth}
+			\includegraphics[width=0.9\linewidth]{img/cc-by-sa-icon.pdf}
+		\end{column}
+	\end{columns}
+	
+	\bigskip
+	
+	Credits
+	
+	\begin{scriptsize}
+		
+		Ivan Habernal
+		
+		Content from ACL Anthology papers licensed under CC-BY \url{https://www.aclweb.org/anthology}
+		
+	\end{scriptsize}
+	
+\end{frame}
+
+
+
+\end{document}
+
