@@ -12,6 +12,10 @@ The content is licenced under [Creative Commons CC BY-SA 4.0](https://creativeco
 
 **Note:** The following content is continuously updated as the summer term progresses. If you're interested in the full previous 2022 content, checkout the latest [2022 Git commit](https://github.com/dl4nlp-tuda/deep-learning-for-nlp-lectures/tree/a59910534ac600a6e8c22fbcde6ae8223a87cda9).
 
+## YouTube Playlist
+
+Subscribe the YouTube playlist to get updates on new lectures: https://youtube.com/playlist?list=PL6WLGVNe6ZcA4gUr5MaAKdrGxYzYAETK3
+
 ## Lecture 1: NLP tasks and evaluation
 
 April 11, 2023
