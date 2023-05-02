@@ -35,6 +35,12 @@ April 25, 2023
 
 * [Slides as PDF](/pdf/dl4nlp2023-lecture03.pdf), [YouTube recording](https://www.youtube.com/watch?v=t7YZ7OgtD5o)
 
+## Lecture 2: Text classification 2: Deep neural networks
+
+May 2, 2023
+
+* [Slides as PDF](/pdf/dl4nlp2023-lecture04.pdf)
+
 
 ## FAQ
 
