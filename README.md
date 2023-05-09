@@ -39,7 +39,7 @@ April 25, 2023
 
 May 2, 2023
 
-* [Slides as PDF](/pdf/dl4nlp2023-lecture04.pdf)
+* [Slides as PDF](/pdf/dl4nlp2023-lecture04.pdf), [YouTube recording](https://www.youtube.com/watch?v=Fk1Y4ycO3aY)
 
 ## Lecture 5: Text generation 1: Language models and word embeddings
 
