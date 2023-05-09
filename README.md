@@ -41,6 +41,13 @@ May 2, 2023
 
 * [Slides as PDF](/pdf/dl4nlp2023-lecture04.pdf)
 
+## Lecture 5: Text generation 1: Language models and word embeddings
+
+May 9, 2023
+
+* [Slides as PDF](/pdf/dl4nlp2023-lecture05.pdf)
+
+
 
 ## FAQ
 
