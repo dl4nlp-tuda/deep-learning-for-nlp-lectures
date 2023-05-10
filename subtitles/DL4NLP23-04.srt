@@ -1,10 +1,10 @@
 1
 00:00:00,000 --> 00:00:02,000
-This computer.
+
 
 2
 00:00:02,000 --> 00:00:02,000
-Great.
+
 
 3
 00:00:02,000 --> 00:00:06,000
@@ -8368,11 +8368,11 @@ If you say something else, say it.
 
 2093
 01:30:37,000 --> 01:30:38,000
-10h.
+tanh.
 
 2094
 01:30:38,000 --> 01:30:39,000
-10h, yes.
+tanh, yes.
 
 2095
 01:30:39,000 --> 01:30:42,000
@@ -8380,11 +8380,11 @@ OK, well, we already had a nonlinear function before.
 
 2096
 01:30:42,000 --> 01:30:43,000
-10h is great.
+tanh is great.
 
 2097
 01:30:43,000 --> 01:30:48,000
-So 10 tangoes hypergolic flux, which maps everything into,
+So tangent hyperbolic, which maps everything into,
 
 2098
 01:30:48,000 --> 01:30:51,000
@@ -8456,7 +8456,7 @@ And we're applying this on each element independently.
 
 2115
 01:31:32,000 --> 01:31:35,000
-So we can use 10h.
+So we can use tanh.
 
 2116
 01:31:35,000 --> 01:31:36,000
