@@ -49,7 +49,7 @@ May 9, 2023
 
 ## Subtitles/Close caption
 
-Thanks to Jan Kühnemund for generating the close caption for YouTube with Open Whisper. We track the subtitles here under `subtitles', so if you spot an error there (there are many, such as "tanh" -> "10h"), just open a bug or PR.
+Thanks to Jan Kühnemund for generating the close caption for YouTube with Open Whisper. We track the subtitles here under `subtitles`, so if you spot an error there (there are many, such as "tanh" -> "10h"), just open a bug or PR.
 
 ## FAQ
 
