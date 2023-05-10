@@ -1,0 +1,3232 @@
+1
+00:01:00,000 --> 00:01:12,000
+Okay, I think we should start. So welcome to the second lecture on deep learning for
+
+2
+00:01:12,000 --> 00:01:20,000
+NLP. Happy to see so many of you here, which is great. And today, okay, so any questions
+
+3
+00:01:20,000 --> 00:01:26,000
+to the last topics, anything which came to your mind and you would like to ask? This
+
+4
+00:01:26,000 --> 00:01:32,000
+is great. Any organizational questions, which we didn't talk about at whatever, Discord
+
+5
+00:01:32,000 --> 00:01:37,000
+Noodle and stuff like that. Everybody's happy with how things are so far. Discord works
+
+6
+00:01:37,000 --> 00:01:44,000
+for you. Okay, cool. Great. So you might have asked, well, what about the exercises and
+
+7
+00:01:44,000 --> 00:01:49,000
+homeworks? So this is in doing, I guess the first exercise will be ready next week, because
+
+8
+00:01:49,000 --> 00:01:55,000
+we have a task force preparing them. And the homeworks, so what we discussed so far, there
+
+9
+00:01:55,000 --> 00:02:02,000
+will be roughly two to three, maybe three to four homeworks overall. Last semester,
+
+10
+00:02:02,000 --> 00:02:06,000
+we had six and it was an overkill, it was just too much. So we thought like three, maybe
+
+11
+00:02:06,000 --> 00:02:15,000
+four homeworks will be the best thing to do. Okay, so these were the things. So stay tuned.
+
+12
+00:02:15,000 --> 00:02:24,000
+And today we're going deep and not like deep learning, but we're going deep into the basics.
+
+13
+00:02:24,000 --> 00:02:35,000
+So why? So let me start with sort of motivation. And I'm going to ask you, who of you, because
+
+14
+00:02:35,000 --> 00:02:40,000
+there's some people who had some machine learning, so who of you knows stochastic gradient descent
+
+15
+00:02:40,000 --> 00:02:49,000
+and back propagation? Raise your hand. Okay, that should be like, yeah, a half or third.
+
+16
+00:02:49,000 --> 00:03:00,000
+Nice. Who of you ever implemented this thing from scratch? Okay, cool. Wow. That's, that's
+
+17
+00:03:00,000 --> 00:03:09,000
+great. I'm gonna ask the rest, why not? So those of you who know these things, why you
+
+18
+00:03:09,000 --> 00:03:17,000
+haven't implemented them from scratch? It's a really curious question. Yes.
+
+19
+00:03:17,000 --> 00:03:23,000
+Okay, they're existing frameworks and they make our life easier. Exactly. Any other,
+
+20
+00:03:23,000 --> 00:03:28,000
+anyone had a different reason for why, why not doing this from scratch and relying on
+
+21
+00:03:28,000 --> 00:03:36,000
+existing frameworks? So I tell you mine, one reason was that, and the second was like,
+
+22
+00:03:36,000 --> 00:03:40,000
+I found it super complicated. Like why, why the heck should I do this? You know, the mathematics
+
+23
+00:03:40,000 --> 00:03:45,000
+and stuff. It's like, I don't understand it at all. So I'm going to use what's out there.
+
+24
+00:03:45,000 --> 00:03:51,000
+And actually understanding things under the hood makes you actually understanding things
+
+25
+00:03:51,000 --> 00:03:58,000
+better and implementing things makes you that understand even more. Right. So who, so those
+
+26
+00:03:58,000 --> 00:04:03,000
+of you who implemented it from scratch, was it, was it a great exercise for you to learn
+
+27
+00:04:03,000 --> 00:04:10,000
+how things actually work under the hood? Was it? Is there somebody who, who kind of hesitated
+
+28
+00:04:10,000 --> 00:04:16,000
+there? Who kind of said like, well, I shouldn't have done that. It's not the case. So that's
+
+29
+00:04:16,000 --> 00:04:24,000
+great. So the goal of this lecture is to go deep, deep into the core of deep learning
+
+30
+00:04:24,000 --> 00:04:29,000
+and even not even touching deep learning and neural networks, but understanding the mathematics
+
+31
+00:04:29,000 --> 00:04:35,000
+behind and how things can be implemented from scratch. So you can, after, after this lecture,
+
+32
+00:04:35,000 --> 00:04:43,000
+you should be able to implement the backbone of deep learning and training neural networks,
+
+33
+00:04:43,000 --> 00:04:49,000
+basically by our own and understanding mathematics behind. That's the goal. Okay. It's, it's kind
+
+34
+00:04:49,000 --> 00:04:53,000
+of challenging. So I don't know how, you know, hopefully it'll work out. So I'm not a mathematician.
+
+35
+00:04:53,000 --> 00:04:57,000
+I'm a computer scientist. I used to hate mathematics before I kind of understood that mathematics
+
+36
+00:04:57,000 --> 00:05:02,000
+is just a, it's a weird language, you know, and they have like so many weird kind of,
+
+37
+00:05:03,000 --> 00:05:08,000
+so to say, speaking of the same thing in very different languages, as we will see. Okay.
+
+38
+00:05:08,000 --> 00:05:13,000
+So if you hate what you see, you can leave. That's fine. No, but I guess there's some,
+
+39
+00:05:13,000 --> 00:05:18,000
+there's a deep need for understanding. So let's dive deeper. And what we won't be covering
+
+40
+00:05:18,000 --> 00:05:24,000
+here today. So we won't cover the abstract mathematics. We won't cover set theory. Okay.
+
+41
+00:05:24,000 --> 00:05:28,000
+But if you want to understand mathematics, what I learned from mathematicians, it's like,
+
+42
+00:05:28,000 --> 00:05:32,000
+you have to understand set theory because everything is, can be expressed in terms of
+
+43
+00:05:32,000 --> 00:05:37,000
+sets, which is the assembler of mathematics, you know, but it kind of sucks because it
+
+44
+00:05:37,000 --> 00:05:41,000
+doesn't give you any advantage of being faster. Like if you program something in assembler,
+
+45
+00:05:41,000 --> 00:05:47,000
+it's faster than in doing in Python. If you do mathematics in set theory, yeah, who cares?
+
+46
+00:05:47,000 --> 00:05:52,000
+So, so you should know something of set theory. So we have sets, sets have elements, there's
+
+47
+00:05:52,000 --> 00:05:58,000
+no ordering and we have ordered tuples. That's enough for us to know. We won't cover number
+
+48
+00:05:58,000 --> 00:06:03,000
+theory because we know there are some, you know, there's some natural numbers and there's
+
+49
+00:06:03,000 --> 00:06:09,000
+real numbers. So we can, we have real numbers. This is given. And there's this weird thing
+
+50
+00:06:09,000 --> 00:06:13,000
+like infinity. So yeah. Okay. That's, that's a weird animal, but we kind of assume there's
+
+51
+00:06:13,000 --> 00:06:19,000
+infinity and as a reason for things, we won't cover sequences and limits, right? So you
+
+52
+00:06:19,000 --> 00:06:23,000
+should kind of know what sequences of real numbers are and what's are the limits because
+
+53
+00:06:23,000 --> 00:06:28,000
+limits are the backbone of derivatives. Okay. So everybody knows what a limit is. Is there
+
+54
+00:06:28,000 --> 00:06:37,000
+anyone in the room who doesn't know limits? Okay, great. Great. So what is important to
+
+55
+00:06:37,000 --> 00:06:42,000
+know? Okay. What is these weird symbols? So R squared, this is the set of real numbers
+
+56
+00:06:42,000 --> 00:06:48,000
+and it's basically a tuple of, you know, two, two real numbers. So a vector or a tuple,
+
+57
+00:06:48,000 --> 00:06:53,000
+two dimensional vector. Okay. So this is like the simplest thing that we start with.
+
+58
+00:06:53,000 --> 00:06:57,000
+Okay. And what, what are the problems we're going to solve? Well, what are you interested
+
+59
+00:06:57,000 --> 00:07:03,000
+in in the first place? So we need to learn how to minimize functions, you know? So this
+
+60
+00:07:03,000 --> 00:07:09,000
+is basically, we need to build the tools in order to train and understand neural networks.
+
+61
+00:07:09,000 --> 00:07:15,000
+And one of the part of that is minimizing functions. So what does it mean? We want to
+
+62
+00:07:15,000 --> 00:07:21,000
+find the minimum of any function. What I'm showing here is a function in like, it could
+
+63
+00:07:21,000 --> 00:07:28,000
+be y is something, something of x, right? So this is the plot. This is the x axis. This
+
+64
+00:07:28,000 --> 00:07:33,000
+is the y axis, just a standard thing. So what is the minimum of any function? How do you
+
+65
+00:07:33,000 --> 00:07:38,000
+find it? Yeah. So you can say, well, I'm going to look, you know, I'm going to have a look
+
+66
+00:07:38,000 --> 00:07:43,000
+at this chart and the minimum is right here. I can see that. Well, this beautiful,
+
+67
+00:07:43,000 --> 00:07:48,000
+but you can't do that, right? Because you don't see the function. You have the prescription
+
+68
+00:07:48,000 --> 00:07:54,000
+of a function and typically you cannot plot it. I mean, if it's easy function, you can do it,
+
+69
+00:07:54,000 --> 00:07:58,000
+something which you learn in high school. So you can do, you know, all these derivatives
+
+70
+00:07:58,000 --> 00:08:02,000
+and secondary about this and blah, blah, blah equals to zero. Yeah. For easy function, that's
+
+71
+00:08:02,000 --> 00:08:06,000
+easy. That's what you did, I guess, in the high school or in some mathematics. But for complicated
+
+72
+00:08:06,000 --> 00:08:10,000
+functions, you will see it's not trivial and it could be super cumbersome to actually try
+
+73
+00:08:10,000 --> 00:08:17,000
+to find the minimum. So what can we, how can we solve this problem is, well, okay, if I ask you,
+
+74
+00:08:17,000 --> 00:08:21,000
+here's a function and find me the minimum. What, as a computer scientist, what would be like the
+
+75
+00:08:21,000 --> 00:08:27,000
+first thing you will try? The most stupid idea to try to find the minimum of a function.
+
+76
+00:08:28,000 --> 00:08:33,000
+You can evaluate a function and you find the output value. What would be like the super
+
+77
+00:08:33,000 --> 00:08:41,000
+easiest thing to try? You are first. You would try exactly. You would. No, no, no. Don't laugh.
+
+78
+00:08:41,000 --> 00:08:46,000
+I mean, you would try a random guesses, right? So you would say, okay, let's pick this X. Yeah.
+
+79
+00:08:47,000 --> 00:08:53,000
+Okay. Why not? Let's pick this one. Yeah. Let's pick this one. Okay. Does it guarantee anything?
+
+80
+00:08:54,000 --> 00:08:56,000
+Yeah, not really. Any other idea?
+
+81
+00:08:57,000 --> 00:09:03,000
+You can look at the neighbors, which is a law. You start with a random.
+
+82
+00:09:03,000 --> 00:09:08,000
+Okay. So you would, I see, you would start here and then just look at neighbors and then see.
+
+83
+00:09:08,000 --> 00:09:14,000
+Okay. That's clever. That's already clever. Something even much worse. Like brute force.
+
+84
+00:09:14,000 --> 00:09:20,000
+I would try all X values and see, okay, for all X, where is the minimum? Yeah. That's the brute
+
+85
+00:09:20,000 --> 00:09:25,000
+force search. It could work. It can't work for unbounded functions. If this were like
+
+86
+00:09:25,000 --> 00:09:30,000
+to infinity, well then I'm doomed. I cannot try all the real numbers, but I could. So this is like
+
+87
+00:09:30,000 --> 00:09:35,000
+the most stupid thing to try would be a brute search. So we should do any better. The random
+
+88
+00:09:35,000 --> 00:09:41,000
+thing. Why not? I mean, I guess it should be something in a, how's it called, the genetic
+
+89
+00:09:41,000 --> 00:09:46,000
+algorithms are using random kind of function optimization. Why not? We should try something
+
+90
+00:09:46,000 --> 00:09:51,000
+better and the neighbors. Yeah. That's a good idea. We're going to utilize, we're going to
+
+91
+00:09:51,000 --> 00:09:56,000
+utilize the curve of, you know, the, the kind of how the function looks like the curve. So,
+
+92
+00:09:57,000 --> 00:10:04,000
+but first what is the function? So we're using the Euler's notation, which is, yeah, we have some
+
+93
+00:10:04,000 --> 00:10:11,000
+arbitrary, but somehow standard naming convention. So we're saying X, the input, Y is typically the
+
+94
+00:10:11,000 --> 00:10:16,000
+output and F is the number of the name of the function. So we write something like that. Right.
+
+95
+00:10:16,000 --> 00:10:21,000
+I mean, this is not rocket science, right? This is Euler notation. What we are saying here is that
+
+96
+00:10:21,000 --> 00:10:29,000
+we have this function from R to R. So it's a mapping from one set to another, and we call this
+
+97
+00:10:29,000 --> 00:10:33,000
+domain and the other we called codomain. Right. So this is like a little bit of terminology. This
+
+98
+00:10:33,000 --> 00:10:37,000
+shouldn't be surprising. I mean, most of that shouldn't be surprising to you, but I'm trying
+
+99
+00:10:37,000 --> 00:10:41,000
+to cover everything to have everyone on board so that we are, if we are talking about something
+
+100
+00:10:41,000 --> 00:10:45,000
+that you've heard it. So, so this is clear. We're using these functions all over the place.
+
+101
+00:10:46,000 --> 00:10:53,000
+Now we have a thing when we have two functions. So we have this function F from reals to reals,
+
+102
+00:10:53,000 --> 00:10:58,000
+and we have a function G from reals to reals. We might stitch them together. Right. We might
+
+103
+00:10:58,000 --> 00:11:05,000
+compose them. And this is the very weird operator, which is kind of saying I'll take the, so this is
+
+104
+00:11:05,000 --> 00:11:12,000
+the circle operator, the function composition. And it's saying I'm first evaluating on F,
+
+105
+00:11:13,000 --> 00:11:18,000
+and then I'm passing that to avoid the G. Okay. So it's like nested function. You call,
+
+106
+00:11:19,000 --> 00:11:23,000
+you put an argument into the G, but you first evaluate F and then turn to G. So basically
+
+107
+00:11:23,000 --> 00:11:29,000
+nested function. What could be a nested function? For example, Y is, I don't know,
+
+108
+00:11:30,000 --> 00:11:36,000
+a two times X square. So this is one function inside and this is the other outside. Okay.
+
+109
+00:11:37,000 --> 00:11:43,000
+What can be misleading here is this kind of very weird operator, this, the circle. So this is how
+
+110
+00:11:43,000 --> 00:11:48,000
+people somehow describe function composition. And you see like, what's coming first, G or F.
+
+111
+00:11:48,000 --> 00:11:52,000
+I never actually, I don't remember. I never remember. So I have to look it up on Wikipedia.
+
+112
+00:11:52,000 --> 00:11:56,000
+So if you see the circle operator, it's function composition. And some people are using that for
+
+113
+00:11:56,000 --> 00:12:01,000
+describing nested functions. I think this is much clearer, right? I mean, you first evaluate
+
+114
+00:12:01,000 --> 00:12:08,000
+the inside and then the outside. Okay. Everybody's with me. Awesome. Good. So we know what function
+
+115
+00:12:08,000 --> 00:12:14,000
+is at least one function from real to real. So single variable input and single variable output.
+
+116
+00:12:15,000 --> 00:12:22,000
+And now let's move to some geometry a little bit. So what is a line? Okay. What is a line? I mean,
+
+117
+00:12:22,000 --> 00:12:28,000
+line has a definition. It's very cool. So in a Cartesian plane, lines are characterized by
+
+118
+00:12:28,000 --> 00:12:34,000
+equations and every line is a set. Okay. Here we're coming to the backbone of mathematics,
+
+119
+00:12:34,000 --> 00:12:42,000
+a set theory. So a line is a set of all points whose coordinates X and Y satisfy a linear equation.
+
+120
+00:12:42,000 --> 00:12:48,000
+So this is why it's called linear equation, right? So we have X and Ys and we have some W1, W2,
+
+121
+00:12:48,000 --> 00:12:55,000
+and W3, which are called coefficients. This again, shouldn't be surprising because everybody
+
+122
+00:12:55,000 --> 00:12:59,000
+should somehow know from the high school what is a linear function. So this is a linear function
+
+123
+00:12:59,000 --> 00:13:04,000
+and linear function describes a line. It's a set of points. Okay, cool. And they have some
+
+124
+00:13:04,000 --> 00:13:11,000
+properties. Okay. So this shouldn't be surprising, right? Everybody's on board with me? Lines is a
+
+125
+00:13:11,000 --> 00:13:21,000
+set of points and it looks like that. So this is a line. Very good. We don't typically use this kind
+
+126
+00:13:21,000 --> 00:13:29,000
+of set oriented definition of a line, but instead we're using the so-called slope intercept form.
+
+127
+00:13:31,000 --> 00:13:36,000
+So slope intercept form is what we know as a basically a function of a line, which is Y is
+
+128
+00:13:36,000 --> 00:13:48,000
+equal a times X plus b. And this a is the slope and this b is the intercept. So this is a simple
+
+129
+00:13:48,000 --> 00:13:55,000
+linear function of one variable, one random number, one real number in and real number out.
+
+130
+00:13:56,000 --> 00:14:04,000
+And if we plot a line here, so this would be like some of our lines, for example, Y is,
+
+131
+00:14:04,000 --> 00:14:08,000
+so a and b would be some actual real numbers and we would have this line.
+
+132
+00:14:09,000 --> 00:14:14,000
+What is interesting is what is slope. So it has a meaning. This slope has a meaning. And if I
+
+133
+00:14:15,000 --> 00:14:22,000
+ask you what is a slope or steepness of the curve, I'm thinking in how, if I'm staying here,
+
+134
+00:14:22,000 --> 00:14:29,000
+how steep things go and how I perceive steepness is not a real number, but as an angle, right?
+
+135
+00:14:29,000 --> 00:14:33,000
+I mean, it's natural to me kind of see steepness of angles between zero and 90 degrees.
+
+136
+00:14:34,000 --> 00:14:40,000
+If you drive a road, there's like 11 degrees steepness, then you pay attention to how we drive.
+
+137
+00:14:41,000 --> 00:14:46,000
+And there's actually a cool relationship between this number, this coefficient, this slope
+
+138
+00:14:47,000 --> 00:14:55,000
+and the angle here. And if you come back to trigonometry and pick a triangle here, then
+
+139
+00:14:56,000 --> 00:15:08,000
+the rise over run is the tangents of this angle, right? So there's a relation between the slope
+
+140
+00:15:08,000 --> 00:15:14,000
+and the angle, and this is tangents, right? It's kind of cool because then I can understand if I
+
+141
+00:15:14,000 --> 00:15:18,000
+see a slope of a curve as a, it's a real number. It could be anything. It could be between
+
+142
+00:15:19,000 --> 00:15:25,000
+minus infinity to plus, well, could be infinity? I don't think so. So something between almost
+
+143
+00:15:26,000 --> 00:15:31,000
+minus infinity and plus infinity, but I can transfer it into an angle and then I see,
+
+144
+00:15:31,000 --> 00:15:35,000
+okay, well, this is like this going that up and that down, because if you know tangents function
+
+145
+00:15:36,000 --> 00:15:40,000
+then, or Arcus tangents, then you can transfer between these two.
+
+146
+00:15:40,000 --> 00:15:46,000
+So if we talk about the slope of a function, then it's a coefficient, like the slope coefficient,
+
+147
+00:15:46,000 --> 00:15:50,000
+but it also has something to do with the angle. Okay, any question?
+
+148
+00:15:50,000 --> 00:15:53,000
+Sounds great. Everybody's with me still. It's a high school mathematics, so it's no surprise. I
+
+149
+00:15:53,000 --> 00:15:58,000
+mean, we shouldn't be doing rocket science here, but building up, you know, really from scratch.
+
+150
+00:16:00,000 --> 00:16:05,000
+So we have lines, we have functions, and now what we want to do in order to minimize the function,
+
+151
+00:16:05,000 --> 00:16:12,000
+we want to approximate a function by a line at a point. Why is it good? Well, because it helps
+
+152
+00:16:12,000 --> 00:16:16,000
+us to find a, you know, to find a cool way to find a minimum of the function later on.
+
+153
+00:16:16,000 --> 00:16:22,000
+But how can we do approximate a line at a point? So let's say, let's pick a point c here,
+
+154
+00:16:23,000 --> 00:16:28,000
+and I want to approximate, let me come in here, and here I want to approximate a function
+
+155
+00:16:29,000 --> 00:16:33,000
+by a line. So this would be like a tangent. Okay.
+
+156
+00:16:36,000 --> 00:16:42,000
+And how can we do that? Well, you can pick a little bit different
+
+157
+00:16:43,000 --> 00:16:49,000
+you can pick a little bit different, sorry, this is, yeah, you can pick a little bit different
+
+158
+00:16:50,000 --> 00:16:54,000
+point nearby and just make this difference smaller and smaller and smaller and smaller
+
+159
+00:16:54,000 --> 00:17:01,000
+and smaller and smaller using trigonometry, and you end up with this limit. So this is a definition
+
+160
+00:17:02,000 --> 00:17:09,000
+of the derivative of this function f at point c, right? So we pick this point, and here
+
+161
+00:17:10,000 --> 00:17:19,000
+this is the, we can approximate by a line. And this derivative at this point is telling us the
+
+162
+00:17:19,000 --> 00:17:27,000
+the slope, right? It's telling how steep we go. Okay. So derivative is the best linear approximation
+
+163
+00:17:27,000 --> 00:17:31,000
+of a function at a point, and it's telling us how fast the function changes there.
+
+164
+00:17:33,000 --> 00:17:38,000
+Okay, everybody's with me? Any questions to derivative? So who hasn't seen derivatives before?
+
+165
+00:17:39,000 --> 00:17:46,000
+Great. So this is no surprise, right? But just, you know, think about it. Yeah, I mean,
+
+166
+00:17:46,000 --> 00:17:52,000
+I can understand the slope. I can approximate a function by the line, and the line is the
+
+167
+00:17:52,000 --> 00:17:56,000
+best approximation of the function at that point, and I'm using the derivative for doing so.
+
+168
+00:17:56,000 --> 00:18:00,000
+And it's telling me how fast the function here is coming up, and I have the exact number,
+
+169
+00:18:01,000 --> 00:18:08,000
+and this will be something like, this function will be actually exactly the derivative at point c,
+
+170
+00:18:09,000 --> 00:18:22,000
+times, how is it? Oh, sorry. Is it like x f derivative f c times x plus f c? Is it possible?
+
+171
+00:18:22,000 --> 00:18:24,000
+Like Taylor expansion, this is correct?
+
+172
+00:18:24,000 --> 00:18:26,000
+It's minus c, I think.
+
+173
+00:18:26,000 --> 00:18:35,000
+x minus c, exactly. Thank you. Yeah. So let me just do it again. Oops. So this would be x minus,
+
+174
+00:18:36,000 --> 00:18:45,000
+oh, what is this? Oh, come on. Oh, yeah. What did I do?
+
+175
+00:18:48,000 --> 00:18:57,000
+Okay. Sorry. So it would be x minus c plus f at c, right? This is the Taylor expansion of a
+
+176
+00:18:57,000 --> 00:19:03,000
+first degree polynomial of Taylor expansion. So this is the exact, and this is the slope, right?
+
+177
+00:19:03,000 --> 00:19:07,000
+You remember the function, we used to have this as a, so this is telling me the slope.
+
+178
+00:19:08,000 --> 00:19:13,000
+So it's telling me how steep is the function changing, or the line
+
+179
+00:19:13,000 --> 00:19:22,000
+approximating function changing at that point. Any questions? Great. So now we have the derivative,
+
+180
+00:19:22,000 --> 00:19:28,000
+and we know what's derivative of the function at the point. So, and we have the definition,
+
+181
+00:19:28,000 --> 00:19:34,000
+and remember, so we have derivative, which is giving us the value at point c. So it's always
+
+182
+00:19:34,000 --> 00:19:40,000
+bound to certain value. If we want to compute a derivative here, we would need to compute a limit
+
+183
+00:19:40,000 --> 00:19:46,000
+again, and just, well, it's boring. So maybe what we want to do instead is to have a function
+
+184
+00:19:48,000 --> 00:19:56,000
+which takes a differentiable function f as input and produces another function
+
+185
+00:19:56,000 --> 00:20:08,000
+at output such that, well, the other function evaluated at c equals to the derivative of f
+
+186
+00:20:08,000 --> 00:20:13,000
+at this point. What does it mean? So an example, let me see, maybe I have an example later on.
+
+187
+00:20:14,000 --> 00:20:24,000
+No. So an example would be, we have that, so f is, I don't know, x square, and what's the
+
+188
+00:20:24,000 --> 00:20:33,000
+derivative of x squared? Okay, what's the derivative of x squared? What is f prime?
+
+189
+00:20:38,000 --> 00:20:45,000
+Say it loud, yeah, say it loud. 2x, yes, thank you, 2x. Right, here we have a little bit of
+
+190
+00:20:45,000 --> 00:20:52,000
+this c and x and so on. So basically we want to, so this would be the function f, then we would have
+
+191
+00:20:52,000 --> 00:21:02,000
+g such that it's 2 times c, because we are changing variables here, right? We would say,
+
+192
+00:21:02,000 --> 00:21:10,000
+okay, the function evaluated at c is 2 times c, which is this derivative, okay? But we typically
+
+193
+00:21:10,000 --> 00:21:16,000
+don't change variables, so we typically say, yeah, well, actually the g, the derivative, sorry,
+
+194
+00:21:16,000 --> 00:21:24,000
+the derivative of f is 2 times x. So this is what we typically do, like, we don't care,
+
+195
+00:21:24,000 --> 00:21:28,000
+this is like one variable and the derivative is another variable and we call them x,
+
+196
+00:21:29,000 --> 00:21:35,000
+although they are different kind of things, a little bit formally. Okay, so everybody's with
+
+197
+00:21:35,000 --> 00:21:40,000
+me, like, what is the, so we can compute now, so this is cool, we can now compute
+
+198
+00:21:41,000 --> 00:21:47,000
+derivative for each point of this function. So what we plug here will give us derivative
+
+199
+00:21:47,000 --> 00:21:52,000
+of this function at this point, okay? So this is like derivative computing function,
+
+200
+00:21:53,000 --> 00:22:00,000
+right? Why I'm saying this? Because then we're coming into the hard part of mathematics,
+
+201
+00:22:00,000 --> 00:22:06,000
+which is the notation, and the notation is awful, I'm telling you. Because this derivative
+
+202
+00:22:06,000 --> 00:22:14,000
+computing function, you can write it as d to dx, and this is not a fraction, this is just one thing,
+
+203
+00:22:15,000 --> 00:22:23,000
+right? So this is not a fraction, this is just how you say, like, d to dx, and then you plug in the
+
+204
+00:22:23,000 --> 00:22:27,000
+function and compute the derivative of the function, like here, so you say, you know,
+
+205
+00:22:27,000 --> 00:22:33,000
+derivative of this function f, but then the notation is, like, inconsistent, it's horrible,
+
+206
+00:22:33,000 --> 00:22:40,000
+because you can write df over dx, but it's not a fraction, or dy dx over dx, and they mean all the
+
+207
+00:22:40,000 --> 00:22:46,000
+same thing. This is the derivative computing function, and you can write it in many different
+
+208
+00:22:46,000 --> 00:22:51,000
+ways. Here you have to choose x, although maybe there's no x in the function, here you have to
+
+209
+00:22:51,000 --> 00:22:56,000
+choose y and x and so on, so it's really ugly. So what you need to understand, that all these
+
+210
+00:22:56,000 --> 00:23:03,000
+are somehow equivalent, and it's just this horrible notation, which makes it kind of clumsy,
+
+211
+00:23:03,000 --> 00:23:08,000
+if you don't know what's behind, okay? So this is one lesson learned, if you read a paper about
+
+212
+00:23:08,000 --> 00:23:13,000
+derivatives, they will use, like, 20 different ways of writing this function, and they might
+
+213
+00:23:13,000 --> 00:23:18,000
+be mostly equivalent, so it's arbitrary decisions, like speaking 10 languages about the same thing, okay?
+
+214
+00:23:18,000 --> 00:23:20,000
+Any questions to this?
+
+215
+00:23:23,000 --> 00:23:27,000
+Let's move on. So we know how to compute the derivative of the function, okay? You're still with me,
+
+216
+00:23:27,000 --> 00:23:31,000
+why we need this? We want to minimize the function, so we want to find the derivative, because it will
+
+217
+00:23:31,000 --> 00:23:38,000
+tell us something about the function later on. Well, if the function is easy, like that one, like
+
+218
+00:23:38,000 --> 00:23:45,000
+x squared, yeah, that's fine. How about we have something more complicated, like sinus of x squared?
+
+219
+00:23:45,000 --> 00:23:47,000
+How can we compute a derivative?
+
+220
+00:23:49,000 --> 00:23:53,000
+Yeah, what do you have to do to compute a derivative of this function?
+
+221
+00:23:55,000 --> 00:23:59,000
+So it consists of two functions, one is sinus and then the other is derivative.
+
+222
+00:23:59,000 --> 00:24:00,000
+Exactly, yes.
+
+223
+00:24:01,000 --> 00:24:04,000
+So the inner function and one is sinus.
+
+224
+00:24:04,000 --> 00:24:08,000
+Right, so we have a compose function here, and there might be some special treatment of that,
+
+225
+00:24:08,000 --> 00:24:13,000
+and we will, it has a name, and it's called a chain rule in English. So there's a chain rule,
+
+226
+00:24:14,000 --> 00:24:19,000
+and it's saying if we have two functions which have derivatives and they're nested,
+
+227
+00:24:19,000 --> 00:24:27,000
+you know, so first f x is inside g x, or f is kind of the input to g, then we
+
+228
+00:24:29,000 --> 00:24:37,000
+take the output of f x, plug it into the derivative of g, and multiply by the derivative of f x.
+
+229
+00:24:37,000 --> 00:24:42,000
+This is the chain rule, okay? Everybody heard of this chain rule before? How to make a derivative of
+
+230
+00:24:43,000 --> 00:24:52,000
+nested functions? If not, make it your friend. Now, chain rule, okay? So you take, basically,
+
+231
+00:24:52,000 --> 00:25:00,000
+you evaluate the function f x, make it to g, and make a derivative of g, and multiply by the
+
+232
+00:25:00,000 --> 00:25:08,000
+derivative of the f x. This is the chain rule. And by the way, here we're using this prime thing,
+
+233
+00:25:08,000 --> 00:25:17,000
+like f prime x as a derivative, and not this d dx of f. So we have two different notations.
+
+234
+00:25:17,000 --> 00:25:22,000
+So here, I'm showing you the Lagrange notation for derivatives of function. I think you know
+
+235
+00:25:22,000 --> 00:25:26,000
+this from physics, right? If you do physics, you know, they're using like this prime. Is it true?
+
+236
+00:25:26,000 --> 00:25:34,000
+Anybody had some physics before? Well, I used to have one before, so this is what people are,
+
+237
+00:25:34,000 --> 00:25:44,000
+I guess, using. So the prime. I'm going to show, again, the same nested function like the chain
+
+238
+00:25:44,000 --> 00:25:48,000
+rule when we were using this kind of ugly notation of the nested functions. So you've
+
+239
+00:25:48,000 --> 00:25:55,000
+seen it at least once. And this is the same. So basically, we're saying, okay, I'm first computing
+
+240
+00:25:55,000 --> 00:26:04,000
+f, plugging it into g, you know, the derivative of g, and multiplying by the derivative of f.
+
+241
+00:26:04,000 --> 00:26:08,000
+So these are equivalent, right? This is the same thing, just written in different language. Here,
+
+242
+00:26:08,000 --> 00:26:13,000
+we're using this operator, the circle thing for function composition. It's the same.
+
+243
+00:26:14,000 --> 00:26:21,000
+And we have one more, which is the most awful notation I've seen, but it's just, it's like,
+
+244
+00:26:21,000 --> 00:26:27,000
+you know, alt API. It's been here for 250 years, 300 years, and nobody wants to ditch it. So we're
+
+245
+00:26:27,000 --> 00:26:31,000
+still using this API and writing derivatives, you know, using this notation, which is the
+
+246
+00:26:31,000 --> 00:26:39,000
+Leibniz notation, 1700-something. And again, we have a function composition f from f and g
+
+247
+00:26:40,000 --> 00:26:49,000
+has input fx. And then using this fraction, which is not a fraction, for derivative of h,
+
+248
+00:26:49,000 --> 00:26:55,000
+then the chain rule is multiplying these two things together. Okay. So basically,
+
+249
+00:26:55,000 --> 00:27:08,000
+all of them are equivalent. Yes. Yeah, that's a good, that's a nice, maybe I had three and I just
+
+250
+00:27:08,000 --> 00:27:14,000
+like, no, it doesn't fit the slides. No, that's typo. So thanks, I'll fix that. Any other question
+
+251
+00:27:14,000 --> 00:27:21,000
+or comment? So I guess we can do like a little bit walkthrough example, because it's important
+
+252
+00:27:21,000 --> 00:27:25,000
+to understand the notation and what we mean by computing this nested derivative. So it's super
+
+253
+00:27:25,000 --> 00:27:33,000
+important for us for minimizing functions. Right. So we have here a composed function, which is y
+
+254
+00:27:33,000 --> 00:27:39,000
+is e to sin x squared. Okay, cool. So it's a composite of three functions, and we can just,
+
+255
+00:27:39,000 --> 00:27:47,000
+we can just give them names. Let's give them names. Okay. So we start here. So the x squared
+
+256
+00:27:47,000 --> 00:27:58,000
+will be function h and the output of that will be v. Okay. Then the sinus thing will have name g.
+
+257
+00:27:59,000 --> 00:28:04,000
+And the input of the sinus is x squared, which we kind of said it's v. Okay. So it's v,
+
+258
+00:28:04,000 --> 00:28:11,000
+sinus v, which is the sinus. Okay, cool. So we gave it names. And then the exponent function,
+
+259
+00:28:11,000 --> 00:28:22,000
+the e to something is this function. And we said this sinus x squared is the u. Okay. So what we're
+
+260
+00:28:22,000 --> 00:28:27,000
+just doing, we're giving in names. So it's easy to see the chain rule. Okay. Everybody's with me
+
+261
+00:28:27,000 --> 00:28:33,000
+with that? Cool. Just giving names, arbitrary names. This is my decision. I said like, okay,
+
+262
+00:28:33,000 --> 00:28:36,000
+this is going to be called u, and it's going to be called g, and it's going to be called h and v.
+
+263
+00:28:38,000 --> 00:28:45,000
+So then these three functions have derivatives, which we can compute. So,
+
+264
+00:28:47,000 --> 00:28:51,000
+and here comes the ugly notation. I'm using both. So here's this Leibniz notation,
+
+265
+00:28:51,000 --> 00:28:57,000
+here is the Lagrange notation. So the derivative of function f, which is e to u,
+
+266
+00:28:58,000 --> 00:29:01,000
+is, what is it? What is derivative of e to something?
+
+267
+00:29:06,000 --> 00:29:12,000
+E to something, exactly the same. Yeah, this is great about it. So, yeah. So this is the derivative.
+
+268
+00:29:12,000 --> 00:29:15,000
+E to something is e to something. So the derivation of that is a beautiful function.
+
+269
+00:29:16,000 --> 00:29:22,000
+And now, okay, so we have the derivative here and some plugging here, because u was
+
+270
+00:29:23,000 --> 00:29:29,000
+sin x squared, so I'm plugging in here. So we have the derivative of y of the function f,
+
+271
+00:29:29,000 --> 00:29:35,000
+or I can write dy to du, you know, using this Leibniz notation. Okay. Everybody knows how we
+
+272
+00:29:35,000 --> 00:29:40,000
+did this. So we basically took this function and make a derivative. And e to u, derivative of that
+
+273
+00:29:40,000 --> 00:29:52,000
+is e to u. E power u. Okay. Cool. The next function was the u is g of v, and it's a sinus.
+
+274
+00:29:52,000 --> 00:29:57,000
+And somebody, somehow you learned at high school, like derivative of sinus is cosinus.
+
+275
+00:29:58,000 --> 00:30:04,000
+So we have now the derivative is cosinus v, and then we plug in the v. So this will be cosinus x
+
+276
+00:30:04,000 --> 00:30:10,000
+squared. Okay. So we kind of, this is also, we have derivative of that. And then the derivative
+
+277
+00:30:10,000 --> 00:30:19,000
+of x squared. Okay. We had it already. So it's 2x. Right. So we know. So now we have derivative of
+
+278
+00:30:19,000 --> 00:30:26,000
+each of these functions. Okay. What is interesting here, that each of the derivatives is using
+
+279
+00:30:27,000 --> 00:30:34,000
+the output of the previous function, right? Because x squared was the function before.
+
+280
+00:30:34,000 --> 00:30:41,000
+And here, sinus x squared was the previous function. Right. Yes.
+
+281
+00:30:41,000 --> 00:30:46,000
+I don't understand why we don't use the chain rule now.
+
+282
+00:30:47,000 --> 00:30:50,000
+We do use the chain rule. Well, we are computing the.
+
+283
+00:30:50,000 --> 00:30:56,000
+We say that e to the power of u is,
+
+284
+00:30:58,000 --> 00:31:05,000
+the derivative of e to the power of u is e to the power of u. Yes. So we're assuming that
+
+285
+00:31:07,000 --> 00:31:13,000
+u is. We're kind of substituting and making this function simple. That's the point. Because
+
+286
+00:31:13,000 --> 00:31:20,000
+they're composed. Right. They're simple functions composed together. And before you apply the chain
+
+287
+00:31:20,000 --> 00:31:25,000
+rule, you have to understand each of these functions and their derivatives to the input.
+
+288
+00:31:25,000 --> 00:31:30,000
+This is the first thing you. I mean, if you do it by per hand, you say, okay, sure, I know what
+
+289
+00:31:30,000 --> 00:31:35,000
+is e to u is. And then I'll go deeper. Okay. I'll ask you in five minutes. Okay. For that. Right.
+
+290
+00:31:36,000 --> 00:31:43,000
+So. So we now know all these derivatives for each of these functions. And now. So this is
+
+291
+00:31:43,000 --> 00:31:47,000
+repeating again from the previous slide. We computed just before. And now we can use the
+
+292
+00:31:47,000 --> 00:31:55,000
+chain rule. And the derivative of the whole function at point a is the product of these three
+
+293
+00:31:57,000 --> 00:32:03,000
+derivatives. Which we computed before, evaluated at a particular point. Okay. So x is a. I'm
+
+294
+00:32:03,000 --> 00:32:10,000
+avoiding this function. Then this function times this function. So this is the chain rule,
+
+295
+00:32:10,000 --> 00:32:16,000
+basically. I mean, you would do it like naively, but we do it like explicitly here by applying
+
+296
+00:32:16,000 --> 00:32:21,000
+really the chain rule for these simple functions. Okay. Does it make sense now? Great. Everybody's
+
+297
+00:32:21,000 --> 00:32:26,000
+with me now. Still. I know it's after lunch and mathematics after lunch is really terrible. I'm
+
+298
+00:32:26,000 --> 00:32:30,000
+really sorry about it. I'm recording this on, I'm putting it on YouTube so you can re-watch that.
+
+299
+00:32:30,000 --> 00:32:38,000
+And there's billions of sources on the internet to do this. I'm doing my way here, which I hope
+
+300
+00:32:38,000 --> 00:32:44,000
+will kind of enlighten some of us and help us to understand more. If you know it already,
+
+301
+00:32:44,000 --> 00:32:50,000
+the better. So you get a different view or maybe you're kind of reaffirming your knowledge. Okay.
+
+302
+00:32:50,000 --> 00:32:55,000
+So everybody's with me here. We took simple functions, make a derivative, and then just
+
+303
+00:32:55,000 --> 00:33:00,000
+make a product of three of them to get this derivative for the whole thing. Okay. Great.
+
+304
+00:33:02,000 --> 00:33:06,000
+So now we know how to make a derivative of a complicated function, because if you look
+
+305
+00:33:07,000 --> 00:33:11,000
+at this function, well, this is not x squared. This is something very weird. It's actually 3
+
+306
+00:33:11,000 --> 00:33:21,000
+minus sin 2x over x. Can you make a derivative of this function? 3 minus sin 2x over x, just
+
+307
+00:33:22,000 --> 00:33:28,000
+per hand. Probably. It will take some time and you would have to do this for each of the function,
+
+308
+00:33:28,000 --> 00:33:33,000
+take a derivative and then make a chain rule. Right. So now we have a really good way how to
+
+309
+00:33:33,000 --> 00:33:40,000
+do it in a structured way. Okay. That's the point. And now we want to find the minimum of the
+
+310
+00:33:40,000 --> 00:33:45,000
+function and we don't want to go like the brute force and we're going to take into account the
+
+311
+00:33:45,000 --> 00:33:52,000
+slope of the function at each point. So what we want to find is such an x that minimizes this
+
+312
+00:33:52,000 --> 00:33:59,000
+function. So this is the, we call it x hat with a hat here. This is some sort of estimate. Right.
+
+313
+00:34:00,000 --> 00:34:06,000
+And we're going to use gradient optimization. And what we need for that is that we can
+
+314
+00:34:06,000 --> 00:34:11,000
+evaluate the function for any x. Right. So we can evaluate it at any point we know what the value of
+
+315
+00:34:11,000 --> 00:34:19,000
+the function is and we can evaluate its derivatives for any point as well. Right. So now we are much
+
+316
+00:34:19,000 --> 00:34:24,000
+clever than before because before that, for the brute force, we just needed what the function
+
+317
+00:34:24,000 --> 00:34:30,000
+values at any point. And we can just go one by one and try and find the minimum. Now we know more
+
+318
+00:34:30,000 --> 00:34:35,000
+about the function because we know not only the value at each point, but also we know the slope
+
+319
+00:34:35,000 --> 00:34:40,000
+of the linear approximation of the function. How is it going to be helpful? Quite a lot.
+
+320
+00:34:42,000 --> 00:34:50,000
+Because we start somewhere, we pick a random value of x. So let's, I don't know, let's start here.
+
+321
+00:34:51,000 --> 00:35:00,000
+Okay. Now we evaluate the gradient here, not the gradient, sorry, the derivative here,
+
+322
+00:35:00,000 --> 00:35:03,000
+the derivative, which is the slope of this linear approximation.
+
+323
+00:35:04,000 --> 00:35:09,000
+And it will be some number, something between here, some positive number. Right.
+
+324
+00:35:11,000 --> 00:35:17,000
+And then we're going to say, okay, this is the direction and strength of change at this point.
+
+325
+00:35:17,000 --> 00:35:26,000
+So this was like x1. And then we're going to take this gradient, we just, sorry, this derivative,
+
+326
+00:35:26,000 --> 00:35:34,000
+we just compute it. Multiply by something, some small constant, and subtract from the actual value.
+
+327
+00:35:36,000 --> 00:35:41,000
+And we arrive at the next point. What exactly it means? So here we have some positive number,
+
+328
+00:35:41,000 --> 00:35:45,000
+we multiply by a positive number. So we have some small positive number here.
+
+329
+00:35:46,000 --> 00:35:51,000
+And we do x1 minus this small positive thing, which moves us somewhere here.
+
+330
+00:35:51,000 --> 00:36:00,000
+And if this eta constant is small enough, we took a step to something which is smaller
+
+331
+00:36:01,000 --> 00:36:06,000
+than our previous position. Okay. So we are somewhere, we look, basically,
+
+332
+00:36:09,000 --> 00:36:14,000
+you know, I have just one direction, and I'm staying at a point. And I only know,
+
+333
+00:36:14,000 --> 00:36:18,000
+and I only know, okay, in this direction, it's going down.
+
+334
+00:36:22,000 --> 00:36:29,000
+And I make a step. So the more, you know, the steeper the slope is, the farther I go.
+
+335
+00:36:30,000 --> 00:36:36,000
+Okay. That's basically it. Because if I'm looking for a minimum, if I'm, you know, if my kind of,
+
+336
+00:36:37,000 --> 00:36:40,000
+if the slope is just, you know, a very tiny angle, I go just a little bit step,
+
+337
+00:36:40,000 --> 00:36:45,000
+because I don't want to overshoot, right? If this is big, I'm going a much bigger step.
+
+338
+00:36:48,000 --> 00:36:54,000
+And I repeat this whole thing over and over. And if I decrease the number of eta,
+
+339
+00:36:54,000 --> 00:36:59,000
+this is called learning rate, I will find a minimum point. It won't be the global minimum,
+
+340
+00:36:59,000 --> 00:37:06,000
+it will be maybe a local minimum, but I can come there using much fewer steps than just,
+
+341
+00:37:06,000 --> 00:37:12,000
+you know, simple brute force search, definitely, or some other methods. Yes?
+
+342
+00:37:12,000 --> 00:37:16,000
+We already got the derivative, so we can mathematically solve for the minimum one?
+
+343
+00:37:18,000 --> 00:37:24,000
+Yeah, and no. You can mathematically solve, absolutely. Right? So remember what you just
+
+344
+00:37:24,000 --> 00:37:29,000
+said. We have a derivative, can we just solve a derivative at high school, like, equals to,
+
+345
+00:37:29,000 --> 00:37:32,000
+you know, second derivative, you know, the first one equals to zero, then the second,
+
+346
+00:37:32,000 --> 00:37:37,000
+if it's positive, then it's minimum maximum, right? Yes, for simple functions, absolutely.
+
+347
+00:37:38,000 --> 00:37:41,000
+I'll ask you in five minutes, okay? Yes?
+
+348
+00:37:41,000 --> 00:37:43,000
+Talking about 2.3?
+
+349
+00:37:43,000 --> 00:37:44,000
+Yes.
+
+350
+00:37:44,000 --> 00:37:51,000
+Isn't it supposed to be like f of x, i plus 1, instead of x, i plus 1?
+
+351
+00:37:51,000 --> 00:37:57,000
+No, no, no, no, no. Why not? Because we're searching for the x. So we're searching,
+
+352
+00:37:58,000 --> 00:38:05,000
+we want to find a point where the function will be smaller than at point, so we are at point x1.
+
+353
+00:38:06,000 --> 00:38:17,000
+Sorry, x1, yes. And if we use this gradient, this function, then the point x2, which will be this
+
+354
+00:38:17,000 --> 00:38:28,000
+one, sorry, let me see. The point x2 will be smaller than x1, so f x1 will be smaller than f x2.
+
+355
+00:38:28,000 --> 00:38:34,000
+So we're moving on the x side, and the gradient is telling us where to go,
+
+356
+00:38:35,000 --> 00:38:42,000
+like, should I go left or right? And then, because you're, basically you're staying on a hill
+
+357
+00:38:42,000 --> 00:38:48,000
+somewhere, on a slope, and you see, like, well, I have to go this direction, then my function will
+
+358
+00:38:48,000 --> 00:38:53,000
+be smaller there, so I'm going there. And how much I'm going, this is the strength, you know,
+
+359
+00:38:53,000 --> 00:38:58,000
+the strength of the slope or the strength of the gradient is how far I should go right now.
+
+360
+00:39:00,000 --> 00:39:07,000
+I'm changing the x, right, because that's what I want to find. I want to find this x here down.
+
+361
+00:39:07,000 --> 00:39:12,000
+So I'm changing the next x where I'm going to evaluate, okay, I'm here, what's my function,
+
+362
+00:39:12,000 --> 00:39:17,000
+what's my derivative, okay, I have to go here again. Does it make sense? I'll try,
+
+363
+00:39:17,000 --> 00:39:21,000
+so I have an example on the next slide, so maybe it will help again. You have a question?
+
+364
+00:39:28,000 --> 00:39:34,000
+What is the u? It's just my variable, I just randomly assigned the u to this gradient at the point.
+
+365
+00:39:37,000 --> 00:39:44,000
+Here, it's this one, it's eta times u.
+
+366
+00:39:48,000 --> 00:39:57,000
+Yeah, okay, so I want to control how far, how long the step will be,
+
+367
+00:39:58,000 --> 00:40:04,000
+because the gradient for the function will be always the same, but maybe I want to just,
+
+368
+00:40:04,000 --> 00:40:09,000
+you know, make shorter steps, so to say. So I'm still taking the gradient into account,
+
+369
+00:40:09,000 --> 00:40:19,000
+but maybe multiply to some small constant. So maybe the theta will be in something like 0.001
+
+370
+00:40:20,000 --> 00:40:25,000
+until 1, right, so I'm taking much smaller steps. It's empirical constant, it's just,
+
+371
+00:40:25,000 --> 00:40:31,000
+you can set it up, it's a hyperparameter, and it's telling like how large step I'm taking
+
+372
+00:40:31,000 --> 00:40:38,000
+given the gradient. Does it answer your question? Okay, any other questions?
+
+373
+00:40:40,000 --> 00:40:44,000
+Great, so this is gradient descent, and now we can, you know, how can we do that? Yes, okay,
+
+374
+00:40:44,000 --> 00:40:50,000
+so let's start, we start randomly, and let's start here, so this is point x1.
+
+375
+00:40:52,000 --> 00:40:59,000
+I'm coming, so this is where I am, I compute a gradient here, so the gradient will be maybe
+
+376
+00:41:01,000 --> 00:41:08,000
+sorry, not really, maybe like that, it's not even better, but it's a line, you have to trust me,
+
+377
+00:41:08,000 --> 00:41:13,000
+okay, so this is a line, and what's the slope? Is it positive or negative here?
+
+378
+00:41:15,000 --> 00:41:24,000
+It's negative, exactly, so I have negative slope, and then the update rule is xi plus 1 is equal to
+
+379
+00:41:24,000 --> 00:41:36,000
+xy minus this theta times, let's call it u, right, the gradient. Since this will be,
+
+380
+00:41:36,000 --> 00:41:43,000
+this is negative, so we'll end up with positive, and I'm gonna, the next step will be this,
+
+381
+00:41:43,000 --> 00:41:48,000
+plus the size of the gradient times some small constant, so I'm gonna move
+
+382
+00:41:49,000 --> 00:41:52,000
+to the right. Ah, cool, this is great, this is what I wanted. I'm here,
+
+383
+00:41:53,000 --> 00:42:00,000
+so doing the same step. Doing the tangent here, so the gradient is still negative, okay, cool,
+
+384
+00:42:01,000 --> 00:42:07,000
+and the gradient is bigger, so which means the next step will be not the same as here,
+
+385
+00:42:07,000 --> 00:42:16,000
+but maybe a little bit larger, a little bit now here. Oh, now I'm here, and my gradient is going
+
+386
+00:42:16,000 --> 00:42:22,000
+to be positive, so the whole thing will be here. I'm substracting a thing, and then I got the
+
+387
+00:42:22,000 --> 00:42:27,000
+gradient is smaller, so maybe I'm jumping right here, okay, and then maybe I will just jump before
+
+388
+00:42:27,000 --> 00:42:35,000
+reaching the minimum. Does it make sense? Sounds easy. So what if we start here?
+
+389
+00:42:37,000 --> 00:42:43,000
+What's gonna happen? Yes? We find a local minimum. Which one?
+
+390
+00:42:46,000 --> 00:42:50,000
+Yeah, maybe this one, right? If we start here, we maybe have no chance to reach here.
+
+391
+00:42:50,000 --> 00:42:56,000
+Well, we might, actually. If we have super large learning rate, we might just, okay,
+
+392
+00:42:56,000 --> 00:43:01,000
+here's my gradient, and the next step, and I'm gonna just overshoot completely here,
+
+393
+00:43:02,000 --> 00:43:07,000
+given this learning rate, and I might just jump left and right. That's why this learning
+
+394
+00:43:07,000 --> 00:43:13,000
+parameter is so crucial, because it tells you, are you going tiny steps? I mean, you can. You can go
+
+395
+00:43:13,000 --> 00:43:17,000
+really, really, really, really tiny steps. It will just take a lot of time to minimize the function,
+
+396
+00:43:17,000 --> 00:43:20,000
+or you might be overshooting. But here, typically, you would reach a local minimum.
+
+397
+00:43:20,000 --> 00:43:22,000
+Is it a good thing or a bad thing?
+
+398
+00:43:27,000 --> 00:43:31,000
+We want a global minimum. So if you reach a... So everybody knows what's a global minimum,
+
+399
+00:43:31,000 --> 00:43:37,000
+local minimum? Yeah, so global, it's like there is no lower point for the function,
+
+400
+00:43:37,000 --> 00:43:41,000
+and local is like, yeah, I mean, some neighborhood of this point, this is a minimum.
+
+401
+00:43:42,000 --> 00:43:46,000
+We want globally, I mean, we want a minimum of the function, we want a global one.
+
+402
+00:43:46,000 --> 00:43:51,000
+Maybe sometimes the local one is good enough. Sometimes we're just happy with local minimum,
+
+403
+00:43:51,000 --> 00:43:56,000
+right? But if we have a convex function, so convex function is something which is
+
+404
+00:43:58,000 --> 00:44:04,000
+like that, then using this gradient-based optimization, we are guaranteed to end up here,
+
+405
+00:44:04,000 --> 00:44:09,000
+in the global one. If we have function which is like that crazy, then, well,
+
+406
+00:44:10,000 --> 00:44:13,000
+you end up with some local minimum. Okay, any questions?
+
+407
+00:44:14,000 --> 00:44:19,000
+Gradient-based optimization or derivative-based optimization for 1D function? Yes?
+
+408
+00:44:27,000 --> 00:44:31,000
+If you have zero, you're getting in trouble. Yes. Or, well, you might have, if you start,
+
+409
+00:44:31,000 --> 00:44:37,000
+let me just delete this. So the question was, if you have maybe this function,
+
+410
+00:44:37,000 --> 00:44:45,000
+and you start exactly here, so the derivative will be zero. Yeah, you're screwed. I mean,
+
+411
+00:44:45,000 --> 00:44:50,000
+yeah, start again. Or, well, this is, this was the chance that you hit just basically the maximum,
+
+412
+00:44:50,000 --> 00:44:56,000
+the chance is slow. What might happen is that you will end up in some sort of valley,
+
+413
+00:44:56,000 --> 00:45:02,000
+I'm sorry, this is not a function, like that, and then there is like nothing happening,
+
+414
+00:45:02,000 --> 00:45:06,000
+nothing happening, and then maybe there's a minimum. This could be a function.
+
+415
+00:45:06,000 --> 00:45:12,000
+So you start here, go down here, and now the gradient will be zero, and you're stuck here.
+
+416
+00:45:13,000 --> 00:45:20,000
+You don't find a minimum. It can typically happen. So zero gradient, bad thing. This would be like
+
+417
+00:45:20,000 --> 00:45:24,000
+super crazy gradients, almost infinity, also bad thing. So you want to be somewhere in the,
+
+418
+00:45:24,000 --> 00:45:31,000
+you know, in between. Okay, any other question? So the algorithm stops when you reach a level
+
+419
+00:45:31,000 --> 00:45:37,000
+where every x plus, x i plus one is equal to the last x i, or? Yeah, the algorithm stops when
+
+420
+00:45:37,000 --> 00:45:44,000
+you decide to run over compute. So you can, you know, either you're, you're really not decreasing
+
+421
+00:45:44,000 --> 00:45:49,000
+anymore, or you reach a number of steps for which you're kind of repeating the whole thing.
+
+422
+00:45:49,000 --> 00:45:54,000
+It's a design choice. You can always check like, well, is it my previous step, is it
+
+423
+00:45:55,000 --> 00:45:59,000
+still higher, then I continue. But if your previous step was like lower, then you stop, maybe. Yes?
+
+424
+00:46:01,000 --> 00:46:08,000
+You can do random starts, exactly. You can just, you can do several random starts,
+
+425
+00:46:09,000 --> 00:46:16,000
+you know, you can start maybe, oh, maybe here first, and then if it fails, and then maybe here,
+
+426
+00:46:16,000 --> 00:46:20,000
+and then you can try several runs with several random seats and find which is one of the minimum.
+
+427
+00:46:20,000 --> 00:46:21,000
+You can do that.
+
+428
+00:46:25,000 --> 00:46:29,000
+Yeah, you want a global minimum, but maybe you have to sacrifice a global minimum, go for a
+
+429
+00:46:29,000 --> 00:46:33,000
+local minimum in some cases, which we will see later on in training neural networks, okay?
+
+430
+00:46:33,000 --> 00:46:38,000
+So this doesn't guarantee you convergence. You can try sampling and stuff like that,
+
+431
+00:46:38,000 --> 00:46:42,000
+but the functions we'll be optimizing are much more complex, complicated, okay?
+
+432
+00:46:43,000 --> 00:46:47,000
+Any other question or point? Yes?
+
+433
+00:46:51,000 --> 00:46:56,000
+I think it's called stochastic, I think it's called gradient descent.
+
+434
+00:46:57,000 --> 00:47:01,000
+I would call it gradient descent, because you take a gradient or derivative,
+
+435
+00:47:02,000 --> 00:47:05,000
+and then you minimize a function based on derivative. I would call it gradient descent.
+
+436
+00:47:08,000 --> 00:47:12,000
+It's not stochastic gradient descent, it's not stochastic. Stochastic has a reasoning gradient
+
+437
+00:47:12,000 --> 00:47:15,000
+descent, and stochastic gradient descent is typical for machine learning, and training
+
+438
+00:47:15,000 --> 00:47:19,000
+in machine learning, sort of. Because the stochastic comes from sampling a random point.
+
+439
+00:47:20,000 --> 00:47:24,000
+We're not there yet. This is just taking derivative, minimizing function, okay?
+
+440
+00:47:24,000 --> 00:47:28,000
+We're not talking about deep learning today at all, which is a good thing, because typically,
+
+441
+00:47:29,000 --> 00:47:35,000
+when I see lectures on function minimization on training with gradient descent, it's mixed with
+
+442
+00:47:35,000 --> 00:47:41,000
+neural networks, and then it's like, oh, this layer, and here, oh, this is just, wow.
+
+443
+00:47:42,000 --> 00:47:47,000
+You can completely decouple these things. You can minimize a function, and then we learn in
+
+444
+00:47:47,000 --> 00:47:51,000
+the next part how to compute a gradient nicely, and then you just use it for deep learning.
+
+445
+00:47:54,000 --> 00:48:02,000
+Okay, so let's move on. Now we had function of one dimension to another, but obviously,
+
+446
+00:48:03,000 --> 00:48:08,000
+the word is more complicated, so we have functions from n dimensions to single number, okay?
+
+447
+00:48:09,000 --> 00:48:14,000
+An example of such a function, well, I have a beautiful one. Anyone knows name of this function?
+
+448
+00:48:14,000 --> 00:48:21,000
+Never mind. I think it's called Rosenbrock function. It's a very famous function,
+
+449
+00:48:21,000 --> 00:48:25,000
+which reads like that, so there's two hyperparameters. You don't have to remember.
+
+450
+00:48:25,000 --> 00:48:28,000
+This is like a nice function, because it's somehow shown to be hard for optimizing.
+
+451
+00:48:28,000 --> 00:48:35,000
+Why is it so? Because it looks like a banana, sort of, banana valley, and here's a minimum at
+
+452
+00:48:36,000 --> 00:48:42,000
+one, one is the minimum, and some techniques, you know, which we are using kind of fail to
+
+453
+00:48:42,000 --> 00:48:46,000
+find this minimum easily or fast enough and so on, so this is a very famous function.
+
+454
+00:48:47,000 --> 00:48:51,000
+By the way, if you want to have these plots, I put, so this is from Colab,
+
+455
+00:48:51,000 --> 00:48:58,000
+and I put links to this Colab plots to the lecture slides to the latex, so if you want to play around
+
+456
+00:48:58,000 --> 00:49:02,000
+with that, just go to the latex source, and you can find the links to the lecture slides.
+
+457
+00:49:02,000 --> 00:49:06,000
+So if you want to play around with that, just go to the latex source, and there's a Colab,
+
+458
+00:49:06,000 --> 00:49:11,000
+which I shared, so you can open it. So this is a nice function, two variables,
+
+459
+00:49:13,000 --> 00:49:18,000
+x and y, and then, you know, we have 3D. Typically, we have much more dimensions.
+
+460
+00:49:20,000 --> 00:49:23,000
+Now, we're coming from the simple derivatives to partial derivatives.
+
+461
+00:49:25,000 --> 00:49:31,000
+So what is partial derivative? It's directional derivative, so it always takes the direction of
+
+462
+00:49:32,000 --> 00:49:37,000
+one of the dimensions, right? If we have two dimensions, there is one derivative in the
+
+463
+00:49:37,000 --> 00:49:43,000
+direction of the one axis and derivative in the direction to the other axis, and with respect to
+
+464
+00:49:43,000 --> 00:49:48,000
+a single variable. So now the terminology or, you know, the naming conventions are kind of hard, so
+
+465
+00:49:49,000 --> 00:49:56,000
+we're using this weird symbol partial for the derivative. So partial derivative of f with
+
+466
+00:49:56,000 --> 00:50:02,000
+respect to x2, this is how we write it, and this is how we read it, and if you had this function,
+
+467
+00:50:02,000 --> 00:50:08,000
+for example, so this is x1 squared times x2 plus cosine of x3, so we have three dimensions.
+
+468
+00:50:09,000 --> 00:50:17,000
+Can you visualize a function of three variables? No, not virtually not, because we need like the
+
+469
+00:50:17,000 --> 00:50:22,000
+fourth dimension for actually showing the output, right? So what we can visualize are two inputs,
+
+470
+00:50:22,000 --> 00:50:26,000
+and the output is like kind of the surface, so we can kind of visualize it and understand
+
+471
+00:50:26,000 --> 00:50:31,000
+what it means if you have three inputs, three minor dimensions and more. I can't do that.
+
+472
+00:50:32,000 --> 00:50:37,000
+You know, human imagination is really bound to the world, three dimensions. So, and now,
+
+473
+00:50:38,000 --> 00:50:43,000
+how we do this kind of partial derivatives is basically we take each variable at a time
+
+474
+00:50:43,000 --> 00:50:50,000
+and treat the rest as constants, right? So for example, the partial derivative with respect to x1
+
+475
+00:50:51,000 --> 00:51:01,000
+will be, so this is a constant, this is zero, so it'll be x2, and then derivative of x1 squared
+
+476
+00:51:02,000 --> 00:51:09,000
+is 2x1, so 2x1 x2, okay? And so on. So who hasn't heard of partial derivatives before?
+
+477
+00:51:11,000 --> 00:51:15,000
+This is great. So partial derivatives, you know, it's, everybody knows that.
+
+478
+00:51:16,000 --> 00:51:20,000
+Okay, good. So this is how we compute the partial derivatives per hand,
+
+479
+00:51:21,000 --> 00:51:27,000
+and then we have a beautiful thing, which is called a gradient. Okay, so here's the example
+
+480
+00:51:27,000 --> 00:51:37,000
+again, and we end up with derivative metrics or a vector, which is called a gradient of f,
+
+481
+00:51:37,000 --> 00:51:46,000
+and this kind of ugly symbol is called nabla, or a gradient. So nabla is basically a vector
+
+482
+00:51:46,000 --> 00:51:52,000
+of partial derivatives for each dimension. Okay, so we have three dimensions, and this is
+
+483
+00:51:53,000 --> 00:51:57,000
+derivative, partial derivative with respect to the first dimension, to the second dimension,
+
+484
+00:51:57,000 --> 00:52:04,000
+and third dimension. So here, the derivative of this function will be basically vector of these
+
+485
+00:52:04,000 --> 00:52:14,000
+three small functions. Okay, any questions? Good, because here the terminology is also kind of
+
+486
+00:52:14,000 --> 00:52:24,000
+confusing, could be. So, yeah, okay, so what the properties of the gradient is that for any of
+
+487
+00:52:24,000 --> 00:52:31,000
+these functions and every point x, the gradient points in the direction of the steepest extent of
+
+488
+00:52:32,000 --> 00:52:41,000
+f at the point x. Well, basically the same thing as with the one dimension. So the gradient, or the
+
+489
+00:52:41,000 --> 00:52:45,000
+derivative of one dimension is saying like, okay, here's my, so here's how steep my function
+
+490
+00:52:45,000 --> 00:52:53,000
+goes here at this point. Now, we have, for example, in two dimensions, so the gradient is telling me
+
+491
+00:52:53,000 --> 00:52:57,000
+I'm staying in a point somewhere in a hill, and the gradient is saying me, or not in a hill, in a valley,
+
+492
+00:52:58,000 --> 00:53:02,000
+and the gradient is telling me, okay, you have to go that far, this direction is the steepest
+
+493
+00:53:02,000 --> 00:53:08,000
+kind of, steepest grow of this function in two dimensions. This is what the gradient is telling
+
+494
+00:53:08,000 --> 00:53:13,000
+me at every point. In two dimensions, it's easy to visualize, you're really sitting in
+
+495
+00:53:13,000 --> 00:53:20,000
+somewhere, staying in the valley, and just look, okay, here's the steepest estimate. Sometimes we call
+
+496
+00:53:20,000 --> 00:53:27,000
+the gradient, the function is here, so this is the gradient, but this is not a real number. And sometimes
+
+497
+00:53:27,000 --> 00:53:32,000
+we call it the vector of concrete numbers computed for the particle input. So this is something
+
+498
+00:53:32,000 --> 00:53:37,000
+you need to somehow take the context into account, because the gradient could be a vector of numbers,
+
+499
+00:53:37,000 --> 00:53:42,000
+which is basically the steepest extent at the point, or it could be just, how can I compute that?
+
+500
+00:53:43,000 --> 00:53:46,000
+Does it make sense? Yes.
+
+501
+00:53:46,000 --> 00:53:53,000
+So the steepest extent at the point of multiple different extent, and also the point of the steepest extent?
+
+502
+00:53:53,000 --> 00:53:59,000
+Yeah, the gradient is the way, is the steepest extent at the point, like the one. This is the
+
+503
+00:53:59,000 --> 00:54:06,000
+vector saying you, okay, you're here, this is my kind of the valley, and here, this is direction of the
+
+504
+00:54:06,000 --> 00:54:11,000
+steepest extent. Right? Yes.
+
+505
+00:54:11,000 --> 00:54:13,000
+That's also just local, right?
+
+506
+00:54:13,000 --> 00:54:18,000
+Yeah, yeah, it's, I mean, you are at a point, and at a point, there is one steepest extent.
+
+507
+00:54:18,000 --> 00:54:23,000
+Could be a different point pointing somewhere else, right? So it's local, exactly. It's a local
+
+508
+00:54:23,000 --> 00:54:26,000
+change of the function.
+
+509
+00:54:26,000 --> 00:54:31,000
+You're using the same method for finding a minima.
+
+510
+00:54:31,000 --> 00:54:37,000
+I'll go there. You're kind of, have you, okay, you're always like two steps before, that's great. So,
+
+511
+00:54:38,000 --> 00:54:41,000
+yes, and exactly, because
+
+512
+00:54:41,000 --> 00:54:51,000
+now we can use it for finding the minima of the multidimensional function, because the gradient is just a,
+
+513
+00:54:51,000 --> 00:54:57,000
+it's the same thing as for one dimension, but we have it for multiple dimensions. So, we can find a minima,
+
+514
+00:54:57,000 --> 00:55:04,000
+or we can find a minimum of multivariate or multivariable function, and so we're looking for a vector,
+
+515
+00:55:05,000 --> 00:55:11,000
+or a position where the function has a minimum. So, we do the same thing as before. We start
+
+516
+00:55:11,000 --> 00:55:18,000
+somewhere random, so random vector, we have n dimensions, then we compute the gradient at this
+
+517
+00:55:18,000 --> 00:55:25,000
+point, so now this is the nabla thing. We have still the eta, this is the learning rate, and we update
+
+518
+00:55:25,000 --> 00:55:32,000
+a step and go somewhere next. And after enough iteration, or some stopping criterion, we have the
+
+519
+00:55:32,000 --> 00:55:39,000
+minimum as we wanted. Okay, so because, I mean, and now you can really visualize it, like you're
+
+520
+00:55:39,000 --> 00:55:46,000
+staying, oh, maybe you have an example, right? You're staying somewhere, so this is the Rosenberg
+
+521
+00:55:46,000 --> 00:55:54,000
+function, okay? You start somewhere here, so, which is like, this is a 3D and this is 2D.
+
+522
+00:55:54,000 --> 00:56:00,000
+You're starting somewhere in this banana woolly shape, and you're in the middle of the mountain
+
+523
+00:56:00,000 --> 00:56:05,000
+somewhere, and you say, like, okay, so I cannot play a theater like the banana thing, but you know, you
+
+524
+00:56:05,000 --> 00:56:10,000
+have to trust me, there's a banana valley here, and I'm staying on the side of the
+
+525
+00:56:10,000 --> 00:56:16,000
+mountain, and saying, like, what is my biggest slope here? So, it's to the mountain. Okay, I'm not
+
+526
+00:56:16,000 --> 00:56:22,000
+going to up, I'm going the other direction, which is the minus, I'm going down here, and I just go down
+
+527
+00:56:22,000 --> 00:56:29,000
+to the woolly. So, I did this large step, because the gradient was huge here, so I just jump here,
+
+528
+00:56:30,000 --> 00:56:35,000
+basically come here to the next little bit of hill in the middle of bananas, I'm saying, okay,
+
+529
+00:56:35,000 --> 00:56:40,000
+what's the, you know, the highest steep, okay, so here I'm going to differ the other direction,
+
+530
+00:56:40,000 --> 00:56:45,000
+downhill to the woolly, and the gradient is getting smaller here, so I'm getting this
+
+531
+00:56:45,000 --> 00:56:50,000
+next step, and compute the gradient, and x net, and here I'm in the woolly already, which means the
+
+532
+00:56:50,000 --> 00:56:55,000
+gradient kind of vanishes, it's smaller and smaller, maybe almost zero, because it's almost flat.
+
+533
+00:56:56,000 --> 00:57:02,000
+So, at each step, I'm getting very small, tiny, forwards to more minimum, more minimum, more
+
+534
+00:57:02,000 --> 00:57:07,000
+minimum, and then I stop here. Is it the final solution? No, this algorithm didn't make it, the
+
+535
+00:57:07,000 --> 00:57:13,000
+final, the true minimum is at 1.1 for this function. But the gradient was so small here, that
+
+536
+00:57:13,000 --> 00:57:19,000
+my stopping criterion told me, like, yeah, I had, like, 100 steps already, and now the changes are
+
+537
+00:57:19,000 --> 00:57:23,000
+so minimal, I'm stopping here, right, so this is why this function is hard to optimize.
+
+538
+00:57:23,000 --> 00:57:28,000
+And it's known for being hard to optimize using standard techniques.
+
+539
+00:57:29,000 --> 00:57:35,000
+Okay, so is the general idea clear? Why are we using the gradient, and what is it telling me?
+
+540
+00:57:36,000 --> 00:57:37,000
+Any questions?
+
+541
+00:57:41,000 --> 00:57:48,000
+Great. Okay, so we know how to minimize a single variable function, we know how to minimize
+
+542
+00:57:48,000 --> 00:57:53,000
+multiple variable functions, so we had this gradient. What's still missing?
+
+543
+00:57:55,000 --> 00:57:58,000
+We know how to do the gradient descent, but what we didn't touch, really?
+
+544
+00:58:01,000 --> 00:58:05,000
+Yeah, the step size is the learning rate, it's a hyperparameter, yes, we touched it a little bit.
+
+545
+00:58:07,000 --> 00:58:12,000
+You can make it smaller, exactly, yeah, we didn't touch it, but there is an even much harder part,
+
+546
+00:58:13,000 --> 00:58:14,000
+is the, yes,
+
+547
+00:58:17,000 --> 00:58:22,000
+yeah, the global minimum, I would kind of like, yeah, it would be nice to have, but maybe that's
+
+548
+00:58:22,000 --> 00:58:28,000
+not, that's unnecessary, the global minimum. No, the point is, so the point is that,
+
+549
+00:58:29,000 --> 00:58:34,000
+what happens when the functions are super heavily nested, like very nested deep functions, so to say,
+
+550
+00:58:34,000 --> 00:58:38,000
+right, because what we saw before was the Rosenbrock, beautiful function, you can do it by
+
+551
+00:58:38,000 --> 00:58:46,000
+hand. Okay, example, we want to minimize this function with respect to w0, w1, to wk. Now,
+
+552
+00:58:46,000 --> 00:58:52,000
+please, who said it, can you write me a partial derivative? Okay, we need a gradient, right,
+
+553
+00:58:52,000 --> 00:59:00,000
+we need a gradient for the output with respect to all these dimensions, so we have k dimensions
+
+554
+00:59:00,000 --> 00:59:04,000
+and very complicated function, well, it's not complicated, it has a name,
+
+555
+00:59:04,000 --> 00:59:13,000
+and we want to find the gradient. Now, can you, can you, yeah, you can, it's wild, you know,
+
+556
+00:59:13,000 --> 00:59:20,000
+you can do like, okay, so it's a sum, then the logarithm, so it's like one over, okay, then,
+
+557
+00:59:20,000 --> 00:59:29,000
+oh, then the sigmoid thing and the, right? Depends on everything, like depends on the k,
+
+558
+00:59:29,000 --> 00:59:32,000
+but you can do that, but it's kind of, it's getting nested, you don't want to do it by hand.
+
+559
+00:59:35,000 --> 00:59:40,000
+Anyone remember, you know, anyone knows what the function is, actually? It's, I didn't make it up,
+
+560
+00:59:40,000 --> 00:59:44,000
+it makes sense, it's one of the, one of the functions we can use in deep learning later on.
+
+561
+00:59:45,000 --> 00:59:55,000
+So, I think this is, this is binary cross-entropy loss for a log-linear function of k variables.
+
+562
+00:59:56,000 --> 01:00:02,000
+It's very shallow deep network, in a way, it's just one layer network and a sigmoid on top of
+
+563
+01:00:02,000 --> 01:00:06,000
+that. We come to that later, but this is, this is the hardest, this is the easiest function you
+
+564
+01:00:06,000 --> 01:00:09,000
+might be optimizing and it's still hard to kind of find the derivatives. Yes?
+
+565
+01:00:13,000 --> 01:00:15,000
+No, why should it be a recursive?
+
+566
+01:00:20,000 --> 01:00:28,000
+Oh, good spot, okay, wow. No, okay, so you know what? I wrote it with the exp, you know, I wrote
+
+567
+01:00:28,000 --> 01:00:35,000
+it like the exponential function, but it didn't look so hard, so I made it look harder using the
+
+568
+01:00:35,000 --> 01:00:40,000
+e number, so this could be, yeah, let's, yeah, like that, this is exponential function, good catch,
+
+569
+01:00:40,000 --> 01:00:48,000
+okay, cool. So, we want a mesh, we want to compute the complicated gradients, right? We want the
+
+570
+01:00:48,000 --> 01:00:54,000
+partial derivatives for complicated functions which are nested. So, we need chain rule for
+
+571
+01:00:54,000 --> 01:01:01,000
+multivariable functions and it's getting very nested now. So, there are some rules which we
+
+572
+01:01:01,000 --> 01:01:05,000
+should maybe know or not or look it up, but there's rules how to do this partial derivatives
+
+573
+01:01:06,000 --> 01:01:08,000
+for two functions. So, let's say we have,
+
+574
+01:01:11,000 --> 01:01:17,000
+we have a variable t and two functions depending on the t, so h and g, and then there's one function
+
+575
+01:01:17,000 --> 01:01:24,000
+z which takes these two functions together, and yeah, so this is the final function, right? This
+
+576
+01:01:24,000 --> 01:01:31,000
+is a nested function of two inner functions depending on one variable, and we want to find a
+
+577
+01:01:31,000 --> 01:01:38,000
+derivative or partial derivative of the final function with respect to this, kind of, the single
+
+578
+01:01:38,000 --> 01:01:44,000
+variable, and we're going to use it, we're going to use this chain rule for multivariable functions.
+
+579
+01:01:44,000 --> 01:01:49,000
+I mean, there's a proof for that, I'm not going to go deeper into that, but just, yeah, this is how
+
+580
+01:01:49,000 --> 01:01:55,000
+it is, this is how it works, you can prove it. And it looks ugly, why? Because we have this partial here,
+
+581
+01:01:55,000 --> 01:01:59,000
+and we have the dx, and what is x, what is y, what is... This is what I meant by, you know,
+
+582
+01:01:59,000 --> 01:02:06,000
+thousand different ways of writing partial derivatives, because you can write it as well
+
+583
+01:02:06,000 --> 01:02:14,000
+as like that, so you say it's partial derivative of f, so you're switching z to f to t, and then
+
+584
+01:02:15,000 --> 01:02:18,000
+using the function names instead of the variable names, and it's correct as well.
+
+585
+01:02:19,000 --> 01:02:27,000
+So that's why, I guess, most of the material of learning multivariate calculus or multivariate
+
+586
+01:02:27,000 --> 01:02:33,000
+optimization is just hard to grasp how the author, like, what is, why partial of f and not
+
+587
+01:02:33,000 --> 01:02:38,000
+for the output function, so because it's arbitrary, it's just one way, you know, to look at this, like,
+
+588
+01:02:38,000 --> 01:02:43,000
+this is Spanish, and maybe this is French, and they're saying the same thing, it's just a different
+
+589
+01:02:43,000 --> 01:02:49,000
+kind of naming conventions and stuff like that, so be aware of that, right? It's notation madness.
+
+590
+01:02:49,000 --> 01:02:56,000
+But this is how you compute a compose function and the chain rule for that, so there is some
+
+591
+01:02:56,000 --> 01:03:02,000
+multiplication and plus. And then if we have more variables, it's getting more complicated, so we
+
+592
+01:03:02,000 --> 01:03:06,000
+have blah blah blah. I'm gonna skip it right now, because, I mean, these rules might be important to
+
+593
+01:03:06,000 --> 01:03:11,000
+look it up, because they later on, we will rely on them, so you've seen them before, but I don't
+
+594
+01:03:11,000 --> 01:03:19,000
+want you to remember this, I mean, something that you perhaps not know, you don't need to
+
+595
+01:03:19,000 --> 01:03:25,000
+remember, but know about it, okay? So we have a chain rule. Why was the chain rule good, actually?
+
+596
+01:03:26,000 --> 01:03:31,000
+Why was it good, the chain rule? Because we could, like, split the function into multiple parts,
+
+597
+01:03:32,000 --> 01:03:38,000
+and then multiply them together. There's some plus as well, so we will be multiplying and
+
+598
+01:03:38,000 --> 01:03:44,000
+stitching things together to get a gradient. Okay, cool, let's try it. So let's try an example.
+
+599
+01:03:44,000 --> 01:03:49,000
+We have still 25 minutes, so I think we'll finish on time. Everybody still with me on board?
+
+600
+01:03:50,000 --> 01:03:54,000
+It's very ugly mathematics, but I think when we survive, you know, you'll be equipped with,
+
+601
+01:03:54,000 --> 01:04:00,000
+you know, understanding. So we have a function, so e here is a variable, okay? This is not like
+
+602
+01:04:01,000 --> 01:04:07,000
+the Euler's number, this is just a variable. e is a plus b times b plus one, so we have two variables,
+
+603
+01:04:08,000 --> 01:04:13,000
+and we want to compute a gradient with respect to a and b. So if I'm going to ask you,
+
+604
+01:04:13,000 --> 01:04:20,000
+can you compute this by hand? Yes, easily, that's super easy. So you have the expression,
+
+605
+01:04:20,000 --> 01:04:24,000
+blah blah blah, and then gradient e to a is b plus one, and so on. This is like high school
+
+606
+01:04:24,000 --> 01:04:30,000
+mathematics, easy. Okay, well, but let's pretend it's a more complicated function and do something
+
+607
+01:04:30,000 --> 01:04:37,000
+much more fancy. So we're going to add, again, some intermediate variable and function names.
+
+608
+01:04:37,000 --> 01:04:42,000
+So this is our function, a something something times something something. So we're going to call
+
+609
+01:04:42,000 --> 01:04:50,000
+this function f1, and it will have two parameters, r and s, and this is r times s. So basically,
+
+610
+01:04:50,000 --> 01:04:57,000
+we're just substituting. So this is going to be a product of two things. Then r is going to be our
+
+611
+01:04:57,000 --> 01:05:04,000
+first parenthesis here, which is a plus b, and the s will be the second parenthesis, b plus one.
+
+612
+01:05:04,000 --> 01:05:08,000
+Okay, everybody's with me? I mean, it's the same thing as we did before, just substituting and
+
+613
+01:05:08,000 --> 01:05:14,000
+giving in names, and making, you know, it's small functions. So it's going to be a composition,
+
+614
+01:05:14,000 --> 01:05:24,000
+basically, of addition and multiplication. Okay, so how can we represent it nicely, in a way?
+
+615
+01:05:24,000 --> 01:05:33,000
+We can use a thing called computational graph, where we basically say we have notes in the graph,
+
+616
+01:05:34,000 --> 01:05:42,000
+and this pink or red, so these pink things are the input variables, and these are the
+
+617
+01:05:42,000 --> 01:05:47,000
+intermediate functions, and they compose to the output function, right? So everybody understands
+
+618
+01:05:47,000 --> 01:05:55,000
+this graph, how it works? Basically, here I'm saying, okay, r, my function is a parameterized
+
+619
+01:05:55,000 --> 01:06:03,000
+by a and b, and it was my a plus b function, right? So it was like the first parenthesis, basically.
+
+620
+01:06:04,000 --> 01:06:13,000
+Kind of this, this one was the second parenthesis, and this is the multiplication.
+
+621
+01:06:14,000 --> 01:06:22,000
+Okay, everybody understands the graph? So it's a direct, you know, okay, a and b will be some
+
+622
+01:06:22,000 --> 01:06:29,000
+concrete real numbers, therefore, the r, s, and e will be also concrete numbers. So how do you
+
+623
+01:06:29,000 --> 01:06:34,000
+evaluate this graph? How do you, if you're given a and b, how do you evaluate the e function? How do
+
+624
+01:06:34,000 --> 01:06:36,000
+you go about it?
+
+625
+01:06:37,000 --> 01:06:45,000
+Yeah, you can, exactly, you can, you need to use the topology of the graph. So you say, oh, s depends
+
+626
+01:06:45,000 --> 01:06:51,000
+on b, then I evaluate r, and then I go to e. Or you can use something different. You can say, oh,
+
+627
+01:06:51,000 --> 01:06:58,000
+give me e, but e says, well, I don't know r and s, so recursion, okay, give me r. So recursion,
+
+628
+01:06:59,000 --> 01:07:06,000
+you can say, oh, give me e, but e says, well, I don't know r and s, so recursion, okay, give me r.
+
+629
+01:07:06,000 --> 01:07:12,000
+Oh, I know a and b, cool, I'm coming back. Oh, s, I need this. Like, basically,
+
+630
+01:07:13,000 --> 01:07:20,000
+recursion and let it compute itself, like, you know, by calling the children of each node.
+
+631
+01:07:20,000 --> 01:07:24,000
+This is, and this is basically a standard computational graph. So if you ever program
+
+632
+01:07:24,000 --> 01:07:29,000
+a calculator, this is most likely what you end up, end it up with, like small functions
+
+633
+01:07:29,000 --> 01:07:36,000
+stitched together. So it's a direct acyclic graph, but it's not a tree, as we saw before,
+
+634
+01:07:36,000 --> 01:07:41,000
+because there could be like this diamond shapes. And each node is differential of the function
+
+635
+01:07:41,000 --> 01:07:47,000
+with arguments. Okay, cool. And the leaves here are the variables or some constants.
+
+636
+01:07:48,000 --> 01:07:51,000
+And this is the function composition. So the arrow is saying basically, yeah, I need this
+
+637
+01:07:51,000 --> 01:07:57,000
+to compute, you know, these are the arguments. And r and s are parents of b and a,
+
+638
+01:07:58,000 --> 01:08:04,000
+of, sorry, r and s are parents, so this is parents of b, and b and a are children of r. Okay,
+
+639
+01:08:04,000 --> 01:08:09,000
+so this shouldn't be any surprising, this is good. Why is this good? Okay, so let's start. We have
+
+640
+01:08:09,000 --> 01:08:14,000
+this graph, and can we do something cool about it? So we can now compute each of these numbers,
+
+641
+01:08:14,000 --> 01:08:19,000
+right? We know what s is, we know what r is, and we know what e is, right? We can do that. We just
+
+642
+01:08:19,000 --> 01:08:26,000
+say compute everything, forward pass, the topology of the graph, or just recursion, okay?
+
+643
+01:08:27,000 --> 01:08:35,000
+So we have these numbers. This is great. What's next? So now, because our goal is to compute
+
+644
+01:08:35,000 --> 01:08:39,000
+the gradient of this function with respect to, so partial derivatives with respect to a and b,
+
+645
+01:08:40,000 --> 01:08:45,000
+but we start at the top. So we start, we want to compute a gradient for each node
+
+646
+01:08:46,000 --> 01:08:53,000
+with respect to e, so the output. And we start here, so the partial derivative of e
+
+647
+01:08:54,000 --> 01:09:00,000
+with respect to e is one. This is something weird, but this is the starting point, like,
+
+648
+01:09:00,000 --> 01:09:06,000
+it makes sense also from calculus perspective. So you start here and saying, okay, this is one.
+
+649
+01:09:06,000 --> 01:09:11,000
+Why is it so? Because if you change e, how much is going to e change? Yeah, once. This is
+
+650
+01:09:15,000 --> 01:09:20,000
+the starting point. So, okay, this is the global output. So the global output is e with respect to
+
+651
+01:09:20,000 --> 01:09:26,000
+node output, and node output is e as well. Yeah, this is boring. So what should we do next?
+
+652
+01:09:27,000 --> 01:09:32,000
+For this node, we can compute the partial derivatives with respect to the argument.
+
+653
+01:09:32,000 --> 01:09:39,000
+So the arguments of this function f1 are r and s. So we're going to compute partial derivative of e
+
+654
+01:09:39,000 --> 01:09:47,000
+to r, or with respect to r, and partial derivative of e with respect to s. Can we compute that?
+
+655
+01:09:47,000 --> 01:09:55,000
+Can we compute what is derivative of e to r? So our function is r times s, right? So what is going
+
+656
+01:09:55,000 --> 01:10:05,000
+to be the derivative with respect to r? s, exactly. And what is going to be derivative of e to s?
+
+657
+01:10:06,000 --> 01:10:11,000
+r, yes, exactly. We just do the simple function and compute the derivatives here. We can do that.
+
+658
+01:10:12,000 --> 01:10:19,000
+So we know how to compute these things. By the way, these will be real numbers, right? I mean,
+
+659
+01:10:19,000 --> 01:10:23,000
+this is just how we compute them, but at the end of the day, these will be some real numbers.
+
+660
+01:10:24,000 --> 01:10:33,000
+All right, so yeah, let's move on. Oh, by the way, we know what s and r is, because we just
+
+661
+01:10:33,000 --> 01:10:37,000
+computed them already before in the forward pass. So we're just going to reuse the computation.
+
+662
+01:10:37,000 --> 01:10:41,000
+We don't have to compute them again. You know, we started here. Oh, okay, this is going to save
+
+663
+01:10:41,000 --> 01:10:48,000
+some time. Everybody's with me in this step? Local derivations with respect to the arguments
+
+664
+01:10:48,000 --> 01:10:53,000
+of the function. Now we're moving next, and we're saying, okay, let's look at the children
+
+665
+01:10:53,000 --> 01:11:00,000
+of this e node. So let's start maybe with r. And again, I'm going to compute the global
+
+666
+01:11:01,000 --> 01:11:09,000
+derivatives, so the partial of e with respect to this output of this function, with respect to r.
+
+667
+01:11:10,000 --> 01:11:18,000
+And now what's kicking in is the chain rule, right? Because I know that e is a compose of f1
+
+668
+01:11:19,000 --> 01:11:26,000
+and r is in there. So I'm going to use the chain rule and just basically multiply these partial
+
+669
+01:11:26,000 --> 01:11:30,000
+derivatives. So this is where the chain rule of multivariate calculus comes in, and I'm using
+
+670
+01:11:30,000 --> 01:11:39,000
+that for computing this sort of gradient, this partial derivative, excuse me. And you might be
+
+671
+01:11:39,000 --> 01:11:47,000
+wondering, oh, I'm computing partial derivative of e with respect to r. I have it here already.
+
+672
+01:11:47,000 --> 01:11:53,000
+Yeah, here it makes no sense, but later on we'll see it will make a lot of sense. But now,
+
+673
+01:11:53,000 --> 01:11:57,000
+actually, I can reuse the same value here, but I'm just going to compute. What I need for this
+
+674
+01:11:57,000 --> 01:12:06,000
+computation is the parent, it's coming from here, times the local derivative from here.
+
+675
+01:12:06,000 --> 01:12:12,000
+This is the chain rule in praxis. Okay, so I can compute it. Very cool. So I'm moving next,
+
+676
+01:12:12,000 --> 01:12:17,000
+to next child of e, and I'm going to do the same thing. So I'm going to compute
+
+677
+01:12:18,000 --> 01:12:26,000
+partial derivative of e with respect to s, which is the parent times the local.
+
+678
+01:12:29,000 --> 01:12:36,000
+This is the chain rule. Okay, everybody's with me? Why do you do this? And it's also nice to
+
+679
+01:12:36,000 --> 01:12:41,000
+graphically, I'm taking like the derivative of the parent, multiply by the path, and this is how to
+
+680
+01:12:41,000 --> 01:12:49,000
+get the derivative of this point. This is pretty cool. Okay, sounds great. So what's the next step?
+
+681
+01:12:49,000 --> 01:12:57,000
+What are we looking at now? Where should we go? What should we avoid next?
+
+682
+01:12:59,000 --> 01:13:04,000
+So, yeah, we started on top and got this thing, then we computed the local derivatives
+
+683
+01:13:04,000 --> 01:13:08,000
+of this function, of this node. We're here, get a global, here get a global,
+
+684
+01:13:08,000 --> 01:13:13,000
+so maybe we should go deeper here and compute the partial derivatives of this function with
+
+685
+01:13:13,000 --> 01:13:21,000
+respect to its arguments. So again, this function f2 of a and b is a plus b.
+
+686
+01:13:23,000 --> 01:13:30,000
+Okay, so, and now the parents are a, sorry, the children are a and b. So what is going to be the
+
+687
+01:13:30,000 --> 01:13:38,000
+derivative of r with respect to a? What is the partial derivative of r with respect to a?
+
+688
+01:13:39,000 --> 01:13:49,000
+If this function is this one? It's going to be one, sorry, yes, one, exactly, because b is a constant,
+
+689
+01:13:49,000 --> 01:13:55,000
+so it's zero, and a is going to be one. Okay, good. What's going to be the derivative of r with respect to b?
+
+690
+01:13:57,000 --> 01:14:02,000
+One as well, yes, exactly. So this is a local function, we can how to compute the derivatives.
+
+691
+01:14:02,000 --> 01:14:09,000
+This is very easy. So I ended up with these derivatives, and okay, this is cool. I'm going to
+
+692
+01:14:09,000 --> 01:14:16,000
+do, I'm going to go deeper now, and I'm taking the child of r, which is going to be a.
+
+693
+01:14:18,000 --> 01:14:23,000
+And now I'm going to compute again the same thing, so global output with respect to this node output,
+
+694
+01:14:23,000 --> 01:14:29,000
+and this node is already the input, so this node output is given. And then again I'm using,
+
+695
+01:14:29,000 --> 01:14:37,000
+okay, what I'm using here, so dE of, with respect to r, which I computed before, okay, I'm taking
+
+696
+01:14:37,000 --> 01:14:45,000
+just the derivative, you know, the parent thing, and I'm again multiplying by the transition here,
+
+697
+01:14:45,000 --> 01:14:52,000
+by the local derivative. So basically I'm always taking the parent's global derivative
+
+698
+01:14:53,000 --> 01:14:58,000
+by multiplying the local derivative. That's all I do, all the time. And here, voila, what we have,
+
+699
+01:14:59,000 --> 01:15:06,000
+partial derivative of E with respect to A. This is what we wanted, this is, I mean, we wanted to
+
+700
+01:15:06,000 --> 01:15:10,000
+compute a gradient, this is one part of the gradient, right, this is one of the variables,
+
+701
+01:15:10,000 --> 01:15:15,000
+and we have the gradient of the output given the input. So this is cool. Let's finish.
+
+702
+01:15:16,000 --> 01:15:23,000
+So the next step is, obviously, we're going to look at the children of S node, and here again we have
+
+703
+01:15:23,000 --> 01:15:30,000
+a partial derivative of S with respect to B, which is going to be, okay, what is this function, f3,
+
+704
+01:15:30,000 --> 01:15:39,000
+B plus 1. So what is this going to be equal to? One, exactly, very easy. Okay, so we have that.
+
+705
+01:15:39,000 --> 01:15:48,000
+And now what's the last point in our recursion, how we travel in the graph, is the B. And now
+
+706
+01:15:48,000 --> 01:15:54,000
+we're going to compute, okay, so we want the global with respect to this node, and here this
+
+707
+01:15:54,000 --> 01:16:06,000
+node has two parents, right. So what I'm going to do is to use this rule for, chain rule for
+
+708
+01:16:06,000 --> 01:16:11,000
+multivariate functions with, you know, multiple parent nodes, and basically I'm taking here
+
+709
+01:16:11,000 --> 01:16:14,000
+the one parent times the transition,
+
+710
+01:16:17,000 --> 01:16:23,000
+plus the other parent times this transition derivative, and stitching them together. So
+
+711
+01:16:23,000 --> 01:16:28,000
+this is the multivariable chain rule. And this is how I ended up with the gradient.
+
+712
+01:16:30,000 --> 01:16:35,000
+Oh, it's very kind of complicated, clumsy and so on, but are you still with me? Now everybody
+
+713
+01:16:36,000 --> 01:16:42,000
+kind of could follow what we're doing here? Very tiny steps. We are interested in the global
+
+714
+01:16:42,000 --> 01:16:46,000
+derivative with respect to something which is on the nodes. And the way we got there,
+
+715
+01:16:46,000 --> 01:16:53,000
+just applying the chain rule on each of these sub nodes, and going by the next children,
+
+716
+01:16:53,000 --> 01:17:00,000
+the next children, the next children, and now, voila, we ended up with the gradient of this
+
+717
+01:17:00,000 --> 01:17:08,000
+function with respect to A and B. This is the gradient of the function. And we, and basically
+
+718
+01:17:08,000 --> 01:17:13,000
+these are numbers now, because we had, you know, we had A and B were real numbers, these were real
+
+719
+01:17:13,000 --> 01:17:18,000
+numbers, this was real numbers, all the gradients were real numbers, so we ended up with a vector
+
+720
+01:17:18,000 --> 01:17:23,000
+of real numbers. So we kind of avoided the gradient of this function at points A and B.
+
+721
+01:17:23,000 --> 01:17:30,000
+In a very weird way, but at the same time, in a very cool way. Because we are clever.
+
+722
+01:17:31,000 --> 01:17:35,000
+You know, we didn't do it like, oh, you have to compute a gradient per hand and make it like
+
+723
+01:17:35,000 --> 01:17:45,000
+formula. We are just transferring first from the bottom up, computing all the outputs of
+
+724
+01:17:45,000 --> 01:17:52,000
+each of the nodes, and then from the top to bottom to find the gradients in order to get the
+
+725
+01:17:52,000 --> 01:17:59,000
+gradient of the input nodes as the result. This is what we wanted. And by caching, yes, I get you,
+
+726
+01:17:59,000 --> 01:18:05,000
+by caching the intermediate values, we're just reusing them all the time. Yes?
+
+727
+01:18:05,000 --> 01:18:10,000
+I just wanted to ask, what's the WRT?
+
+728
+01:18:11,000 --> 01:18:13,000
+What does it stand for?
+
+729
+01:18:13,000 --> 01:18:25,000
+W, with respect to, okay, sorry. WRT is with respect to. Okay? So we're having
+
+730
+01:18:27,000 --> 01:18:33,000
+global partial derivative with respect to node output. This is what it means. Okay.
+
+731
+01:18:33,000 --> 01:18:39,000
+Any other question? Is it, maybe it doesn't spark a joy, but this is how basically how
+
+732
+01:18:39,000 --> 01:18:46,000
+everything works under the hood. It's called, what's it called? I don't know, maybe we'll get to
+
+733
+01:18:46,000 --> 01:18:52,000
+that. Okay. So now what is actually, so we did just very tiny, tiny little things for each of
+
+734
+01:18:52,000 --> 01:18:57,000
+the nodes. We build a computational graph and then computed a gradient. So a generic node in a
+
+735
+01:18:57,000 --> 01:19:04,000
+computational graph can have multiple parents here and multiple arguments. Right? So this is what we
+
+736
+01:19:04,000 --> 01:19:13,000
+have locally. And maybe it goes somewhere here to the output. And this function, what we need to
+
+737
+01:19:13,000 --> 01:19:22,000
+compute is that the, you know, if we have the output here will be E, not the Euler's number,
+
+738
+01:19:22,000 --> 01:19:29,000
+but just E as a maybe error. Then we need to take all the parents of this node, all the parents and
+
+739
+01:19:29,000 --> 01:19:36,000
+multiply by their transition derivatives. Sorry, it's not transition derivatives, it's derivatives
+
+740
+01:19:36,000 --> 01:19:41,000
+with respect to this function output. Right? That's what we did. It's just, we're assuming up
+
+741
+01:19:41,000 --> 01:19:49,000
+over all parents of this node and their global derivatives times this, the local derivative.
+
+742
+01:19:49,000 --> 01:19:57,000
+And it's chain rule for this node. Right? And then we can compute also for each node,
+
+743
+01:19:57,000 --> 01:20:02,000
+we can compute again their local derivatives with respect to its children. Right? And we're
+
+744
+01:20:02,000 --> 01:20:07,000
+doing recursively that in the topology of the graph. And we end up with all the global gradients
+
+745
+01:20:07,000 --> 01:20:15,000
+to each node, including the inputs. So which means if we want to implement this, each of the nodes
+
+746
+01:20:15,000 --> 01:20:21,000
+must be a function which we need to compute the output value of this function. Yeah, it makes
+
+747
+01:20:21,000 --> 01:20:27,000
+sense. I mean, function typically has to output a value. So we can do that. And we have to know
+
+748
+01:20:27,000 --> 01:20:32,000
+how to compute a partial derivatives with respect to its function parameters. So if we have function
+
+749
+01:20:32,000 --> 01:20:37,000
+of a, b, c, d, we have to know how to evaluate the function for a, b, c, d, and how to compute
+
+750
+01:20:38,000 --> 01:20:44,000
+partial derivatives with respect to a, with respect to b, c, and d. What we just did
+
+751
+01:20:45,000 --> 01:20:54,000
+is called backpropagation, or reverse mode differentiation. And it has two parts. So one
+
+752
+01:20:54,000 --> 01:21:00,000
+is the forward computation. Basically, we compute all nodes output, and we store it there because
+
+753
+01:21:00,000 --> 01:21:06,000
+we're going to use it for gradients. And then we started from top and computed overall function
+
+754
+01:21:06,000 --> 01:21:14,000
+partial derivatives with respect to each node. And that's it. This is how you find a gradient
+
+755
+01:21:14,000 --> 01:21:20,000
+of various super complicated function, including what I showed before. Yeah, I mean, this, can you,
+
+756
+01:21:22,000 --> 01:21:32,000
+sorry, can you turn this into a conditional graph? Yes, yes, you can. It's just stitching
+
+757
+01:21:32,000 --> 01:21:37,000
+functions together. So you say, OK, I have a function which is sum of this. This will be a
+
+758
+01:21:37,000 --> 01:21:41,000
+product. There will be a logarithm. Then this will be arguments, and so on, so on.
+
+759
+01:21:42,000 --> 01:21:46,000
+I mean, it's not trivial, but it's fairly easy to get a graph of this function,
+
+760
+01:21:47,000 --> 01:21:52,000
+and then compute, basically use the backpropagation to compute a gradient for every input.
+
+761
+01:21:53,000 --> 01:22:05,000
+OK, so where did I stop here? This, backpropagation. So recap, we can express any arbitrarily complicated
+
+762
+01:22:05,000 --> 01:22:11,000
+function from multiple dimensions to one dimension as a computational graph. We can do that,
+
+763
+01:22:11,000 --> 01:22:18,000
+absolutely. We can parse the function as humans and make it a graph. And this nodes will be maybe
+
+764
+01:22:19,000 --> 01:22:23,000
+is a function, which you know how to make a derivative with respect to its inputs.
+
+765
+01:22:25,000 --> 01:22:30,000
+And then for computing gradient at concrete point, we run the forward pass and the
+
+766
+01:22:30,000 --> 01:22:35,000
+backpropagation. And when we are caching the each intermediate output of each node,
+
+767
+01:22:36,000 --> 01:22:40,000
+we avoid repeating computations. And then this is like efficient algorithm
+
+768
+01:22:40,000 --> 01:22:45,000
+for finding the gradient of a function at a certain point.
+
+769
+01:22:48,000 --> 01:22:49,000
+Any questions?
+
+770
+01:22:51,000 --> 01:22:56,000
+Will you be able now to implement minimizing a function of, let's say, the Rosenbrock or this
+
+771
+01:22:56,000 --> 01:23:00,000
+kind of very nasty function? Will you be able to do that? I guess so. I think you have everything
+
+772
+01:23:00,000 --> 01:23:06,000
+you need to do to implement it. Well, there's tricks. You need to find, you know, you need a way
+
+773
+01:23:06,000 --> 01:23:12,000
+how to compute this, how to build a graph, the computational graph. Yeah, but if you're doing,
+
+774
+01:23:12,000 --> 01:23:17,000
+I don't know, like in Python or object oriented, you make a node and stitch them together, like
+
+775
+01:23:17,000 --> 01:23:24,000
+parent node relationship. So you can build a graph. Then it's easy. You need a topology or
+
+776
+01:23:25,000 --> 01:23:31,000
+you can take each node, each function and make the topology per hand. You say, OK, the ordering
+
+777
+01:23:31,000 --> 01:23:36,000
+of the nodes is like that. So you know where to start with. So you would say maybe for this input,
+
+778
+01:23:36,000 --> 01:23:43,000
+you would say, OK, the topology will be A, B, R, S, E. And then you know how to avoid,
+
+779
+01:23:43,000 --> 01:23:47,000
+you know, in a loop. So that's also easy. That's possible. So I guess, you know,
+
+780
+01:23:48,000 --> 01:23:55,000
+that should be possible to do. Is it? I know. And then the devil is in the detail,
+
+781
+01:23:55,000 --> 01:24:01,000
+you know, how to make it efficient and bug free and so on. But basically, this is it.
+
+782
+01:24:02,000 --> 01:24:07,000
+So we can quite efficiently find the minimum of any differentially nested multivariate function.
+
+783
+01:24:07,000 --> 01:24:11,000
+This is what we learned today. We can find, we have multivariate nested function,
+
+784
+01:24:12,000 --> 01:24:17,000
+very deep, very complicated, you know, different paths and so on. So it's not a tree. It's really
+
+785
+01:24:17,000 --> 01:24:24,000
+like a graph. And we can find the minimum. How? Well, we have this gradient descent,
+
+786
+01:24:24,000 --> 01:24:31,000
+which takes you at each point to the best next solution. It's local, locally, local move.
+
+787
+01:24:33,000 --> 01:24:38,000
+And then, so this is the easy part, is the gradient kind of descent, like, OK, I need a
+
+788
+01:24:38,000 --> 01:24:44,000
+gradient here and I'm coming the next step. How to compute a gradient for this each point? Yeah,
+
+789
+01:24:44,000 --> 01:24:51,000
+we're using backprop. So you can effectively compute the gradient automatically without,
+
+790
+01:24:51,000 --> 01:24:55,000
+like, writing on the paper this complicated function and what's the analytical solution
+
+791
+01:24:55,000 --> 01:24:58,000
+to this, you know, to partial derivative with respect to that partial derivative.
+
+792
+01:24:58,000 --> 01:25:03,000
+You don't need that. You just need all these tiny functions have to be differentiable. You have to
+
+793
+01:25:03,000 --> 01:25:08,000
+know how to create their partial derivatives. But that's all. And the function composition will just
+
+794
+01:25:08,000 --> 01:25:17,000
+work out of box. We didn't touch neural networks at all, which is a good thing. I think it's a
+
+795
+01:25:17,000 --> 01:25:22,000
+really good thing because it comes with a lot of, you know, a lot of terminology and a lot of kind
+
+796
+01:25:22,000 --> 01:25:28,000
+of their own naming conventions and matrices and things like that. And I think it makes it super
+
+797
+01:25:28,000 --> 01:25:36,000
+complicated to understand gradient descent and backprop, because backprop is just a general
+
+798
+01:25:36,000 --> 01:25:40,000
+way of computing gradients for multivariate functions. It has nothing to do with neural
+
+799
+01:25:40,000 --> 01:25:46,000
+networks. It just works for neural networks to train them well and effectively. But you can do,
+
+800
+01:25:46,000 --> 01:25:50,000
+you know, if you do, I know, where would you like minimizing functions, like in physics and
+
+801
+01:25:50,000 --> 01:25:56,000
+something, you know, did you do any function minimization before somewhere? Where?
+
+802
+01:25:59,000 --> 01:26:03,000
+Math? OK, yeah, yeah, OK, cool. Like numerical mathematics, right? In numerical mathematics,
+
+803
+01:26:03,000 --> 01:26:08,000
+you have multiple ways of minimizing function. I think this is actually called conjugate gradient
+
+804
+01:26:08,000 --> 01:26:15,000
+descent. Mathematically correct, maybe. You have numerical methods, and now you have one which is
+
+805
+01:26:15,000 --> 01:26:20,000
+kind of very good for multivariate functions, and you can find a minimum. Yeah, that's cool.
+
+806
+01:26:20,000 --> 01:26:27,000
+It will be super useful next lecture for training neural networks, because neural networks are
+
+807
+01:26:27,000 --> 01:26:31,000
+just complicated functions, nothing more. OK, any question?
+
+808
+01:26:34,000 --> 01:26:44,000
+Very good. Thanks a lot. I'll see you next week.
+

@@ -1,0 +1,8744 @@
+1
+00:00:00,000 --> 00:00:02,000
+This computer.
+
+2
+00:00:02,000 --> 00:00:02,000
+Great.
+
+3
+00:00:02,000 --> 00:00:06,000
+Welcome to Deep Learning for NLP lecture four.
+
+4
+00:00:06,000 --> 00:00:10,000
+And today's title is Text Classification 2.
+
+5
+00:00:10,000 --> 00:00:14,000
+And we're finally coming to deep neural networks.
+
+6
+00:00:14,000 --> 00:00:17,000
+Great, but we actually didn't really finish last time,
+
+7
+00:00:17,000 --> 00:00:20,000
+as I thought we would finish on time.
+
+8
+00:00:20,000 --> 00:00:24,000
+So let's call it a, well, I think,
+
+9
+00:00:24,000 --> 00:00:27,000
+let me just get it up here.
+
+10
+00:00:27,000 --> 00:00:28,000
+Get away.
+
+11
+00:00:28,000 --> 00:00:31,000
+Get away.
+
+12
+00:00:31,000 --> 00:00:35,000
+We didn't finish the full lecture, which was basically
+
+13
+00:00:35,000 --> 00:00:37,000
+a glitch in the screenplay, because I
+
+14
+00:00:37,000 --> 00:00:38,000
+thought we should crack everything,
+
+15
+00:00:38,000 --> 00:00:40,000
+pack everything into a lecture.
+
+16
+00:00:40,000 --> 00:00:45,000
+But I guess the discussion about back of words and subword
+
+17
+00:00:45,000 --> 00:00:48,000
+units and so on was kind of crucial.
+
+18
+00:00:48,000 --> 00:00:52,000
+And I'm glad we spent a lot of time on that.
+
+19
+00:00:52,000 --> 00:00:55,000
+So let's finish today what we didn't finish last week
+
+20
+00:00:55,000 --> 00:00:56,000
+and then move on.
+
+21
+00:00:59,000 --> 00:01:01,000
+So where did we finish last time?
+
+22
+00:01:01,000 --> 00:01:04,000
+OK, so what did we do?
+
+23
+00:01:04,000 --> 00:01:07,000
+We did some, what was that?
+
+24
+00:01:07,000 --> 00:01:09,000
+Binary sentiment classification, right?
+
+25
+00:01:09,000 --> 00:01:11,000
+So we had reviews or something like that.
+
+26
+00:01:11,000 --> 00:01:15,000
+And we tried to build a classifier for whether it's
+
+27
+00:01:15,000 --> 00:01:16,000
+positive or negative.
+
+28
+00:01:16,000 --> 00:01:19,000
+So how did we map the labels, like positive or negative?
+
+29
+00:01:19,000 --> 00:01:20,000
+Anyone remembers from last week?
+
+30
+00:01:20,000 --> 00:01:22,000
+What did we do?
+
+31
+00:01:22,000 --> 00:01:24,000
+So we had positive and negative, but we
+
+32
+00:01:24,000 --> 00:01:26,000
+need numbers, because we're working with functions.
+
+33
+00:01:26,000 --> 00:01:28,000
+So how did we map them?
+
+34
+00:01:28,000 --> 00:01:29,000
+Yes?
+
+35
+00:01:29,000 --> 00:01:31,000
+You mean the logistic regression?
+
+36
+00:01:31,000 --> 00:01:33,000
+Well, the got labels in the first place.
+
+37
+00:01:33,000 --> 00:01:35,000
+We had a logistic regression, which was part of the model.
+
+38
+00:01:35,000 --> 00:01:38,000
+But what did you do with labels, like positive negative?
+
+39
+00:01:41,000 --> 00:01:41,000
+You did one and zero.
+
+40
+00:01:41,000 --> 00:01:43,000
+Yeah, one and zero, exactly.
+
+41
+00:01:43,000 --> 00:01:45,000
+So zero for negative, one for positive, arbitrary decision.
+
+42
+00:01:45,000 --> 00:01:46,000
+This is great.
+
+43
+00:01:46,000 --> 00:01:50,000
+And we're representing the input text as something.
+
+44
+00:01:50,000 --> 00:01:51,000
+There is a term for that.
+
+45
+00:01:51,000 --> 00:01:53,000
+Anyone remembers the beautiful word?
+
+46
+00:01:53,000 --> 00:01:53,000
+Yes?
+
+47
+00:01:53,000 --> 00:01:54,000
+Back of words.
+
+48
+00:01:54,000 --> 00:01:58,000
+It's a back of words or the average back of words, exactly.
+
+49
+00:01:58,000 --> 00:01:59,000
+And we use some sort of functions
+
+50
+00:01:59,000 --> 00:02:04,000
+to map the back of words into the 0 and 1,
+
+51
+00:02:04,000 --> 00:02:05,000
+which we want to predict.
+
+52
+00:02:05,000 --> 00:02:07,000
+So what was the function?
+
+53
+00:02:07,000 --> 00:02:10,000
+Anyone remembers what the function was?
+
+54
+00:02:10,000 --> 00:02:12,000
+It has a special name and special properties.
+
+55
+00:02:12,000 --> 00:02:14,000
+Yes?
+
+56
+00:02:14,000 --> 00:02:18,000
+We had a sigmoid function at the end of this complex function.
+
+57
+00:02:18,000 --> 00:02:20,000
+Not complex, complicated function.
+
+58
+00:02:20,000 --> 00:02:24,000
+We had a sigmoid to put everything into 0 and 1.
+
+59
+00:02:24,000 --> 00:02:29,000
+But the main kind of building block of that was,
+
+60
+00:02:29,000 --> 00:02:33,000
+we didn't have activation functions really yet, I guess.
+
+61
+00:02:33,000 --> 00:02:37,000
+We were doing something from linear algebra a little bit.
+
+62
+00:02:37,000 --> 00:02:39,000
+So what was that?
+
+63
+00:02:39,000 --> 00:02:40,000
+Gradient descent.
+
+64
+00:02:40,000 --> 00:02:43,000
+We didn't touch gradient descent at all last time.
+
+65
+00:02:43,000 --> 00:02:44,000
+Sorry.
+
+66
+00:02:44,000 --> 00:02:45,000
+I don't remember, actually, if we touched that.
+
+67
+00:02:45,000 --> 00:02:46,000
+We will touch it today.
+
+68
+00:02:46,000 --> 00:02:48,000
+Yes?
+
+69
+00:02:48,000 --> 00:02:51,000
+Yeah, the threshold function was kind of a sigmoid function.
+
+70
+00:02:51,000 --> 00:02:54,000
+Like sigmoid is mapping anything from minus infinity
+
+71
+00:02:54,000 --> 00:02:56,000
+from infinity to these two.
+
+72
+00:02:56,000 --> 00:02:58,000
+Yes?
+
+73
+00:02:58,000 --> 00:03:00,000
+Yeah, we had this linear transformation.
+
+74
+00:03:00,000 --> 00:03:00,000
+Exactly.
+
+75
+00:03:00,000 --> 00:03:03,000
+So the core was the linear transformation or projection,
+
+76
+00:03:03,000 --> 00:03:04,000
+linear projection.
+
+77
+00:03:04,000 --> 00:03:05,000
+Yes, come in.
+
+78
+00:03:05,000 --> 00:03:11,000
+We have, again, premium seats in the first row, last row.
+
+79
+00:03:11,000 --> 00:03:13,000
+So it was the linear transformation, exactly.
+
+80
+00:03:13,000 --> 00:03:17,000
+It was the main building block for taking
+
+81
+00:03:17,000 --> 00:03:19,000
+the back of words or the vector and map it
+
+82
+00:03:19,000 --> 00:03:22,000
+to some low dimensional space.
+
+83
+00:03:22,000 --> 00:03:24,000
+So the linear function and then followed
+
+84
+00:03:24,000 --> 00:03:29,000
+by the sigmoid function to map an arbitrary range from minus
+
+85
+00:03:29,000 --> 00:03:33,000
+infinity to plus infinity into numbers between 0 and 1.
+
+86
+00:03:33,000 --> 00:03:36,000
+So here's the thing again.
+
+87
+00:03:36,000 --> 00:03:40,000
+So we had this, the x was the vector of these back of words.
+
+88
+00:03:40,000 --> 00:03:45,000
+And we had this weight vector, basically, in this case.
+
+89
+00:03:46,000 --> 00:03:48,000
+This is the bias.
+
+90
+00:03:48,000 --> 00:03:50,000
+And we squeeze it through the sigmoid function
+
+91
+00:03:50,000 --> 00:03:54,000
+and get the final prediction, which is
+
+92
+00:03:54,000 --> 00:03:56,000
+a number between 0 and 1.
+
+93
+00:03:56,000 --> 00:03:59,000
+And we also had this, you have a question or you're, no,
+
+94
+00:03:59,000 --> 00:04:00,000
+you don't have a question.
+
+95
+00:04:00,000 --> 00:04:00,000
+OK, sorry.
+
+96
+00:04:00,000 --> 00:04:02,000
+Yeah, no worries.
+
+97
+00:04:02,000 --> 00:04:07,000
+And this is the computational graph of this function.
+
+98
+00:04:07,000 --> 00:04:10,000
+So what it means is that the x is the input.
+
+99
+00:04:10,000 --> 00:04:12,000
+And this is basically a constant here,
+
+100
+00:04:12,000 --> 00:04:13,000
+because we don't want to do anything with it.
+
+101
+00:04:13,000 --> 00:04:15,000
+I mean, this is given.
+
+102
+00:04:15,000 --> 00:04:16,000
+The text is given.
+
+103
+00:04:16,000 --> 00:04:18,000
+We extract the back of words.
+
+104
+00:04:18,000 --> 00:04:19,000
+And we can't change it.
+
+105
+00:04:19,000 --> 00:04:24,000
+What we want to change are these parameters, w and b,
+
+106
+00:04:24,000 --> 00:04:29,000
+which we want to make such that what's coming out of here
+
+107
+00:04:29,000 --> 00:04:31,000
+is doing what we want it to do.
+
+108
+00:04:31,000 --> 00:04:35,000
+So for texts that are negative, it gives us 0's.
+
+109
+00:04:35,000 --> 00:04:36,000
+And for texts which are positives,
+
+110
+00:04:36,000 --> 00:04:38,000
+it will give us the 1's.
+
+111
+00:04:38,000 --> 00:04:40,000
+And here we have this function.
+
+112
+00:04:40,000 --> 00:04:41,000
+This is the linear mapping.
+
+113
+00:04:41,000 --> 00:04:43,000
+So OK, sanity check.
+
+114
+00:04:43,000 --> 00:04:48,000
+So we are mapping from large dimension to small dimension.
+
+115
+00:04:48,000 --> 00:04:51,000
+What is the input dimension of this function?
+
+116
+00:04:51,000 --> 00:04:53,000
+What is the input dimension of this x?
+
+117
+00:04:53,000 --> 00:04:57,000
+Sorry, what is this x dimensionality?
+
+118
+00:04:57,000 --> 00:04:58,000
+What is it again?
+
+119
+00:04:58,000 --> 00:04:59,000
+So we have back of words.
+
+120
+00:04:59,000 --> 00:05:01,000
+What is the dimension?
+
+121
+00:05:01,000 --> 00:05:02,000
+AUDIENCE 1.
+
+122
+00:05:02,000 --> 00:05:04,000
+One by the length of the vocabulary.
+
+123
+00:05:04,000 --> 00:05:06,000
+It's basically the length of the vocabulary, exactly.
+
+124
+00:05:06,000 --> 00:05:10,000
+So this would be the size of our vocabulary, exactly.
+
+125
+00:05:10,000 --> 00:05:12,000
+It's a vector, so it's not 1 times.
+
+126
+00:05:12,000 --> 00:05:13,000
+We don't have to make a matrix.
+
+127
+00:05:13,000 --> 00:05:14,000
+We don't have to make it complicated.
+
+128
+00:05:14,000 --> 00:05:18,000
+It's just a vector, a bunch of numbers.
+
+129
+00:05:18,000 --> 00:05:19,000
+And what is the output of that again?
+
+130
+00:05:19,000 --> 00:05:22,000
+What is the output of this sigma?
+
+131
+00:05:22,000 --> 00:05:23,000
+What's the dimensionality of that?
+
+132
+00:05:27,000 --> 00:05:29,000
+A number is equal to 100.
+
+133
+00:05:29,000 --> 00:05:30,000
+Exactly, it's a scalar.
+
+134
+00:05:30,000 --> 00:05:31,000
+It's one dimension.
+
+135
+00:05:31,000 --> 00:05:32,000
+It's a scalar.
+
+136
+00:05:32,000 --> 00:05:37,000
+So we are basically mapping from super high dimensional space.
+
+137
+00:05:37,000 --> 00:05:38,000
+What vocabulary size could be?
+
+138
+00:05:38,000 --> 00:05:43,000
+I don't know, 100,000, for instance, into one dimension.
+
+139
+00:05:43,000 --> 00:05:44,000
+And in this one dimension, we squeeze it
+
+140
+00:05:44,000 --> 00:05:47,000
+through the sigmoid function to get the decision rule.
+
+141
+00:05:47,000 --> 00:05:49,000
+OK, this is all good.
+
+142
+00:05:49,000 --> 00:05:53,000
+And I guess we had this decision rule as well last time.
+
+143
+00:05:53,000 --> 00:05:56,000
+So basically, we're saying what comes through the sigmoid,
+
+144
+00:05:56,000 --> 00:05:59,000
+if it's larger than 0.5, the result, we say,
+
+145
+00:05:59,000 --> 00:06:01,000
+I mean, we're basically rounding.
+
+146
+00:06:01,000 --> 00:06:04,000
+So if it's bigger than 0.5, it's positive.
+
+147
+00:06:04,000 --> 00:06:05,000
+Or the prediction is not 1.
+
+148
+00:06:05,000 --> 00:06:09,000
+And if it's smaller than 0.5, it's 0.
+
+149
+00:06:09,000 --> 00:06:11,000
+And then we have this nice interpretation,
+
+150
+00:06:11,000 --> 00:06:15,000
+which gives us basically the conditional probability.
+
+151
+00:06:15,000 --> 00:06:17,000
+So we can interpret this as a probability
+
+152
+00:06:17,000 --> 00:06:19,000
+of being prediction 1 given x.
+
+153
+00:06:19,000 --> 00:06:21,000
+Yes, you have a question?
+
+154
+00:06:21,000 --> 00:06:27,000
+Like, the probability of sigmoid of f of x
+
+155
+00:06:27,000 --> 00:06:29,000
+equals the probability of 1?
+
+156
+00:06:29,000 --> 00:06:30,000
+No, no.
+
+157
+00:06:30,000 --> 00:06:33,000
+So the sigmoid of f of x is exactly
+
+158
+00:06:33,000 --> 00:06:35,000
+the probability of the prediction being 1,
+
+159
+00:06:35,000 --> 00:06:37,000
+given the features.
+
+160
+00:06:37,000 --> 00:06:40,000
+I'm almost 100% sure this is it.
+
+161
+00:06:40,000 --> 00:06:41,000
+Like, this is a value, right?
+
+162
+00:06:41,000 --> 00:06:46,000
+I mean, this is something in between 0 and 1,
+
+163
+00:06:46,000 --> 00:06:48,000
+the output of the function.
+
+164
+00:06:48,000 --> 00:06:50,000
+Let's call it, we have y's.
+
+165
+00:06:50,000 --> 00:06:52,000
+Let's call it z.
+
+166
+00:06:52,000 --> 00:06:54,000
+So z is a number.
+
+167
+00:06:54,000 --> 00:06:57,000
+And then it corresponds to this.
+
+168
+00:06:57,000 --> 00:06:58,000
+Is it clear now?
+
+169
+00:06:58,000 --> 00:07:00,000
+Cool, yeah, thanks.
+
+170
+00:07:00,000 --> 00:07:03,000
+I had a typo on this slide last week anyway.
+
+171
+00:07:03,000 --> 00:07:03,000
+OK, good.
+
+172
+00:07:03,000 --> 00:07:04,000
+So so far, so good.
+
+173
+00:07:04,000 --> 00:07:06,000
+Everybody's with me.
+
+174
+00:07:06,000 --> 00:07:07,000
+Any questions so far?
+
+175
+00:07:10,000 --> 00:07:11,000
+This is great.
+
+176
+00:07:11,000 --> 00:07:14,000
+So we have a linear model, where we have a linear model
+
+177
+00:07:14,000 --> 00:07:15,000
+plus some non-linearity.
+
+178
+00:07:15,000 --> 00:07:18,000
+And we were to find the parameters.
+
+179
+00:07:18,000 --> 00:07:20,000
+So we want to find the best parameters, which
+
+180
+00:07:20,000 --> 00:07:23,000
+kind of give us the, yeah, what we want to do.
+
+181
+00:07:23,000 --> 00:07:26,000
+Like, predicting given a new vector or a new text,
+
+182
+00:07:26,000 --> 00:07:29,000
+when we tokenize it and do the back of words thing,
+
+183
+00:07:29,000 --> 00:07:32,000
+we want to predict what is the classified
+
+184
+00:07:32,000 --> 00:07:34,000
+to negative or positive.
+
+185
+00:07:34,000 --> 00:07:38,000
+And how can we tell the model what's, you know,
+
+186
+00:07:38,000 --> 00:07:40,000
+are you doing well or are you doing not well?
+
+187
+00:07:40,000 --> 00:07:44,000
+On these training examples, we introduce the loss function.
+
+188
+00:07:44,000 --> 00:07:47,000
+So it's a crucial concept in machine learning.
+
+189
+00:07:47,000 --> 00:07:48,000
+Deep learning is a loss function.
+
+190
+00:07:48,000 --> 00:07:51,000
+So basically, it's saying how much, so it's quantifying.
+
+191
+00:07:51,000 --> 00:07:54,000
+It's saying how much loss is suffered.
+
+192
+00:07:54,000 --> 00:07:55,000
+Well, it's not suffering.
+
+193
+00:07:55,000 --> 00:07:57,000
+It's telling you basically how much loss
+
+194
+00:07:57,000 --> 00:08:02,000
+we obtain when predicting this prediction y hat,
+
+195
+00:08:02,000 --> 00:08:07,000
+while the true label is y for a single example.
+
+196
+00:08:07,000 --> 00:08:10,000
+So basically, if we have a binary classification,
+
+197
+00:08:10,000 --> 00:08:12,000
+the loss function, which is parameterized
+
+198
+00:08:12,000 --> 00:08:15,000
+by this y hat, which is the prediction,
+
+199
+00:08:15,000 --> 00:08:18,000
+and y is the gold standard data or data point,
+
+200
+00:08:18,000 --> 00:08:20,000
+it's from a tuple of these two into real numbers.
+
+201
+00:08:20,000 --> 00:08:25,000
+So the loss basically gives us a real number.
+
+202
+00:08:25,000 --> 00:08:28,000
+And the loss should have some properties.
+
+203
+00:08:28,000 --> 00:08:31,000
+Namely, the smaller the loss, the better,
+
+204
+00:08:31,000 --> 00:08:33,000
+the closer the prediction should be together.
+
+205
+00:08:33,000 --> 00:08:34,000
+So it should be like positive number.
+
+206
+00:08:34,000 --> 00:08:37,000
+It should be maybe, well, it doesn't have to be positive,
+
+207
+00:08:37,000 --> 00:08:40,000
+but at least it should have a minimum.
+
+208
+00:08:40,000 --> 00:08:42,000
+And when the minimum is hit for these two things,
+
+209
+00:08:42,000 --> 00:08:45,000
+they should be, this should be the correct prediction.
+
+210
+00:08:45,000 --> 00:08:55,000
+So if, for example, y is 1 and y hat is 0.999,
+
+211
+00:08:55,000 --> 00:08:59,000
+the loss should be very low, because they
+
+212
+00:08:59,000 --> 00:09:00,000
+are very close to each other.
+
+213
+00:09:00,000 --> 00:09:04,000
+So any questions so far to the loss?
+
+214
+00:09:04,000 --> 00:09:07,000
+Like what are we trying to achieve with that?
+
+215
+00:09:07,000 --> 00:09:10,000
+We're trying to basically make it as small as possible
+
+216
+00:09:10,000 --> 00:09:12,000
+for one example.
+
+217
+00:09:12,000 --> 00:09:18,000
+So which means then, giving label training set.
+
+218
+00:09:18,000 --> 00:09:20,000
+So now this is about like one single example,
+
+219
+00:09:20,000 --> 00:09:22,000
+but we have a training set, which
+
+220
+00:09:22,000 --> 00:09:26,000
+is a sequence of n training examples with x and y.
+
+221
+00:09:26,000 --> 00:09:33,000
+So the input, so to say, features and the labels.
+
+222
+00:09:33,000 --> 00:09:37,000
+And we have this notion of loss per instance
+
+223
+00:09:37,000 --> 00:09:39,000
+and parameterized function fx.
+
+224
+00:09:39,000 --> 00:09:41,000
+So what is our parameterized function fx again?
+
+225
+00:09:41,000 --> 00:09:43,000
+Oh, parameterized functions looks terrible.
+
+226
+00:09:43,000 --> 00:09:44,000
+What is it again?
+
+227
+00:09:44,000 --> 00:09:45,000
+This is our linear function and the sigmoid.
+
+228
+00:09:45,000 --> 00:09:49,000
+So this is the function we're mapping the input
+
+229
+00:09:49,000 --> 00:09:50,000
+to the output.
+
+230
+00:09:50,000 --> 00:09:53,000
+We define then the corpus y loss.
+
+231
+00:09:53,000 --> 00:09:57,000
+So it's basically for all training data
+
+232
+00:09:57,000 --> 00:09:59,000
+with respect to the parameters, theta
+
+233
+00:09:59,000 --> 00:10:02,000
+is the average loss over all training examples.
+
+234
+00:10:02,000 --> 00:10:04,000
+What does it really mean is that, it's
+
+235
+00:10:04,000 --> 00:10:07,000
+very simple at the end, we iterate
+
+236
+00:10:07,000 --> 00:10:09,000
+through all the examples in the training data.
+
+237
+00:10:09,000 --> 00:10:12,000
+So we have n training examples and we iterate through all
+
+238
+00:10:12,000 --> 00:10:12,000
+of them.
+
+239
+00:10:12,000 --> 00:10:17,000
+And for each of them, we compute this per instance loss.
+
+240
+00:10:17,000 --> 00:10:21,000
+So basically what is here is the prediction, so y hat.
+
+241
+00:10:21,000 --> 00:10:27,000
+And this is the got label for this if example, if example.
+
+242
+00:10:27,000 --> 00:10:28,000
+And we compute a loss.
+
+243
+00:10:28,000 --> 00:10:32,000
+As in the previous, what I showed, like 0, 1 and 0, 9, 9,
+
+244
+00:10:32,000 --> 00:10:34,000
+9 would be like per example loss.
+
+245
+00:10:34,000 --> 00:10:36,000
+And then we just sum them together
+
+246
+00:10:36,000 --> 00:10:39,000
+for the order training data and take the average.
+
+247
+00:10:39,000 --> 00:10:43,000
+So this is the average loss per corpus.
+
+248
+00:10:43,000 --> 00:10:44,000
+Any questions?
+
+249
+00:10:51,000 --> 00:10:53,000
+OK, this is great.
+
+250
+00:10:53,000 --> 00:10:56,000
+So we have a loss.
+
+251
+00:10:56,000 --> 00:11:00,000
+And we say the smaller the loss, the better we kind of
+
+252
+00:11:00,000 --> 00:11:02,000
+mimic the gold standard labels.
+
+253
+00:11:02,000 --> 00:11:04,000
+So does it ring a bell?
+
+254
+00:11:04,000 --> 00:11:05,000
+What should we do?
+
+255
+00:11:05,000 --> 00:11:07,000
+Why do we care about the loss actually?
+
+256
+00:11:07,000 --> 00:11:08,000
+Why is it important?
+
+257
+00:11:08,000 --> 00:11:11,000
+Why do we need to have some function as a loss
+
+258
+00:11:11,000 --> 00:11:14,000
+over the training data?
+
+259
+00:11:14,000 --> 00:11:15,000
+We can minimize it.
+
+260
+00:11:15,000 --> 00:11:16,000
+Exactly.
+
+261
+00:11:16,000 --> 00:11:17,000
+We want to minimize the loss.
+
+262
+00:11:17,000 --> 00:11:19,000
+We want to make the loss as small as possible
+
+263
+00:11:19,000 --> 00:11:21,000
+on the training data.
+
+264
+00:11:21,000 --> 00:11:22,000
+OK, this is a great question.
+
+265
+00:11:22,000 --> 00:11:24,000
+So we want to minimize a function.
+
+266
+00:11:24,000 --> 00:11:27,000
+Does it ring a bell now?
+
+267
+00:11:27,000 --> 00:11:29,000
+Can we minimize a function?
+
+268
+00:11:29,000 --> 00:11:31,000
+We can use the gradient descent to minimize a function.
+
+269
+00:11:31,000 --> 00:11:32,000
+This is great.
+
+270
+00:11:32,000 --> 00:11:32,000
+OK, cool.
+
+271
+00:11:32,000 --> 00:11:34,000
+Wow.
+
+272
+00:11:34,000 --> 00:11:35,000
+We talk about a lot of functions.
+
+273
+00:11:35,000 --> 00:11:38,000
+And last week, we talked about all the linear functions.
+
+274
+00:11:38,000 --> 00:11:39,000
+What do you have to know?
+
+275
+00:11:39,000 --> 00:11:41,000
+What the properties all the functions
+
+276
+00:11:41,000 --> 00:11:45,000
+must have in order to be kind of minimizable the way
+
+277
+00:11:45,000 --> 00:11:46,000
+we know with the gradient descent?
+
+278
+00:11:46,000 --> 00:11:52,000
+So all the functions must be continuous.
+
+279
+00:11:52,000 --> 00:11:53,000
+And then we can minimize the function.
+
+280
+00:11:53,000 --> 00:11:55,000
+OK, so we can minimize the function.
+
+281
+00:11:55,000 --> 00:11:56,000
+And then we can minimize the function.
+
+282
+00:11:57,000 --> 00:12:02,000
+Or continuous, yes, which kind of is a different term
+
+283
+00:12:02,000 --> 00:12:05,000
+for being differentiable.
+
+284
+00:12:05,000 --> 00:12:07,000
+They don't have to be continuous because you
+
+285
+00:12:07,000 --> 00:12:08,000
+can make exceptions.
+
+286
+00:12:08,000 --> 00:12:09,000
+But they have to have derivatives
+
+287
+00:12:09,000 --> 00:12:11,000
+with respect to everything what's coming in.
+
+288
+00:12:11,000 --> 00:12:13,000
+Because if we know the derivatives,
+
+289
+00:12:13,000 --> 00:12:15,000
+we can compute what?
+
+290
+00:12:15,000 --> 00:12:18,000
+The gradient using the very famous technique of?
+
+291
+00:12:22,000 --> 00:12:25,000
+The back propagation, the chain rule, the back propagation.
+
+292
+00:12:25,000 --> 00:12:25,000
+Exactly.
+
+293
+00:12:26,000 --> 00:12:27,000
+And now we say, oh, OK.
+
+294
+00:12:27,000 --> 00:12:29,000
+So I can actually use back propagation
+
+295
+00:12:29,000 --> 00:12:33,000
+to compute gradient over all my training instances.
+
+296
+00:12:33,000 --> 00:12:36,000
+And through doing this, I will minimize my loss function.
+
+297
+00:12:36,000 --> 00:12:36,000
+Wow.
+
+298
+00:12:36,000 --> 00:12:38,000
+This is great.
+
+299
+00:12:38,000 --> 00:12:39,000
+This is machine learning.
+
+300
+00:12:39,000 --> 00:12:40,000
+Basically, this is it.
+
+301
+00:12:40,000 --> 00:12:41,000
+This is deep learning.
+
+302
+00:12:41,000 --> 00:12:44,000
+One thing we need to talk about, what is this loss function?
+
+303
+00:12:44,000 --> 00:12:45,000
+Yeah, what is it?
+
+304
+00:12:45,000 --> 00:12:46,000
+This is very abstract.
+
+305
+00:12:46,000 --> 00:12:47,000
+What is dl?
+
+306
+00:12:47,000 --> 00:12:48,000
+I have no idea.
+
+307
+00:12:48,000 --> 00:12:51,000
+We'll talk about it later on, typical examples
+
+308
+00:12:51,000 --> 00:12:52,000
+of the loss functions.
+
+309
+00:12:52,000 --> 00:12:53,000
+But so far, so good.
+
+310
+00:12:53,000 --> 00:12:56,000
+So we can take the loss function and take
+
+311
+00:12:56,000 --> 00:12:59,000
+training as optimization.
+
+312
+00:12:59,000 --> 00:13:04,000
+So this is the loss, very fancy l here of the theta,
+
+313
+00:13:04,000 --> 00:13:06,000
+very fancy terms for parameters.
+
+314
+00:13:06,000 --> 00:13:09,000
+I mean, so the question here is, is it OK,
+
+315
+00:13:09,000 --> 00:13:11,000
+like so many mathematical terms or not?
+
+316
+00:13:11,000 --> 00:13:12,000
+I mean, do you like it?
+
+317
+00:13:12,000 --> 00:13:13,000
+Do you hate it?
+
+318
+00:13:13,000 --> 00:13:15,000
+Or it's fine?
+
+319
+00:13:15,000 --> 00:13:16,000
+Who hates it?
+
+320
+00:13:16,000 --> 00:13:20,000
+Who hates slides in LaTeX with mathematics?
+
+321
+00:13:20,000 --> 00:13:20,000
+That's fine.
+
+322
+00:13:20,000 --> 00:13:21,000
+I mean, raise your hand.
+
+323
+00:13:21,000 --> 00:13:22,000
+That's fine.
+
+324
+00:13:22,000 --> 00:13:23,000
+I'm really curious.
+
+325
+00:13:23,000 --> 00:13:24,000
+I like to write it.
+
+326
+00:13:24,000 --> 00:13:26,000
+I like the way it looks in LaTeX, actually.
+
+327
+00:13:26,000 --> 00:13:28,000
+So I like writing it.
+
+328
+00:13:28,000 --> 00:13:33,000
+It's really like, I do research for writing papers in LaTeX.
+
+329
+00:13:33,000 --> 00:13:37,000
+OK, I shouldn't put it on record on YouTube, but it's true.
+
+330
+00:13:37,000 --> 00:13:41,000
+OK, so I mean, you can describe it in many different ways.
+
+331
+00:13:41,000 --> 00:13:43,000
+But the mathematical formulation is kind of,
+
+332
+00:13:43,000 --> 00:13:45,000
+it could be precise most of the times.
+
+333
+00:13:45,000 --> 00:13:47,000
+But we're misusing notations here.
+
+334
+00:13:47,000 --> 00:13:49,000
+But anyway, so everybody's fine with that?
+
+335
+00:13:49,000 --> 00:13:51,000
+Everybody understands what we're talking about?
+
+336
+00:13:51,000 --> 00:13:53,000
+I'm trying to take it as also explaining
+
+337
+00:13:53,000 --> 00:13:56,000
+like what all these things are.
+
+338
+00:13:56,000 --> 00:13:56,000
+OK, good.
+
+339
+00:13:56,000 --> 00:14:02,000
+So we have this loss for the training data set
+
+340
+00:14:02,000 --> 00:14:03,000
+with n examples.
+
+341
+00:14:03,000 --> 00:14:05,000
+And the training examples are fixed.
+
+342
+00:14:05,000 --> 00:14:11,000
+So this xy are given, and the yi's are also given.
+
+343
+00:14:11,000 --> 00:14:17,000
+And we want to set the values of the parameters.
+
+344
+00:14:17,000 --> 00:14:19,000
+So no matter what it is, it would be typically
+
+345
+00:14:19,000 --> 00:14:23,000
+the w's and b's, such that the value is minimized.
+
+346
+00:14:23,000 --> 00:14:26,000
+So the final formal kind of definition
+
+347
+00:14:26,000 --> 00:14:28,000
+of this minimization would be, we
+
+348
+00:14:28,000 --> 00:14:31,000
+want to find such parameters with this tiny hat.
+
+349
+00:14:31,000 --> 00:14:36,000
+So the hat is like, it's not the truth, but sort of almost.
+
+350
+00:14:36,000 --> 00:14:38,000
+We're trying to predict.
+
+351
+00:14:38,000 --> 00:14:40,000
+As the minimum of these parameters,
+
+352
+00:14:40,000 --> 00:14:43,000
+so where this complicated function,
+
+353
+00:14:43,000 --> 00:14:44,000
+this is a complicated function, right?
+
+354
+00:14:44,000 --> 00:14:46,000
+This is a really complicated function, actually,
+
+355
+00:14:46,000 --> 00:14:50,000
+because it's an average of a sum of a loss of,
+
+356
+00:14:50,000 --> 00:14:54,000
+here will be a linear transformation
+
+357
+00:14:54,000 --> 00:14:55,000
+through sigmoids.
+
+358
+00:14:55,000 --> 00:14:57,000
+So it's kind of complicated function,
+
+359
+00:14:57,000 --> 00:15:01,000
+but we can still work with that easily.
+
+360
+00:15:01,000 --> 00:15:04,000
+And we want to find such parameters, such data,
+
+361
+00:15:04,000 --> 00:15:07,000
+that this function will be at a minimum.
+
+362
+00:15:07,000 --> 00:15:10,000
+Whether it's global minimum or local minimum, it's a question.
+
+363
+00:15:10,000 --> 00:15:12,000
+Typically, global minimum is great,
+
+364
+00:15:12,000 --> 00:15:14,000
+because then we really know we're at global minimum.
+
+365
+00:15:14,000 --> 00:15:19,000
+If we have the function, if they are fully convex,
+
+366
+00:15:19,000 --> 00:15:20,000
+you can find, so it's like a bowl,
+
+367
+00:15:20,000 --> 00:15:23,000
+you can go to the minimum with stochastic gradient descent.
+
+368
+00:15:23,000 --> 00:15:27,000
+But deep learning of deep networks are not really such.
+
+369
+00:15:27,000 --> 00:15:29,000
+So they're kind of very nested functions,
+
+370
+00:15:29,000 --> 00:15:31,000
+and you will mostly reach a local optima.
+
+371
+00:15:31,000 --> 00:15:34,000
+But this is good as well.
+
+372
+00:15:34,000 --> 00:15:35,000
+So this is what we're trying to achieve.
+
+373
+00:15:35,000 --> 00:15:38,000
+So we want to minimize the function.
+
+374
+00:15:38,000 --> 00:15:40,000
+And we use the techniques we know already.
+
+375
+00:15:40,000 --> 00:15:41,000
+This is great.
+
+376
+00:15:41,000 --> 00:15:44,000
+So now coming to the question, what
+
+377
+00:15:44,000 --> 00:15:46,000
+is this loss, what is this thing?
+
+378
+00:15:46,000 --> 00:15:55,000
+So let us show a simple loss called the logistic loss,
+
+379
+00:15:55,000 --> 00:15:58,000
+or also binary cross entropy.
+
+380
+00:15:58,000 --> 00:16:02,000
+And this is something you should know, OK?
+
+381
+00:16:02,000 --> 00:16:04,000
+Even like the formula, you should kind of
+
+382
+00:16:04,000 --> 00:16:08,000
+know, because this is so central to many things.
+
+383
+00:16:08,000 --> 00:16:11,000
+It looks complicated, but it's not,
+
+384
+00:16:11,000 --> 00:16:12,000
+because we will show later.
+
+385
+00:16:12,000 --> 00:16:16,000
+It's coming from actually a concept from probability
+
+386
+00:16:16,000 --> 00:16:19,000
+theory, from KL divergence between two distributions.
+
+387
+00:16:19,000 --> 00:16:22,000
+And it's just one kind of incarnation
+
+388
+00:16:22,000 --> 00:16:24,000
+of that for the binary task.
+
+389
+00:16:24,000 --> 00:16:26,000
+So we're taking these y's.
+
+390
+00:16:26,000 --> 00:16:29,000
+OK, sanity check, what is this y?
+
+391
+00:16:29,000 --> 00:16:31,000
+What is this?
+
+392
+00:16:31,000 --> 00:16:32,000
+The true label.
+
+393
+00:16:32,000 --> 00:16:32,000
+The true label.
+
+394
+00:16:32,000 --> 00:16:33,000
+Thank you.
+
+395
+00:16:33,000 --> 00:16:34,000
+What is this y hat?
+
+396
+00:16:37,000 --> 00:16:37,000
+Yes, again.
+
+397
+00:16:37,000 --> 00:16:38,000
+The predicted label.
+
+398
+00:16:38,000 --> 00:16:39,000
+Second?
+
+399
+00:16:39,000 --> 00:16:40,000
+The predicted label.
+
+400
+00:16:40,000 --> 00:16:40,000
+Exactly.
+
+401
+00:16:40,000 --> 00:16:43,000
+This is what's coming from the network.
+
+402
+00:16:43,000 --> 00:16:45,000
+OK, so this is logistic loss.
+
+403
+00:16:45,000 --> 00:16:49,000
+And in order to optimize this function,
+
+404
+00:16:49,000 --> 00:16:53,000
+we need to have, again, one thing.
+
+405
+00:16:53,000 --> 00:16:56,000
+Every function which we plug into the complex functions,
+
+406
+00:16:56,000 --> 00:16:59,000
+the complicated functions, we need one thing
+
+407
+00:16:59,000 --> 00:17:01,000
+to work with that, with stochastic gradient descent.
+
+408
+00:17:01,000 --> 00:17:02,000
+What do we need?
+
+409
+00:17:05,000 --> 00:17:07,000
+It's a nice function, but it's not complete for us,
+
+410
+00:17:07,000 --> 00:17:10,000
+because if I tell you, implement it in your network,
+
+411
+00:17:10,000 --> 00:17:12,000
+you're missing one part.
+
+412
+00:17:12,000 --> 00:17:13,000
+What do we need?
+
+413
+00:17:13,000 --> 00:17:14,000
+We need a derivative, exactly.
+
+414
+00:17:14,000 --> 00:17:17,000
+So what is the derivative of this function with respect
+
+415
+00:17:17,000 --> 00:17:20,000
+to the y?
+
+416
+00:17:20,000 --> 00:17:21,000
+No, y hat.
+
+417
+00:17:21,000 --> 00:17:22,000
+I'm sorry, y hat.
+
+418
+00:17:22,000 --> 00:17:24,000
+This is the input, because this is constant.
+
+419
+00:17:24,000 --> 00:17:26,000
+So what is the derivative of that?
+
+420
+00:17:26,000 --> 00:17:27,000
+I don't know.
+
+421
+00:17:27,000 --> 00:17:29,000
+I look it up, to be honest.
+
+422
+00:17:29,000 --> 00:17:32,000
+I was too lazy to kind of compute by hand.
+
+423
+00:17:32,000 --> 00:17:35,000
+But at the end of the day, it's because
+
+424
+00:17:35,000 --> 00:17:36,000
+of all these logarithms.
+
+425
+00:17:36,000 --> 00:17:37,000
+So it's kind of nice.
+
+426
+00:17:37,000 --> 00:17:38,000
+It's basically this kind of fraction.
+
+427
+00:17:38,000 --> 00:17:40,000
+So you don't have to remember this derivative.
+
+428
+00:17:40,000 --> 00:17:45,000
+If you're stranded on a desert island,
+
+429
+00:17:45,000 --> 00:17:47,000
+you would come up with this derivation
+
+430
+00:17:47,000 --> 00:17:51,000
+if you really have to build a neural network there
+
+431
+00:17:51,000 --> 00:17:54,000
+by your own order.
+
+432
+00:17:54,000 --> 00:17:59,000
+So I'm just saying, well, it's a nice function.
+
+433
+00:17:59,000 --> 00:18:01,000
+The derivative is not really complicated.
+
+434
+00:18:01,000 --> 00:18:03,000
+So we have the derivative of this logistic loss.
+
+435
+00:18:03,000 --> 00:18:04,000
+Great.
+
+436
+00:18:04,000 --> 00:18:08,000
+So now coming from the conditional graph we had so far,
+
+437
+00:18:08,000 --> 00:18:11,000
+now we have the full computational graph.
+
+438
+00:18:11,000 --> 00:18:14,000
+So again, this is the input.
+
+439
+00:18:14,000 --> 00:18:20,000
+This is the parameters, w and b, so the weights and the bias.
+
+440
+00:18:20,000 --> 00:18:22,000
+And then we have this linear function.
+
+441
+00:18:22,000 --> 00:18:23,000
+What is this sigma again?
+
+442
+00:18:26,000 --> 00:18:26,000
+Yes?
+
+443
+00:18:26,000 --> 00:18:27,000
+The sigmoid.
+
+444
+00:18:27,000 --> 00:18:28,000
+The sigmoid.
+
+445
+00:18:28,000 --> 00:18:29,000
+Sigma sigmoid.
+
+446
+00:18:29,000 --> 00:18:29,000
+OK, good.
+
+447
+00:18:29,000 --> 00:18:30,000
+It's a good hint, exactly.
+
+448
+00:18:30,000 --> 00:18:32,000
+So it's a sigmoid.
+
+449
+00:18:32,000 --> 00:18:34,000
+And then we have this loss function.
+
+450
+00:18:34,000 --> 00:18:38,000
+And the loss is taking the prediction
+
+451
+00:18:38,000 --> 00:18:45,000
+from this function and taking also the gold standard label.
+
+452
+00:18:45,000 --> 00:18:48,000
+So and now I already kind of revealed the secret here.
+
+453
+00:18:48,000 --> 00:18:50,000
+How can we minimize this function?
+
+454
+00:18:50,000 --> 00:18:53,000
+OK, any question to this computational graph?
+
+455
+00:18:53,000 --> 00:18:54,000
+Is it clear for everybody?
+
+456
+00:18:54,000 --> 00:18:59,000
+It's very simple, I would say, but it's a building block
+
+457
+00:18:59,000 --> 00:19:01,000
+of, I would say, deep learning.
+
+458
+00:19:01,000 --> 00:19:04,000
+So if you see a neural network, you
+
+459
+00:19:04,000 --> 00:19:05,000
+would see something like a graph,
+
+460
+00:19:05,000 --> 00:19:07,000
+but in very many different flavors.
+
+461
+00:19:07,000 --> 00:19:09,000
+So I'm using this kind of very simplistic
+
+462
+00:19:09,000 --> 00:19:11,000
+function-oriented graph.
+
+463
+00:19:11,000 --> 00:19:12,000
+But I guess it's clear.
+
+464
+00:19:12,000 --> 00:19:15,000
+Any questions?
+
+465
+00:19:15,000 --> 00:19:17,000
+Good.
+
+466
+00:19:17,000 --> 00:19:20,000
+So we minimize this function by gradient descent
+
+467
+00:19:20,000 --> 00:19:23,000
+and back propagation.
+
+468
+00:19:23,000 --> 00:19:27,000
+And now we're coming to a very famous kind of algorithm
+
+469
+00:19:27,000 --> 00:19:29,000
+for training these models.
+
+470
+00:19:29,000 --> 00:19:31,000
+Although this is not, well, this is still not
+
+471
+00:19:31,000 --> 00:19:32,000
+like a deep learning model.
+
+472
+00:19:32,000 --> 00:19:36,000
+It's like one layer binary predictor,
+
+473
+00:19:36,000 --> 00:19:40,000
+so logistic regression in a way.
+
+474
+00:19:40,000 --> 00:19:43,000
+But we're going to use this stochastic gradient descent,
+
+475
+00:19:43,000 --> 00:19:46,000
+so online stochastic gradient descent.
+
+476
+00:19:46,000 --> 00:19:49,000
+OK, so this is something which looks maybe a little bit
+
+477
+00:19:49,000 --> 00:19:51,000
+complicated, but let's have a look.
+
+478
+00:19:51,000 --> 00:19:53,000
+So what do we need for this function,
+
+479
+00:19:53,000 --> 00:19:55,000
+for the stochastic gradient descent?
+
+480
+00:19:55,000 --> 00:19:57,000
+Again, we need the function which
+
+481
+00:19:57,000 --> 00:19:59,000
+takes the input and the parameters
+
+482
+00:19:59,000 --> 00:20:01,000
+and produces the output.
+
+483
+00:20:01,000 --> 00:20:02,000
+Well, what is this?
+
+484
+00:20:02,000 --> 00:20:03,000
+This is the training data, right?
+
+485
+00:20:03,000 --> 00:20:05,000
+So we have n examples and n labels.
+
+486
+00:20:05,000 --> 00:20:09,000
+And we have this L. This is the loss function.
+
+487
+00:20:09,000 --> 00:20:10,000
+Loss function, OK.
+
+488
+00:20:10,000 --> 00:20:13,000
+So and then we're going to do with,
+
+489
+00:20:13,000 --> 00:20:15,000
+as in the standard kind of minimization,
+
+490
+00:20:15,000 --> 00:20:16,000
+we had it with just simple functions, not
+
+491
+00:20:16,000 --> 00:20:18,000
+these complicated graphs.
+
+492
+00:20:18,000 --> 00:20:21,000
+We're going to continue while something,
+
+493
+00:20:21,000 --> 00:20:24,000
+while we're still going lower, lower, and lower.
+
+494
+00:20:24,000 --> 00:20:28,000
+So maybe a number of steps or just we don't,
+
+495
+00:20:28,000 --> 00:20:30,000
+we hit some local minimum and we stop.
+
+496
+00:20:30,000 --> 00:20:31,000
+So some stopping criteria are there.
+
+497
+00:20:31,000 --> 00:20:34,000
+What we're going to do is we sample a training
+
+498
+00:20:34,000 --> 00:20:36,000
+example from the training data.
+
+499
+00:20:36,000 --> 00:20:41,000
+So we sample, we just randomly choose one.
+
+500
+00:20:41,000 --> 00:20:45,000
+And then we're going to compute the loss on this example.
+
+501
+00:20:45,000 --> 00:20:48,000
+So what is this loss computing?
+
+502
+00:20:48,000 --> 00:20:53,000
+What is the output, again, of this loss?
+
+503
+00:20:53,000 --> 00:21:00,000
+It's going to give us a number.
+
+504
+00:21:00,000 --> 00:21:01,000
+Loss is giving us a number.
+
+505
+00:21:02,000 --> 00:21:04,000
+It's a number, right?
+
+506
+00:21:04,000 --> 00:21:08,000
+Should be positive real number.
+
+507
+00:21:08,000 --> 00:21:12,000
+And then having computed this number, this loss,
+
+508
+00:21:12,000 --> 00:21:15,000
+we take our computational graph and compute
+
+509
+00:21:15,000 --> 00:21:18,000
+the gradient of this loss function with respect
+
+510
+00:21:18,000 --> 00:21:22,000
+to all these parameters.
+
+511
+00:21:22,000 --> 00:21:25,000
+What does it mean exactly is, let me come here.
+
+512
+00:21:25,000 --> 00:21:31,000
+So we run this sort of forward pass
+
+513
+00:21:31,000 --> 00:21:33,000
+where we compute a loss.
+
+514
+00:21:33,000 --> 00:21:34,000
+So we have this loss.
+
+515
+00:21:34,000 --> 00:21:36,000
+So everything is computed.
+
+516
+00:21:36,000 --> 00:21:39,000
+We know all these values of all these nodes.
+
+517
+00:21:39,000 --> 00:21:41,000
+This is very similar to what we did
+
+518
+00:21:41,000 --> 00:21:44,000
+with the computational graph in the second lecture.
+
+519
+00:21:44,000 --> 00:21:46,000
+Looks maybe more complicated, but it's the same,
+
+520
+00:21:46,000 --> 00:21:47,000
+conceptually, the very same thing.
+
+521
+00:21:47,000 --> 00:21:49,000
+So we compute all these outputs.
+
+522
+00:21:49,000 --> 00:21:53,000
+And then we're going to start from here and ask, OK,
+
+523
+00:21:53,000 --> 00:21:59,000
+what is the gradient of L with respect to L is 1.
+
+524
+00:21:59,000 --> 00:22:00,000
+So this is how we start.
+
+525
+00:22:00,000 --> 00:22:02,000
+And then we're going to come back.
+
+526
+00:22:02,000 --> 00:22:07,000
+What is the gradient of L with respect to sigma?
+
+527
+00:22:07,000 --> 00:22:10,000
+L with respect to sigma.
+
+528
+00:22:10,000 --> 00:22:12,000
+And what is the gradient and so on, so on.
+
+529
+00:22:12,000 --> 00:22:16,000
+And we end up here when we do this back propagation,
+
+530
+00:22:16,000 --> 00:22:17,000
+basically.
+
+531
+00:22:17,000 --> 00:22:21,000
+We end up here with, what is the gradient of L with respect
+
+532
+00:22:21,000 --> 00:22:22,000
+to b.
+
+533
+00:22:22,000 --> 00:22:24,000
+And here we'll end up with, what is the gradient,
+
+534
+00:22:24,000 --> 00:22:27,000
+partial derivative, the gradient of partial derivative,
+
+535
+00:22:27,000 --> 00:22:31,000
+the same thing, of L with respect to this vector,
+
+536
+00:22:31,000 --> 00:22:33,000
+so each of these things.
+
+537
+00:22:33,000 --> 00:22:34,000
+And this is what we want.
+
+538
+00:22:34,000 --> 00:22:37,000
+We want to find the partial derivatives or the gradient
+
+539
+00:22:37,000 --> 00:22:38,000
+with respect to these things.
+
+540
+00:22:38,000 --> 00:22:39,000
+We don't care about the input.
+
+541
+00:22:39,000 --> 00:22:40,000
+It's a constant.
+
+542
+00:22:40,000 --> 00:22:43,000
+We don't change the input, obviously.
+
+543
+00:22:43,000 --> 00:22:45,000
+We only care about the train of parameters here.
+
+544
+00:22:45,000 --> 00:22:49,000
+So the first forward pass shown here, we compute a loss.
+
+545
+00:22:49,000 --> 00:22:51,000
+And by doing computing the loss,
+
+546
+00:22:51,000 --> 00:22:53,000
+we compute all the outputs intermediately.
+
+547
+00:22:53,000 --> 00:22:55,000
+And we store them in the nodes.
+
+548
+00:22:55,000 --> 00:22:57,000
+And then for the back propagation,
+
+549
+00:22:57,000 --> 00:23:00,000
+we're going to reuse them for computing the gradient.
+
+550
+00:23:00,000 --> 00:23:02,000
+So once we get the gradient, which is basically
+
+551
+00:23:02,000 --> 00:23:04,000
+a vector of partial derivatives.
+
+552
+00:23:04,000 --> 00:23:10,000
+So this gradient is kind of nothing else than 2b.
+
+553
+00:23:10,000 --> 00:23:18,000
+And then this partial derivative with respect to w1.
+
+554
+00:23:18,000 --> 00:23:21,000
+And w2, and so on.
+
+555
+00:23:21,000 --> 00:23:23,000
+So these are the parameters.
+
+556
+00:23:23,000 --> 00:23:25,000
+These are all the dimensions we get.
+
+557
+00:23:25,000 --> 00:23:27,000
+So we're in highly dimensional space.
+
+558
+00:23:27,000 --> 00:23:29,000
+And now we're going to take a step
+
+559
+00:23:29,000 --> 00:23:31,000
+in the opposite direction of this gradient.
+
+560
+00:23:31,000 --> 00:23:34,000
+So this gradient, it's actually, this
+
+561
+00:23:34,000 --> 00:23:39,000
+is how we denote them.
+
+562
+00:23:39,000 --> 00:23:41,000
+But in reality, these will be numbers.
+
+563
+00:23:41,000 --> 00:23:43,000
+This will be a vector of real numbers.
+
+564
+00:23:43,000 --> 00:23:47,000
+And the gradient size, so the gradient is nabla.
+
+565
+00:23:47,000 --> 00:23:54,000
+So the gradient size is the number of these w parameters
+
+566
+00:23:54,000 --> 00:23:59,000
+plus 1, which is the bias.
+
+567
+00:23:59,000 --> 00:24:02,000
+So this is the number of, this is the size of the gradient.
+
+568
+00:24:02,000 --> 00:24:05,000
+And this is the multidimensional space of the parameters
+
+569
+00:24:05,000 --> 00:24:07,000
+when we are moving ourselves.
+
+570
+00:24:07,000 --> 00:24:12,000
+Once we compute this gradient, we take this eta.
+
+571
+00:24:12,000 --> 00:24:13,000
+Is it eta?
+
+572
+00:24:13,000 --> 00:24:14,000
+Yes, I guess so.
+
+573
+00:24:14,000 --> 00:24:16,000
+Eta, which is the, what is the eta again?
+
+574
+00:24:16,000 --> 00:24:21,000
+What is this thing we're multiplying the gradient?
+
+575
+00:24:21,000 --> 00:24:23,000
+The learning rate, exactly, the learning rate.
+
+576
+00:24:23,000 --> 00:24:24,000
+Thank you.
+
+577
+00:24:24,000 --> 00:24:27,000
+We multiply the gradient, which is a bunch of real numbers.
+
+578
+00:24:27,000 --> 00:24:31,000
+And we moved the parameters, which
+
+579
+00:24:31,000 --> 00:24:35,000
+is, again, a bunch of numbers somewhere else,
+
+580
+00:24:35,000 --> 00:24:40,000
+where we get smaller loss.
+
+581
+00:24:40,000 --> 00:24:46,000
+And repeat until we can't do anymore.
+
+582
+00:24:46,000 --> 00:24:49,000
+So I'll let you digest it, and if you have any questions.
+
+583
+00:24:57,000 --> 00:24:58,000
+Great, any questions?
+
+584
+00:24:58,000 --> 00:24:59,000
+Yes.
+
+585
+00:24:59,000 --> 00:25:01,000
+What does online mean?
+
+586
+00:25:01,000 --> 00:25:04,000
+Online, OK, this is a great question.
+
+587
+00:25:04,000 --> 00:25:05,000
+Let me, thank you.
+
+588
+00:25:05,000 --> 00:25:07,000
+Any other questions before I answer online?
+
+589
+00:25:10,000 --> 00:25:11,000
+So everybody is happy with it?
+
+590
+00:25:11,000 --> 00:25:12,000
+Yes.
+
+591
+00:25:12,000 --> 00:25:15,000
+Why is it in the form of a vector?
+
+592
+00:25:15,000 --> 00:25:18,000
+Oh, yes, so why is it in the form of a vector?
+
+593
+00:25:18,000 --> 00:25:20,000
+It's just a bunch of numbers.
+
+594
+00:25:20,000 --> 00:25:20,000
+It doesn't matter.
+
+595
+00:25:20,000 --> 00:25:22,000
+So it's the gradients.
+
+596
+00:25:22,000 --> 00:25:24,000
+I mean, if you look at it like that,
+
+597
+00:25:24,000 --> 00:25:26,000
+they are kind of separated, because here you have,
+
+598
+00:25:26,000 --> 00:25:29,000
+oh, you don't see, OK, sorry.
+
+599
+00:25:29,000 --> 00:25:30,000
+Like that.
+
+600
+00:25:30,000 --> 00:25:32,000
+You have the, so this is a matrix.
+
+601
+00:25:32,000 --> 00:25:36,000
+This is a number somewhere in your code somewhere.
+
+602
+00:25:37,000 --> 00:25:37,000
+More than.
+
+603
+00:25:40,000 --> 00:25:42,000
+This is a vector.
+
+604
+00:25:42,000 --> 00:25:45,000
+This w is a vector, because you're
+
+605
+00:25:45,000 --> 00:25:51,000
+multiplying vector by vector, a dot product, and plus b.
+
+606
+00:25:51,000 --> 00:25:53,000
+So these are somewhere, but in fact,
+
+607
+00:25:53,000 --> 00:25:55,000
+from the mathematical perspective,
+
+608
+00:25:55,000 --> 00:26:00,000
+you're minimizing a function in dimensions
+
+609
+00:26:00,000 --> 00:26:03,000
+which corresponds to the number of the parameters.
+
+610
+00:26:03,000 --> 00:26:06,000
+Because if you minimize one-dimensional functions,
+
+611
+00:26:06,000 --> 00:26:08,000
+as function as we did before, you
+
+612
+00:26:08,000 --> 00:26:12,000
+minimize in just one, basically, one direction you find it.
+
+613
+00:26:12,000 --> 00:26:14,000
+If you have like, what is it, banana function
+
+614
+00:26:14,000 --> 00:26:18,000
+was two dimensions, and you find a minimum in two dimensions.
+
+615
+00:26:18,000 --> 00:26:22,000
+Here you have w plus 1 dimensions,
+
+616
+00:26:22,000 --> 00:26:23,000
+and in that, you're finding the minimum.
+
+617
+00:26:23,000 --> 00:26:25,000
+You're finding the spot of these parameters
+
+618
+00:26:25,000 --> 00:26:27,000
+where the loss will be minimal.
+
+619
+00:26:27,000 --> 00:26:31,000
+So it's a kind of large number of parameters.
+
+620
+00:26:31,000 --> 00:26:34,000
+And you can see it as a vector in this high dimensional space.
+
+621
+00:26:34,000 --> 00:26:37,000
+At the end of the day, it's just a bunch of numbers.
+
+622
+00:26:37,000 --> 00:26:38,000
+OK, yes.
+
+623
+00:26:43,000 --> 00:26:45,000
+What is the shape?
+
+624
+00:26:45,000 --> 00:26:46,000
+It's a very awful one.
+
+625
+00:26:46,000 --> 00:26:49,000
+So the point is, it's hard to visualize first,
+
+626
+00:26:49,000 --> 00:26:54,000
+because you have like, you rarely have two parameters.
+
+627
+00:26:54,000 --> 00:26:57,000
+This could be, well, how much parameters
+
+628
+00:26:57,000 --> 00:27:00,000
+you need if you have like, vocabulary of 10,000 words.
+
+629
+00:27:00,000 --> 00:27:02,000
+So how many parameters you will train here?
+
+630
+00:27:05,000 --> 00:27:07,000
+10,001.
+
+631
+00:27:07,000 --> 00:27:08,000
+Yes, say 100.
+
+632
+00:27:08,000 --> 00:27:11,000
+OK, so we have like, let's say like, 101 dimensions.
+
+633
+00:27:15,000 --> 00:27:16,000
+No, no, no, no, no.
+
+634
+00:27:16,000 --> 00:27:22,000
+So what you're plugging here is a bag of words.
+
+635
+00:27:22,000 --> 00:27:24,000
+And the dimension of the bag of words
+
+636
+00:27:24,000 --> 00:27:26,000
+is the size of the vocabulary, which
+
+637
+00:27:26,000 --> 00:27:28,000
+could be even if it's 100.
+
+638
+00:27:28,000 --> 00:27:29,000
+OK, let's say it's 100.
+
+639
+00:27:29,000 --> 00:27:33,000
+So V is 100.
+
+640
+00:27:33,000 --> 00:27:35,000
+If you multiply this with another vector,
+
+641
+00:27:35,000 --> 00:27:38,000
+this vector dimension has to be 100 as well.
+
+642
+00:27:38,000 --> 00:27:39,000
+And this is plus 1.
+
+643
+00:27:39,000 --> 00:27:45,000
+So you have like, 101 dimensions to optimize.
+
+644
+00:27:45,000 --> 00:27:49,000
+So you are in a 101 dimensional space,
+
+645
+00:27:49,000 --> 00:27:52,000
+finding a place in this 101 dimensional space
+
+646
+00:27:52,000 --> 00:27:55,000
+where you have minimum of some loss.
+
+647
+00:27:55,000 --> 00:27:57,000
+It's easy to visualize if you had like, two parameters.
+
+648
+00:27:57,000 --> 00:28:01,000
+So you have like, one word and one bias.
+
+649
+00:28:01,000 --> 00:28:03,000
+Yeah, so you have like, two dimensions.
+
+650
+00:28:03,000 --> 00:28:06,000
+And you see like, maybe the banana function, whatever.
+
+651
+00:28:06,000 --> 00:28:07,000
+So you can visualize it.
+
+652
+00:28:07,000 --> 00:28:11,000
+But there's no way how to visualize 101 dimensions.
+
+653
+00:28:11,000 --> 00:28:12,000
+Right?
+
+654
+00:28:12,000 --> 00:28:13,000
+How does it look?
+
+655
+00:28:13,000 --> 00:28:15,000
+So some people try actually looking into that,
+
+656
+00:28:15,000 --> 00:28:18,000
+how the surface would look if you project it down
+
+657
+00:28:18,000 --> 00:28:20,000
+to fewer dimensions.
+
+658
+00:28:20,000 --> 00:28:21,000
+And it's not a nice surface.
+
+659
+00:28:21,000 --> 00:28:22,000
+It's kind of very bumpy.
+
+660
+00:28:22,000 --> 00:28:23,000
+And there's a lot of settles.
+
+661
+00:28:23,000 --> 00:28:27,000
+Like, everybody knows what a settle is in two dimensions.
+
+662
+00:28:28,000 --> 00:28:29,000
+I don't have a picture here.
+
+663
+00:28:29,000 --> 00:28:33,000
+So if you have like, mountains here, and here is go down.
+
+664
+00:28:33,000 --> 00:28:35,000
+Like a settle in the mountains.
+
+665
+00:28:35,000 --> 00:28:36,000
+Yeah, if you go, you know, if anyone's
+
+666
+00:28:36,000 --> 00:28:39,000
+hiking in the mountains, who's hiking in the mountains?
+
+667
+00:28:39,000 --> 00:28:39,000
+Right, OK.
+
+668
+00:28:39,000 --> 00:28:42,000
+So you go up, you go to the settle.
+
+669
+00:28:42,000 --> 00:28:44,000
+And you have two peaks on the sides, and you just
+
+670
+00:28:44,000 --> 00:28:46,000
+go to the settle to the next volley.
+
+671
+00:28:46,000 --> 00:28:48,000
+So you had a settle.
+
+672
+00:28:48,000 --> 00:28:50,000
+And typically, also these functions
+
+673
+00:28:50,000 --> 00:28:51,000
+are in deep neural nets.
+
+674
+00:28:51,000 --> 00:28:53,000
+When you find the minimum, it's not really
+
+675
+00:28:53,000 --> 00:28:54,000
+like in the volley, the minimum.
+
+676
+00:28:54,000 --> 00:28:55,000
+It's typically some settle point,
+
+677
+00:28:55,000 --> 00:28:57,000
+where you have zero gradient, because it's
+
+678
+00:28:57,000 --> 00:28:59,000
+kind of flat on the settle.
+
+679
+00:28:59,000 --> 00:29:01,000
+But it's not like optimal, because you can still go down.
+
+680
+00:29:11,000 --> 00:29:12,000
+Sorry, I didn't get a question.
+
+681
+00:29:12,000 --> 00:29:21,000
+So well, you know that you minimize the loss.
+
+682
+00:29:21,000 --> 00:29:24,000
+And your function with these parameters
+
+683
+00:29:24,000 --> 00:29:26,000
+will give you the best prediction for your training
+
+684
+00:29:26,000 --> 00:29:27,000
+data.
+
+685
+00:29:27,000 --> 00:29:29,000
+And at the same time, it will give you, like,
+
+686
+00:29:29,000 --> 00:29:30,000
+best prediction for your test data
+
+687
+00:29:30,000 --> 00:29:33,000
+if they come from the same distribution.
+
+688
+00:29:33,000 --> 00:29:34,000
+Does it make sense?
+
+689
+00:29:38,000 --> 00:29:40,000
+OK, we can take it offline.
+
+690
+00:29:40,000 --> 00:29:46,000
+But any other questions before I hit what's online?
+
+691
+00:29:46,000 --> 00:29:47,000
+Let me come here.
+
+692
+00:29:50,000 --> 00:29:51,000
+OK, it's not the case.
+
+693
+00:29:51,000 --> 00:29:54,000
+If so, just, you know, you can talk about the lecture.
+
+694
+00:29:55,000 --> 00:29:58,000
+It's online, because here on the line 4,
+
+695
+00:29:58,000 --> 00:30:01,000
+we're taking a single training example.
+
+696
+00:30:01,000 --> 00:30:05,000
+We're picking a random example from the training data.
+
+697
+00:30:05,000 --> 00:30:09,000
+And it gives us only a rough estimate of the corpus loss,
+
+698
+00:30:09,000 --> 00:30:12,000
+because we're trying to minimize the corpus loss for all training
+
+699
+00:30:12,000 --> 00:30:13,000
+data.
+
+700
+00:30:13,000 --> 00:30:16,000
+But we just pick one single training example at a time.
+
+701
+00:30:16,000 --> 00:30:19,000
+That's why it's online, because you can proceed,
+
+702
+00:30:19,000 --> 00:30:23,000
+take out one example, compute a gradient,
+
+703
+00:30:23,000 --> 00:30:26,000
+do the step, pick another example, and so on.
+
+704
+00:30:26,000 --> 00:30:28,000
+So it could be used when your data is actually
+
+705
+00:30:28,000 --> 00:30:32,000
+coming online from somebody just sending you a new label data.
+
+706
+00:30:32,000 --> 00:30:34,000
+You pick one at a time and learn a new kind
+
+707
+00:30:34,000 --> 00:30:37,000
+of set of parameters, OK?
+
+708
+00:30:37,000 --> 00:30:38,000
+Good.
+
+709
+00:30:38,000 --> 00:30:39,000
+Is it a good thing or a bad thing?
+
+710
+00:30:39,000 --> 00:30:41,000
+I mean, what's the advantage or disadvantage
+
+711
+00:30:41,000 --> 00:30:43,000
+of having this online thing?
+
+712
+00:30:43,000 --> 00:30:46,000
+What could be the advantage?
+
+713
+00:30:46,000 --> 00:30:47,000
+Quick update.
+
+714
+00:30:47,000 --> 00:30:48,000
+Yeah, quick update.
+
+715
+00:30:48,000 --> 00:30:49,000
+Yes, quick updates.
+
+716
+00:30:49,000 --> 00:30:51,000
+Basically, you can basically streaming data.
+
+717
+00:30:51,000 --> 00:30:53,000
+If you have any streaming data, so you
+
+718
+00:30:53,000 --> 00:30:54,000
+can update on the streaming.
+
+719
+00:30:54,000 --> 00:30:57,000
+OK, any disadvantages of that?
+
+720
+00:30:57,000 --> 00:31:02,000
+It will take longer when you do the data set.
+
+721
+00:31:02,000 --> 00:31:03,000
+Exactly.
+
+722
+00:31:03,000 --> 00:31:04,000
+So mini-batch is the keyword, right?
+
+723
+00:31:04,000 --> 00:31:05,000
+So you've heard the word mini-batch.
+
+724
+00:31:05,000 --> 00:31:06,000
+It's great.
+
+725
+00:31:06,000 --> 00:31:07,000
+Yeah, it will take a lot of time.
+
+726
+00:31:07,000 --> 00:31:12,000
+Just do this backpropagation after every example you see.
+
+727
+00:31:12,000 --> 00:31:14,000
+Because it's kind of complicated computation.
+
+728
+00:31:14,000 --> 00:31:15,000
+I mean, complicated.
+
+729
+00:31:15,000 --> 00:31:16,000
+It's just a lot of computations.
+
+730
+00:31:16,000 --> 00:31:18,000
+And maybe there's a better way.
+
+731
+00:31:18,000 --> 00:31:21,000
+And also, the point is, you're taking a single training
+
+732
+00:31:21,000 --> 00:31:21,000
+example.
+
+733
+00:31:21,000 --> 00:31:23,000
+And this example could be kind of bad
+
+734
+00:31:23,000 --> 00:31:26,000
+and gives you the wrong direction in the gradient.
+
+735
+00:31:26,000 --> 00:31:29,000
+Because you want to go to the minimum
+
+736
+00:31:29,000 --> 00:31:30,000
+in this high-dimensional space.
+
+737
+00:31:30,000 --> 00:31:32,000
+And this particular example is kind of misleading you
+
+738
+00:31:32,000 --> 00:31:35,000
+somewhere else because it's just bad or somehow out
+
+739
+00:31:35,000 --> 00:31:36,000
+of distribution, whatever.
+
+740
+00:31:36,000 --> 00:31:38,000
+And that's maybe not what you want.
+
+741
+00:31:38,000 --> 00:31:43,000
+So instead, you can do better estimation of this corpus loss.
+
+742
+00:31:43,000 --> 00:31:49,000
+And you're going to use something called, right?
+
+743
+00:31:49,000 --> 00:31:51,000
+You can use mini-batch stochastic gradient.
+
+744
+00:31:51,000 --> 00:31:57,000
+So this is the algorithm for training neural nets.
+
+745
+00:31:57,000 --> 00:31:57,000
+Mini-batch.
+
+746
+00:31:57,000 --> 00:31:58,000
+So how does it work?
+
+747
+00:31:58,000 --> 00:32:00,000
+We have the same kind of setup.
+
+748
+00:32:00,000 --> 00:32:02,000
+So we have the same neural network, the function,
+
+749
+00:32:02,000 --> 00:32:05,000
+the training data here, and the loss.
+
+750
+00:32:05,000 --> 00:32:09,000
+And again, we iterate while something, something.
+
+751
+00:32:09,000 --> 00:32:12,000
+And then we're not picking just one example, one training
+
+752
+00:32:12,000 --> 00:32:16,000
+example, but picking n examples at a time.
+
+753
+00:32:16,000 --> 00:32:19,000
+Where n could be, yeah, something between 1.
+
+754
+00:32:19,000 --> 00:32:23,000
+If we had n1, then we are back to the online gradient descent.
+
+755
+00:32:23,000 --> 00:32:26,000
+If n is more than 1, then we get this batch.
+
+756
+00:32:26,000 --> 00:32:28,000
+So mini-batch, it will.
+
+757
+00:32:28,000 --> 00:32:31,000
+It's a batch sort of, or if it's small,
+
+758
+00:32:31,000 --> 00:32:32,000
+we call it mini-batch for some reason.
+
+759
+00:32:32,000 --> 00:32:33,000
+I don't know.
+
+760
+00:32:33,000 --> 00:32:36,000
+And what you're going to do here is that you compute the loss
+
+761
+00:32:36,000 --> 00:32:41,000
+for each example in the mini-batch, as we did before.
+
+762
+00:32:41,000 --> 00:32:44,000
+And then you're going to basically make
+
+763
+00:32:44,000 --> 00:32:46,000
+the average gradient.
+
+764
+00:32:46,000 --> 00:32:48,000
+So you're basically, for each example,
+
+765
+00:32:48,000 --> 00:32:53,000
+you take, you divide it by the number of samples
+
+766
+00:32:53,000 --> 00:32:54,000
+in the mini-batch.
+
+767
+00:32:54,000 --> 00:32:58,000
+But at the end of the day, what this thing is doing
+
+768
+00:32:58,000 --> 00:33:02,000
+is that we're getting the g hat is
+
+769
+00:33:02,000 --> 00:33:05,000
+the average of the gradients for each example in the mini-batch.
+
+770
+00:33:05,000 --> 00:33:06,000
+OK?
+
+771
+00:33:06,000 --> 00:33:06,000
+Yes?
+
+772
+00:33:06,000 --> 00:33:12,000
+So after the loop is done, the thing?
+
+773
+00:33:12,000 --> 00:33:12,000
+g hat, yes.
+
+774
+00:33:12,000 --> 00:33:14,000
+This is a lot.
+
+775
+00:33:14,000 --> 00:33:16,000
+It's like hat g.
+
+776
+00:33:16,000 --> 00:33:17,000
+It's going to be what?
+
+777
+00:33:18,000 --> 00:33:19,000
+So exactly.
+
+778
+00:33:19,000 --> 00:33:23,000
+This will be the average of the gradients for each example
+
+779
+00:33:23,000 --> 00:33:23,000
+in the mini-batch.
+
+780
+00:33:29,000 --> 00:33:31,000
+Why is this here?
+
+781
+00:33:31,000 --> 00:33:33,000
+Yeah, because it's, right.
+
+782
+00:33:33,000 --> 00:33:34,000
+It's a great question.
+
+783
+00:33:34,000 --> 00:33:37,000
+Because it's going to be, what we really want to do
+
+784
+00:33:37,000 --> 00:33:39,000
+is to kind of, if you program it naively,
+
+785
+00:33:39,000 --> 00:33:41,000
+you would collect the gradient vector
+
+786
+00:33:41,000 --> 00:33:43,000
+for each of these examples in the mini-batch.
+
+787
+00:33:43,000 --> 00:33:46,000
+You get a gradient 1, gradient 2, and so on.
+
+788
+00:33:46,000 --> 00:33:48,000
+And then you would do the average,
+
+789
+00:33:48,000 --> 00:33:53,000
+like sum them up and divide by number of them.
+
+790
+00:33:53,000 --> 00:33:54,000
+Yeah.
+
+791
+00:33:54,000 --> 00:33:58,000
+If you do that, you need n times more space
+
+792
+00:33:58,000 --> 00:34:01,000
+to store the gradients, right?
+
+793
+00:34:01,000 --> 00:34:04,000
+Because you need, well, you need a gradient
+
+794
+00:34:04,000 --> 00:34:05,000
+for the first example.
+
+795
+00:34:05,000 --> 00:34:06,000
+It's a vector of numbers.
+
+796
+00:34:06,000 --> 00:34:09,000
+You need a gradient for the first example here,
+
+797
+00:34:09,000 --> 00:34:14,000
+for the second, for the third, for the fourth, up to n.
+
+798
+00:34:14,000 --> 00:34:14,000
+Why?
+
+799
+00:34:14,000 --> 00:34:17,000
+Because I've got some gradient.
+
+800
+00:34:17,000 --> 00:34:17,000
+Oh, right.
+
+801
+00:34:17,000 --> 00:34:18,000
+You can sum.
+
+802
+00:34:18,000 --> 00:34:18,000
+Yeah, that's correct.
+
+803
+00:34:18,000 --> 00:34:18,000
+Sorry.
+
+804
+00:34:18,000 --> 00:34:20,000
+You can sum them together and divide by n.
+
+805
+00:34:20,000 --> 00:34:21,000
+Yeah, that's the same thing.
+
+806
+00:34:21,000 --> 00:34:22,000
+OK, yeah, you can do that.
+
+807
+00:34:22,000 --> 00:34:25,000
+I mean, this is basically doing it in line.
+
+808
+00:34:25,000 --> 00:34:27,000
+Yeah, I got you.
+
+809
+00:34:27,000 --> 00:34:28,000
+Overflow?
+
+810
+00:34:28,000 --> 00:34:29,000
+No, I don't think so.
+
+811
+00:34:29,000 --> 00:34:30,000
+I think it's just a design decision.
+
+812
+00:34:30,000 --> 00:34:32,000
+Like, it's maybe faster just to divide them
+
+813
+00:34:32,000 --> 00:34:34,000
+and sum them together.
+
+814
+00:34:34,000 --> 00:34:36,000
+But you can do it afterwards.
+
+815
+00:34:36,000 --> 00:34:38,000
+Yeah, sorry.
+
+816
+00:34:38,000 --> 00:34:43,000
+Is it summed up first and then divided faster than like this?
+
+817
+00:34:43,000 --> 00:34:45,000
+I think it depends on the implementation.
+
+818
+00:34:45,000 --> 00:34:45,000
+I don't know.
+
+819
+00:34:45,000 --> 00:34:49,000
+I think, I mean, mathematically, it's the same thing.
+
+820
+00:34:49,000 --> 00:34:50,000
+There might be differences somewhere.
+
+821
+00:34:50,000 --> 00:34:52,000
+Yes, you were saying?
+
+822
+00:34:52,000 --> 00:34:54,000
+Why is the minibatch thing faster?
+
+823
+00:34:54,000 --> 00:34:58,000
+You still have to calculate the gradient for each of the-
+
+824
+00:34:58,000 --> 00:34:59,000
+This is a great question.
+
+825
+00:34:59,000 --> 00:35:03,000
+So why is the minibatch gradient faster than just doing before?
+
+826
+00:35:03,000 --> 00:35:05,000
+Because at the end of the day, you
+
+827
+00:35:05,000 --> 00:35:07,000
+have to go through the computation loss and gradient
+
+828
+00:35:07,000 --> 00:35:09,000
+for each example anyway.
+
+829
+00:35:09,000 --> 00:35:11,000
+I do have an answer for that.
+
+830
+00:35:11,000 --> 00:35:12,000
+I'll come to that later.
+
+831
+00:35:12,000 --> 00:35:14,000
+Any other question?
+
+832
+00:35:14,000 --> 00:35:15,000
+You were something?
+
+833
+00:35:15,000 --> 00:35:17,000
+You were asking as well?
+
+834
+00:35:17,000 --> 00:35:17,000
+The same.
+
+835
+00:35:17,000 --> 00:35:20,000
+I was about to say that we need to focus on the migration.
+
+836
+00:35:20,000 --> 00:35:21,000
+Thank you for spoiling that.
+
+837
+00:35:21,000 --> 00:35:22,000
+OK, yes.
+
+838
+00:35:22,000 --> 00:35:22,000
+OK, good.
+
+839
+00:35:22,000 --> 00:35:24,000
+So I'm going to address this.
+
+840
+00:35:24,000 --> 00:35:26,000
+Any other question to the minibatch stochastic gradient?
+
+841
+00:35:26,000 --> 00:35:28,000
+Yes.
+
+842
+00:35:28,000 --> 00:35:28,000
+Which one?
+
+843
+00:35:28,000 --> 00:35:31,000
+The stochastic?
+
+844
+00:35:31,000 --> 00:35:36,000
+Because stochastic means you're randomly sampling the batch.
+
+845
+00:35:36,000 --> 00:35:37,000
+Right?
+
+846
+00:35:37,000 --> 00:35:37,000
+This is it.
+
+847
+00:35:37,000 --> 00:35:41,000
+I mean, here, it's stochastic because you're
+
+848
+00:35:41,000 --> 00:35:44,000
+sampling your- choose randomly one example
+
+849
+00:35:44,000 --> 00:35:46,000
+from the training data.
+
+850
+00:35:46,000 --> 00:35:48,000
+Here, you're sampling a batch of training data.
+
+851
+00:35:48,000 --> 00:35:49,000
+Yeah.
+
+852
+00:35:49,000 --> 00:35:55,000
+And does not have to be always the training data.
+
+853
+00:35:55,000 --> 00:35:56,000
+No.
+
+854
+00:35:56,000 --> 00:35:57,000
+And it's a parameter.
+
+855
+00:35:57,000 --> 00:35:58,000
+Yes, exactly.
+
+856
+00:35:58,000 --> 00:36:00,000
+I'll come to that on the next slide as well.
+
+857
+00:36:00,000 --> 00:36:01,000
+So we have two questions.
+
+858
+00:36:01,000 --> 00:36:02,000
+Any other question?
+
+859
+00:36:02,000 --> 00:36:02,000
+Which is- yes?
+
+860
+00:36:02,000 --> 00:36:05,000
+What's our starting weight?
+
+861
+00:36:05,000 --> 00:36:07,000
+The starting weight?
+
+862
+00:36:07,000 --> 00:36:08,000
+Where do you start?
+
+863
+00:36:08,000 --> 00:36:10,000
+What is our parameters?
+
+864
+00:36:11,000 --> 00:36:14,000
+OK, so how would you set up your parameters?
+
+865
+00:36:14,000 --> 00:36:15,000
+What is the W?
+
+866
+00:36:15,000 --> 00:36:16,000
+So you start from scratch.
+
+867
+00:36:16,000 --> 00:36:20,000
+What is the W's, and what is the B's?
+
+868
+00:36:20,000 --> 00:36:24,000
+So I would say the good default could be all 0's.
+
+869
+00:36:27,000 --> 00:36:29,000
+Will it work?
+
+870
+00:36:29,000 --> 00:36:31,000
+Actually, I thought about it in the car now,
+
+871
+00:36:31,000 --> 00:36:32,000
+and I think it will work.
+
+872
+00:36:32,000 --> 00:36:32,000
+It won't break.
+
+873
+00:36:32,000 --> 00:36:34,000
+I think it will work, but just the first iteration
+
+874
+00:36:34,000 --> 00:36:38,000
+will give you a 0 in front- I mean,
+
+875
+00:36:38,000 --> 00:36:41,000
+after the first kind of stochastic gradient step,
+
+876
+00:36:41,000 --> 00:36:43,000
+you will end up something somewhere else.
+
+877
+00:36:43,000 --> 00:36:45,000
+I mean, there is no local minimum, maximum
+
+878
+00:36:45,000 --> 00:36:46,000
+in the 0 parameters.
+
+879
+00:36:46,000 --> 00:36:48,000
+It's just a point, right?
+
+880
+00:36:48,000 --> 00:36:51,000
+But typically, what we do- so I need to double check.
+
+881
+00:36:51,000 --> 00:36:53,000
+I was really thinking about it, like whether I shouldn't put it
+
+882
+00:36:53,000 --> 00:36:56,000
+to 0, but then why not?
+
+883
+00:36:56,000 --> 00:36:59,000
+Typically, we sample them randomly.
+
+884
+00:36:59,000 --> 00:37:02,000
+Random, and there is some kind of- from which distribution
+
+885
+00:37:02,000 --> 00:37:04,000
+uniform between something and something?
+
+886
+00:37:04,000 --> 00:37:07,000
+Initialized randomly the weights of your model.
+
+887
+00:37:07,000 --> 00:37:08,000
+OK?
+
+888
+00:37:08,000 --> 00:37:09,000
+So random.
+
+889
+00:37:09,000 --> 00:37:12,000
+Could be- but I think 0's could be also fine.
+
+890
+00:37:12,000 --> 00:37:14,000
+Maybe you have 0 multiplications,
+
+891
+00:37:14,000 --> 00:37:16,000
+which gives you a little information
+
+892
+00:37:16,000 --> 00:37:18,000
+than having some random numbers, so it's maybe
+
+893
+00:37:18,000 --> 00:37:20,000
+better to start somewhere else.
+
+894
+00:37:20,000 --> 00:37:21,000
+But I don't think it will break the 0's.
+
+895
+00:37:21,000 --> 00:37:23,000
+I have to double check, though.
+
+896
+00:37:23,000 --> 00:37:24,000
+NRPS.
+
+897
+00:37:30,000 --> 00:37:31,000
+I don't think so.
+
+898
+00:37:31,000 --> 00:37:33,000
+Why should be there a 0 gradient?
+
+899
+00:37:37,000 --> 00:37:37,000
+Yeah, exactly.
+
+900
+00:37:37,000 --> 00:37:40,000
+I mean, I was sitting in the car, and it's like, yeah,
+
+901
+00:37:40,000 --> 00:37:41,000
+there will be 0 gradients.
+
+902
+00:37:41,000 --> 00:37:42,000
+No.
+
+903
+00:37:42,000 --> 00:37:44,000
+Why should there be a 0 gradient?
+
+904
+00:37:44,000 --> 00:37:47,000
+Because you compute a loss and the gradient- I mean,
+
+905
+00:37:47,000 --> 00:37:47,000
+show me the proof.
+
+906
+00:37:47,000 --> 00:37:49,000
+I mean, maybe I'm wrong.
+
+907
+00:37:49,000 --> 00:37:53,000
+So I would need a piece of paper as well for this.
+
+908
+00:37:53,000 --> 00:37:55,000
+Anyway, any other question?
+
+909
+00:37:55,000 --> 00:37:57,000
+Before we move to these two questions,
+
+910
+00:37:57,000 --> 00:38:04,000
+like what is M, and why is it faster or better?
+
+911
+00:38:04,000 --> 00:38:06,000
+OK, let's move on.
+
+912
+00:38:06,000 --> 00:38:09,000
+So the mini-batch size can be something between 1
+
+913
+00:38:09,000 --> 00:38:11,000
+and the full data set, right?
+
+914
+00:38:11,000 --> 00:38:15,000
+Typically, what's the driving factor of the batch size?
+
+915
+00:38:15,000 --> 00:38:19,000
+Sorry, I have a new phone, and I can't turn it off.
+
+916
+00:38:19,000 --> 00:38:20,000
+Come on.
+
+917
+00:38:20,000 --> 00:38:22,000
+Sorry about it.
+
+918
+00:38:22,000 --> 00:38:26,000
+What kind of drives your mini-batch size?
+
+919
+00:38:27,000 --> 00:38:27,000
+What do you think?
+
+920
+00:38:27,000 --> 00:38:32,000
+What do you- OK, let's address the second question first.
+
+921
+00:38:32,000 --> 00:38:36,000
+Because this can be easily parallelized, right?
+
+922
+00:38:36,000 --> 00:38:41,000
+If you look back, this kind of two things
+
+923
+00:38:41,000 --> 00:38:43,000
+are running for each example, but these examples
+
+924
+00:38:43,000 --> 00:38:44,000
+are independent.
+
+925
+00:38:44,000 --> 00:38:47,000
+And also, you don't change anything in your parameters
+
+926
+00:38:47,000 --> 00:38:51,000
+yet, so you can just run it on different kind of cores,
+
+927
+00:38:51,000 --> 00:38:52,000
+whatever.
+
+928
+00:38:52,000 --> 00:38:54,000
+So you can parallelize that.
+
+929
+00:38:54,000 --> 00:38:56,000
+If you do it very cleverly, then on GPUs,
+
+930
+00:38:56,000 --> 00:38:57,000
+it gives you super, super boost.
+
+931
+00:38:57,000 --> 00:38:58,000
+OK?
+
+932
+00:38:58,000 --> 00:39:02,000
+So do you also parallelize the other online things?
+
+933
+00:39:02,000 --> 00:39:08,000
+Do you just run single examples on different cores?
+
+934
+00:39:08,000 --> 00:39:11,000
+I think here, you- well, the only thing you can really
+
+935
+00:39:11,000 --> 00:39:15,000
+parallelize here is maybe some matrix multiplication
+
+936
+00:39:15,000 --> 00:39:16,000
+in the network.
+
+937
+00:39:16,000 --> 00:39:21,000
+But itself, naively, you have just one function running.
+
+938
+00:39:21,000 --> 00:39:24,000
+This is one function, so there's nothing globally parallelizable.
+
+939
+00:39:24,000 --> 00:39:26,000
+Well, here, you can really say, oh, this example goes here,
+
+940
+00:39:26,000 --> 00:39:29,000
+this example goes here, and you can compute them parallel.
+
+941
+00:39:29,000 --> 00:39:29,000
+OK?
+
+942
+00:39:34,000 --> 00:39:37,000
+And the higher values of n, like the size of mini-batch,
+
+943
+00:39:37,000 --> 00:39:40,000
+so the high values give you better estimates.
+
+944
+00:39:40,000 --> 00:39:43,000
+Smaller values, like more updates and turning faster.
+
+945
+00:39:43,000 --> 00:39:46,000
+There is one thing, actually, in reality
+
+946
+00:39:46,000 --> 00:39:50,000
+where you need to pay attention while choosing n.
+
+947
+00:39:50,000 --> 00:39:50,000
+What is it?
+
+948
+00:39:54,000 --> 00:39:57,000
+Anyone knows what's the limiting factor
+
+949
+00:39:57,000 --> 00:40:00,000
+of having smaller batch sizes than the full training data
+
+950
+00:40:00,000 --> 00:40:05,000
+set if you run this in parallel?
+
+951
+00:40:05,000 --> 00:40:07,000
+Let's say you parallelize everything here,
+
+952
+00:40:07,000 --> 00:40:11,000
+and you want to run it with n as large as possible.
+
+953
+00:40:11,000 --> 00:40:13,000
+Is it a hardware or a core?
+
+954
+00:40:13,000 --> 00:40:14,000
+Memory.
+
+955
+00:40:14,000 --> 00:40:15,000
+Yes, you're running out of memory.
+
+956
+00:40:15,000 --> 00:40:17,000
+So if your network is big, and you're
+
+957
+00:40:17,000 --> 00:40:23,000
+running on a poor guy's A100 NVIDIA GPU with 80 gigs RAM,
+
+958
+00:40:23,000 --> 00:40:25,000
+and you're running a large model,
+
+959
+00:40:25,000 --> 00:40:30,000
+then your batch size will be 16, 32, 64 maximum.
+
+960
+00:40:30,000 --> 00:40:34,000
+Because the network is just, I mean, with billion parameters,
+
+961
+00:40:34,000 --> 00:40:35,000
+you need to fit it in memory.
+
+962
+00:40:35,000 --> 00:40:37,000
+And in a batch, if you run it in parallel,
+
+963
+00:40:37,000 --> 00:40:42,000
+you need as much memory as your batch size.
+
+964
+00:40:42,000 --> 00:40:44,000
+So this is the factor slowing down.
+
+965
+00:40:44,000 --> 00:40:45,000
+Yes?
+
+966
+00:40:45,000 --> 00:40:47,000
+Is that slowing down for the end up
+
+967
+00:40:47,000 --> 00:40:51,000
+to other data?
+
+968
+00:40:51,000 --> 00:40:55,000
+It gives you, so like getting rid of settle points,
+
+969
+00:40:55,000 --> 00:40:55,000
+I don't know.
+
+970
+00:40:55,000 --> 00:40:57,000
+I mean, I don't know.
+
+971
+00:40:57,000 --> 00:41:00,000
+I don't think there's a general kind of rule of thumb,
+
+972
+00:41:00,000 --> 00:41:02,000
+but it gives you a better estimate of the gradient.
+
+973
+00:41:02,000 --> 00:41:04,000
+So because you're kind of averaging
+
+974
+00:41:04,000 --> 00:41:07,000
+all the gradients for all the different points,
+
+975
+00:41:07,000 --> 00:41:10,000
+so then you know much better where
+
+976
+00:41:10,000 --> 00:41:12,000
+to go for the better loss.
+
+977
+00:41:12,000 --> 00:41:14,000
+But if it's just a settle point or not, I don't know.
+
+978
+00:41:14,000 --> 00:41:16,000
+Maybe there's some theory about it.
+
+979
+00:41:16,000 --> 00:41:17,000
+But I don't know that.
+
+980
+00:41:17,000 --> 00:41:19,000
+I'm sorry.
+
+981
+00:41:19,000 --> 00:41:23,000
+OK, any other question?
+
+982
+00:41:23,000 --> 00:41:25,000
+Great, so we can build this thing.
+
+983
+00:41:25,000 --> 00:41:29,000
+I mean, we have computational graphs.
+
+984
+00:41:29,000 --> 00:41:30,000
+We have backpropagation.
+
+985
+00:41:30,000 --> 00:41:34,000
+All these functions in there are differentiable.
+
+986
+00:41:34,000 --> 00:41:35,000
+You can plug them together.
+
+987
+00:41:35,000 --> 00:41:37,000
+You can run backpropagation, and you can
+
+988
+00:41:37,000 --> 00:41:39,000
+run stochastic gradient descent.
+
+989
+00:41:39,000 --> 00:41:40,000
+So basically, nothing prevents you now
+
+990
+00:41:40,000 --> 00:41:44,000
+from building this thing from scratch, if you want.
+
+991
+00:41:44,000 --> 00:41:49,000
+OK, now we are talking about so far,
+
+992
+00:41:49,000 --> 00:41:51,000
+we are talking about binary classification, which
+
+993
+00:41:51,000 --> 00:41:53,000
+was like, yeah, 0 and 1.
+
+994
+00:41:53,000 --> 00:41:57,000
+But typically, the world is not binary,
+
+995
+00:41:57,000 --> 00:42:01,000
+or classification tasks in NLP are not binary at all.
+
+996
+00:42:01,000 --> 00:42:05,000
+And we want to classify maybe into distinct categorical
+
+997
+00:42:05,000 --> 00:42:07,000
+classes.
+
+998
+00:42:07,000 --> 00:42:14,000
+So for example, let's try a task of language identification.
+
+999
+00:42:14,000 --> 00:42:16,000
+So the input will be, again, back of words,
+
+1000
+00:42:16,000 --> 00:42:18,000
+or back of subwords, whatever.
+
+1001
+00:42:18,000 --> 00:42:20,000
+Maybe subwords are better, but let's take it as back of words.
+
+1002
+00:42:20,000 --> 00:42:25,000
+And the output will be, I want to tell whether a document is
+
+1003
+00:42:25,000 --> 00:42:28,000
+in English, French, German, Italian, Spanish, or other.
+
+1004
+00:42:28,000 --> 00:42:30,000
+So we have six classes now.
+
+1005
+00:42:30,000 --> 00:42:32,000
+It's a very simplified version, but why not?
+
+1006
+00:42:32,000 --> 00:42:34,000
+For some cases, it might be good.
+
+1007
+00:42:34,000 --> 00:42:37,000
+And we want to classify it into these categories.
+
+1008
+00:42:37,000 --> 00:42:41,000
+And the thing is, there is no ordering of these.
+
+1009
+00:42:41,000 --> 00:42:44,000
+There is nothing saying, like, English
+
+1010
+00:42:44,000 --> 00:42:47,000
+should be higher than French, or whatever.
+
+1011
+00:42:47,000 --> 00:42:48,000
+There is nothing.
+
+1012
+00:42:48,000 --> 00:42:50,000
+There's different categories.
+
+1013
+00:42:50,000 --> 00:42:52,000
+So how do you want to encode this?
+
+1014
+00:42:52,000 --> 00:42:55,000
+I mean, in the binary, we had negative, positive 0 and 1.
+
+1015
+00:42:55,000 --> 00:42:59,000
+But now, how are we going to encode this into something,
+
+1016
+00:42:59,000 --> 00:43:02,000
+into maybe, I don't know, a number, a vector?
+
+1017
+00:43:02,000 --> 00:43:03,000
+Any ideas?
+
+1018
+00:43:03,000 --> 00:43:07,000
+How can we work with this categorical data?
+
+1019
+00:43:07,000 --> 00:43:07,000
+Yes?
+
+1020
+00:43:07,000 --> 00:43:09,000
+So just have a six-dimensional vector
+
+1021
+00:43:09,000 --> 00:43:11,000
+as output instead of 0 and 1?
+
+1022
+00:43:11,000 --> 00:43:15,000
+We will have a six-dimensional output vector with 0s and 1.
+
+1023
+00:43:15,000 --> 00:43:15,000
+OK, cool.
+
+1024
+00:43:15,000 --> 00:43:17,000
+Was it ringing a bell for everybody here?
+
+1025
+00:43:17,000 --> 00:43:19,000
+Because we had it already.
+
+1026
+00:43:19,000 --> 00:43:20,000
+It's similar to?
+
+1027
+00:43:20,000 --> 00:43:20,000
+One-off encoding.
+
+1028
+00:43:20,000 --> 00:43:22,000
+It's one-off encoding, exactly.
+
+1029
+00:43:22,000 --> 00:43:23,000
+We had the same thing for words.
+
+1030
+00:43:23,000 --> 00:43:25,000
+Words didn't have any ordering, and we just
+
+1031
+00:43:25,000 --> 00:43:29,000
+put them into 60,000 big vector.
+
+1032
+00:43:29,000 --> 00:43:31,000
+And there was just 1, and everything else was 0.
+
+1033
+00:43:31,000 --> 00:43:34,000
+We're going to do the same thing with the labels here.
+
+1034
+00:43:34,000 --> 00:43:35,000
+So one-off encoding, exactly.
+
+1035
+00:43:35,000 --> 00:43:38,000
+And we're going to randomly, or not randomly, arbitrarily say,
+
+1036
+00:43:38,000 --> 00:43:42,000
+OK, this is going to be 1 and 5 0s, 5 0s,
+
+1037
+00:43:42,000 --> 00:43:45,000
+and French is going to be on the second position, and so on.
+
+1038
+00:43:45,000 --> 00:43:47,000
+And the dimensionality of this y vector
+
+1039
+00:43:47,000 --> 00:43:50,000
+is now the number of classes.
+
+1040
+00:43:50,000 --> 00:43:53,000
+Any questions why we're doing this mapping,
+
+1041
+00:43:53,000 --> 00:43:55,000
+one-off mapping of the label?
+
+1042
+00:43:55,000 --> 00:43:55,000
+Yes?
+
+1043
+00:43:55,000 --> 00:43:58,000
+Shouldn't we also set up 1 and 0 to give confidence
+
+1044
+00:43:58,000 --> 00:44:00,000
+for every language and see which is the highest?
+
+1045
+00:44:00,000 --> 00:44:01,000
+But this is the Goldständer labels.
+
+1046
+00:44:01,000 --> 00:44:02,000
+We know.
+
+1047
+00:44:02,000 --> 00:44:05,000
+I mean, this is like how you present the task.
+
+1048
+00:44:05,000 --> 00:44:09,000
+We're saying, yeah, this is in German.
+
+1049
+00:44:09,000 --> 00:44:10,000
+But theoretically, you're right.
+
+1050
+00:44:10,000 --> 00:44:12,000
+You can put the probability distribution
+
+1051
+00:44:12,000 --> 00:44:14,000
+over these categories and say, yeah, maybe this
+
+1052
+00:44:14,000 --> 00:44:19,000
+is like 80% German and 20% English
+
+1053
+00:44:19,000 --> 00:44:22,000
+if it suits your use case.
+
+1054
+00:44:22,000 --> 00:44:23,000
+But this is very simple.
+
+1055
+00:44:23,000 --> 00:44:25,000
+And it's like hard classification.
+
+1056
+00:44:25,000 --> 00:44:27,000
+You're saying, yeah, either or the other.
+
+1057
+00:44:27,000 --> 00:44:30,000
+We're not talking about language flipping, language switching,
+
+1058
+00:44:30,000 --> 00:44:31,000
+and stuff like that.
+
+1059
+00:44:31,000 --> 00:44:33,000
+So any other question?
+
+1060
+00:44:33,000 --> 00:44:34,000
+I hope this is clear.
+
+1061
+00:44:34,000 --> 00:44:36,000
+This is the same thing as we did with words, one-off encoding
+
+1062
+00:44:36,000 --> 00:44:37,000
+of the labels.
+
+1063
+00:44:37,000 --> 00:44:37,000
+Yes?
+
+1064
+00:44:37,000 --> 00:44:39,000
+What was the probability that there
+
+1065
+00:44:39,000 --> 00:44:43,000
+should be texts that are exactly the same in English
+
+1066
+00:44:43,000 --> 00:44:46,000
+and in German, the same words that you would put
+
+1067
+00:44:46,000 --> 00:44:47,000
+for chart-off text?
+
+1068
+00:44:47,000 --> 00:44:49,000
+How much would you solve for that?
+
+1069
+00:44:49,000 --> 00:44:52,000
+Yeah, so if there's, OK, this is a tricky question.
+
+1070
+00:44:52,000 --> 00:44:57,000
+So if I really want to classify text into languages
+
+1071
+00:44:57,000 --> 00:44:59,000
+and there are two documents that are exactly
+
+1072
+00:44:59,000 --> 00:45:03,000
+the same in English and in German,
+
+1073
+00:45:03,000 --> 00:45:06,000
+then something is wrong with the text,
+
+1074
+00:45:06,000 --> 00:45:07,000
+or something is wrong with my data set,
+
+1075
+00:45:07,000 --> 00:45:10,000
+or something is wrong conceptually with my task.
+
+1076
+00:45:10,000 --> 00:45:11,000
+So I'm not expecting that.
+
+1077
+00:45:11,000 --> 00:45:13,000
+But obviously, there could be cases.
+
+1078
+00:45:13,000 --> 00:45:15,000
+What's the case?
+
+1079
+00:45:15,000 --> 00:45:16,000
+For example, if you were translating just
+
+1080
+00:45:16,000 --> 00:45:22,000
+out of the text language, and if I put the EID in,
+
+1081
+00:45:22,000 --> 00:45:25,000
+it would be done in English, or the actual EID.
+
+1082
+00:45:25,000 --> 00:45:26,000
+Sure, yes, of course.
+
+1083
+00:45:26,000 --> 00:45:29,000
+But you're translating words, which is harder.
+
+1084
+00:45:29,000 --> 00:45:31,000
+You can also translate sentence things.
+
+1085
+00:45:31,000 --> 00:45:35,000
+Yes, yeah, OK, sure.
+
+1086
+00:45:35,000 --> 00:45:37,000
+I mean, this is not an easy task, right?
+
+1087
+00:45:37,000 --> 00:45:40,000
+And mentioning a language identification is not easy,
+
+1088
+00:45:40,000 --> 00:45:41,000
+although we think it's easy.
+
+1089
+00:45:41,000 --> 00:45:42,000
+So there is research on that.
+
+1090
+00:45:42,000 --> 00:45:46,000
+And you have corner cases where it will break,
+
+1091
+00:45:46,000 --> 00:45:48,000
+because you have the same label for the same,
+
+1092
+00:45:48,000 --> 00:45:50,000
+so different labels for the same inputs.
+
+1093
+00:45:50,000 --> 00:45:52,000
+Yeah, so you have to take it as a feature of your data set
+
+1094
+00:45:52,000 --> 00:45:55,000
+and live with that, right?
+
+1095
+00:45:55,000 --> 00:45:56,000
+OK, good.
+
+1096
+00:45:56,000 --> 00:45:58,000
+Any other question, which is not that tricky?
+
+1097
+00:45:58,000 --> 00:45:59,000
+Yes?
+
+1098
+00:45:59,000 --> 00:46:04,000
+Would it be possible to just use a vector with three entries
+
+1099
+00:46:04,000 --> 00:46:07,000
+and then count up and bind it?
+
+1100
+00:46:07,000 --> 00:46:08,000
+OK, good.
+
+1101
+00:46:08,000 --> 00:46:10,000
+So yes, so you would be basically
+
+1102
+00:46:10,000 --> 00:46:12,000
+mapping that to binary numbers, right?
+
+1103
+00:46:12,000 --> 00:46:16,000
+But you're imposing them, then, some sort
+
+1104
+00:46:16,000 --> 00:46:19,000
+of ordering or similarity, because some numbers are
+
+1105
+00:46:19,000 --> 00:46:22,000
+close to each other than the others.
+
+1106
+00:46:22,000 --> 00:46:25,000
+But these are distinct things, and the Hamming distance
+
+1107
+00:46:25,000 --> 00:46:26,000
+should be the same for all of them,
+
+1108
+00:46:26,000 --> 00:46:30,000
+because we want to map them as far as possible in this space.
+
+1109
+00:46:30,000 --> 00:46:31,000
+OK?
+
+1110
+00:46:31,000 --> 00:46:33,000
+Good.
+
+1111
+00:46:33,000 --> 00:46:35,000
+Let's move on.
+
+1112
+00:46:35,000 --> 00:46:36,000
+So how can we solve this?
+
+1113
+00:46:36,000 --> 00:46:39,000
+OK, so we know we have linear functions.
+
+1114
+00:46:39,000 --> 00:46:40,000
+We have the sigmoid thing.
+
+1115
+00:46:40,000 --> 00:46:43,000
+But now we're not classifying into binary, into 0, 1, 1.
+
+1116
+00:46:43,000 --> 00:46:46,000
+We are classifying into a vector.
+
+1117
+00:46:46,000 --> 00:46:49,000
+So how can we solve this?
+
+1118
+00:46:49,000 --> 00:46:52,000
+So I have a possible solution here.
+
+1119
+00:46:52,000 --> 00:46:57,000
+And we can actually have, for each of these languages,
+
+1120
+00:46:57,000 --> 00:47:00,000
+so this fancy L here, for each of them,
+
+1121
+00:47:00,000 --> 00:47:03,000
+we can have a separate white vector.
+
+1122
+00:47:03,000 --> 00:47:05,000
+So for example, the weights for French,
+
+1123
+00:47:05,000 --> 00:47:11,000
+and we can have the bias scalar here for each language.
+
+1124
+00:47:11,000 --> 00:47:14,000
+And then we can just basically do the same thing
+
+1125
+00:47:14,000 --> 00:47:16,000
+as we did before for the binary prediction
+
+1126
+00:47:16,000 --> 00:47:20,000
+and take the input vector, multiply that
+
+1127
+00:47:20,000 --> 00:47:25,000
+for with the particle language weights and bias,
+
+1128
+00:47:25,000 --> 00:47:28,000
+and then pick the highest scoring language.
+
+1129
+00:47:28,000 --> 00:47:31,000
+So it would be like the maximum argument
+
+1130
+00:47:31,000 --> 00:47:34,000
+from all of these six ones that gives us the highest
+
+1131
+00:47:34,000 --> 00:47:36,000
+score for this computation.
+
+1132
+00:47:36,000 --> 00:47:38,000
+Does it make sense?
+
+1133
+00:47:38,000 --> 00:47:41,000
+So basically, we would say, well, there's no, well,
+
+1134
+00:47:41,000 --> 00:47:43,000
+we're not saying there's only two languages
+
+1135
+00:47:43,000 --> 00:47:44,000
+and cast it binary.
+
+1136
+00:47:44,000 --> 00:47:46,000
+But we would say, like, there's six languages,
+
+1137
+00:47:46,000 --> 00:47:48,000
+and each of them has a set of parameters.
+
+1138
+00:47:48,000 --> 00:47:50,000
+And the equation we're using here would be the same.
+
+1139
+00:47:50,000 --> 00:47:53,000
+So basically, projection of the inputs
+
+1140
+00:47:53,000 --> 00:47:58,000
+times the parameters for the language and the bias.
+
+1141
+00:47:58,000 --> 00:47:59,000
+This is great.
+
+1142
+00:47:59,000 --> 00:48:03,000
+So we can basically take these and rearrange them
+
+1143
+00:48:03,000 --> 00:48:09,000
+into, rearrange these vectors into columns of the matrix W,
+
+1144
+00:48:09,000 --> 00:48:16,000
+which will be then, we'll have number
+
+1145
+00:48:16,000 --> 00:48:20,000
+of rows, which is the input dimension, and six columns.
+
+1146
+00:48:20,000 --> 00:48:22,000
+And we would get, again, linear projection.
+
+1147
+00:48:22,000 --> 00:48:23,000
+Oh, this is kind of cool, right?
+
+1148
+00:48:23,000 --> 00:48:25,000
+So we're trimming everything from separated languages
+
+1149
+00:48:25,000 --> 00:48:27,000
+into one matrix.
+
+1150
+00:48:27,000 --> 00:48:30,000
+And it's doing the same thing.
+
+1151
+00:48:30,000 --> 00:48:36,000
+It's a projection from a vector into another vector.
+
+1152
+00:48:36,000 --> 00:48:40,000
+So this would be like the result here.
+
+1153
+00:48:40,000 --> 00:48:44,000
+We would have dimensionality of six,
+
+1154
+00:48:44,000 --> 00:48:48,000
+because we have six languages.
+
+1155
+00:48:48,000 --> 00:48:49,000
+Any questions?
+
+1156
+00:48:54,000 --> 00:48:57,000
+Yes.
+
+1157
+00:48:57,000 --> 00:48:59,000
+What do we do with biases?
+
+1158
+00:49:00,000 --> 00:49:02,000
+Well, we treat them the same way as we did before.
+
+1159
+00:49:02,000 --> 00:49:06,000
+So we have, for each language, we would have basically,
+
+1160
+00:49:06,000 --> 00:49:08,000
+oh, here, what do we do with the biases?
+
+1161
+00:49:08,000 --> 00:49:11,000
+Yes, so we convert the bias into also,
+
+1162
+00:49:11,000 --> 00:49:14,000
+like, a six-dimensional vector.
+
+1163
+00:49:14,000 --> 00:49:16,000
+So everything will kind of work with the dimensions here.
+
+1164
+00:49:16,000 --> 00:49:17,000
+Yeah, thank you.
+
+1165
+00:49:17,000 --> 00:49:18,000
+Any other question?
+
+1166
+00:49:18,000 --> 00:49:18,000
+Yes.
+
+1167
+00:49:18,000 --> 00:49:20,000
+So if I understand correctly, we have
+
+1168
+00:49:20,000 --> 00:49:24,000
+this two-step probability for every language, right?
+
+1169
+00:49:24,000 --> 00:49:25,000
+Exactly.
+
+1170
+00:49:25,000 --> 00:49:31,000
+In that case, we would also need that for all the ways
+
+1171
+00:49:31,000 --> 00:49:34,000
+we just said, oh, the probability is really low,
+
+1172
+00:49:34,000 --> 00:49:37,000
+or multiple tests, the probability is really high.
+
+1173
+00:49:37,000 --> 00:49:38,000
+Yes, I know.
+
+1174
+00:49:38,000 --> 00:49:40,000
+So we're not going to, you're talking
+
+1175
+00:49:40,000 --> 00:49:44,000
+about putting the sigmoid over that.
+
+1176
+00:49:44,000 --> 00:49:47,000
+I mean, the sigmoid, this tells you probability of the,
+
+1177
+00:49:47,000 --> 00:49:50,000
+whether it's, the linear mapping is basically
+
+1178
+00:49:50,000 --> 00:49:52,000
+a projection into a number.
+
+1179
+00:49:52,000 --> 00:49:54,000
+So now, for each language, you're
+
+1180
+00:49:54,000 --> 00:49:57,000
+projecting the input to a number.
+
+1181
+00:49:57,000 --> 00:50:01,000
+And it tells us some sort of affinity,
+
+1182
+00:50:01,000 --> 00:50:04,000
+or how for this language, this input,
+
+1183
+00:50:04,000 --> 00:50:07,000
+kind of what values is it giving us.
+
+1184
+00:50:07,000 --> 00:50:09,000
+But we're not saying the probability at all.
+
+1185
+00:50:09,000 --> 00:50:10,000
+Just numbers.
+
+1186
+00:50:10,000 --> 00:50:12,000
+Because if we do this, the output
+
+1187
+00:50:12,000 --> 00:50:18,000
+will be a vector of size 6 of real numbers.
+
+1188
+00:50:18,000 --> 00:50:21,000
+But these will be, these could be from minus infinity,
+
+1189
+00:50:21,000 --> 00:50:23,000
+oh, sorry, it's not infinity.
+
+1190
+00:50:23,000 --> 00:50:25,000
+This is infinity to plus infinity,
+
+1191
+00:50:25,000 --> 00:50:27,000
+because we don't put any constraints here.
+
+1192
+00:50:27,000 --> 00:50:29,000
+So it just gives us, it's a projection
+
+1193
+00:50:29,000 --> 00:50:30,000
+to low dimensional space.
+
+1194
+00:50:30,000 --> 00:50:31,000
+Nothing more.
+
+1195
+00:50:31,000 --> 00:50:33,000
+There's no probabilities.
+
+1196
+00:50:33,000 --> 00:50:34,000
+OK, does that answer your question?
+
+1197
+00:50:34,000 --> 00:50:35,000
+OK.
+
+1198
+00:50:35,000 --> 00:50:36,000
+Any other question?
+
+1199
+00:50:36,000 --> 00:50:38,000
+Yes.
+
+1200
+00:50:38,000 --> 00:50:40,000
+Then you take the highest one, or?
+
+1201
+00:50:40,000 --> 00:50:41,000
+Yes, I will take the highest one.
+
+1202
+00:50:41,000 --> 00:50:43,000
+I would take like, which one is the highest?
+
+1203
+00:50:43,000 --> 00:50:46,000
+This will be the language.
+
+1204
+00:50:46,000 --> 00:50:49,000
+Why not?
+
+1205
+00:50:49,000 --> 00:50:50,000
+I mean, we can do that.
+
+1206
+00:50:50,000 --> 00:50:51,000
+Is it a good thing to do?
+
+1207
+00:50:51,000 --> 00:50:53,000
+Yeah, maybe there's something better.
+
+1208
+00:50:53,000 --> 00:50:55,000
+But theoretically, we can just make this projection
+
+1209
+00:50:55,000 --> 00:50:57,000
+and take the maximum here.
+
+1210
+00:50:57,000 --> 00:50:58,000
+And we can learn the weights in a way
+
+1211
+00:50:58,000 --> 00:51:01,000
+that it will just work out nicely.
+
+1212
+00:51:01,000 --> 00:51:02,000
+OK?
+
+1213
+00:51:02,000 --> 00:51:03,000
+Yes.
+
+1214
+00:51:03,000 --> 00:51:07,000
+Can we, instead of doing this, like having specific,
+
+1215
+00:51:07,000 --> 00:51:10,000
+it's almost a different model for each language, right?
+
+1216
+00:51:10,000 --> 00:51:11,000
+Mm-hmm.
+
+1217
+00:51:14,000 --> 00:51:15,000
+Yes, exactly.
+
+1218
+00:51:15,000 --> 00:51:17,000
+So can you do different models for each language?
+
+1219
+00:51:17,000 --> 00:51:19,000
+Because if you look at this like that,
+
+1220
+00:51:19,000 --> 00:51:23,000
+then it feels like different models for each language.
+
+1221
+00:51:23,000 --> 00:51:26,000
+If we cram them to one matrix, it's still the same thing.
+
+1222
+00:51:26,000 --> 00:51:28,000
+They are independent.
+
+1223
+00:51:28,000 --> 00:51:30,000
+Because these are kind of independent.
+
+1224
+00:51:30,000 --> 00:51:32,000
+We're going to use something which make them kind
+
+1225
+00:51:32,000 --> 00:51:33,000
+of dependent.
+
+1226
+00:51:33,000 --> 00:51:36,000
+And really, we'll try to pick one, which will be the answer,
+
+1227
+00:51:36,000 --> 00:51:38,000
+and kind of suppress the others.
+
+1228
+00:51:38,000 --> 00:51:39,000
+We'll get to there.
+
+1229
+00:51:39,000 --> 00:51:41,000
+We'll make it everything fit together.
+
+1230
+00:51:41,000 --> 00:51:41,000
+OK?
+
+1231
+00:51:49,000 --> 00:51:53,000
+Yeah, linear regression, but you would then, so linear.
+
+1232
+00:51:53,000 --> 00:51:55,000
+I guess this is for the language.
+
+1233
+00:51:55,000 --> 00:51:59,000
+Like, if the prediction was from 1 to 0.8,
+
+1234
+00:51:59,000 --> 00:52:01,000
+I know what you mean, yes.
+
+1235
+00:52:01,000 --> 00:52:03,000
+I mean, conceptually, you could do that.
+
+1236
+00:52:03,000 --> 00:52:06,000
+But then you impose an ordering on your categories
+
+1237
+00:52:06,000 --> 00:52:09,000
+because you're mapping them to real numbers.
+
+1238
+00:52:09,000 --> 00:52:11,000
+And this is what we don't want to do.
+
+1239
+00:52:11,000 --> 00:52:14,000
+I mean, I think you could do that.
+
+1240
+00:52:14,000 --> 00:52:16,000
+But then you're putting meaning on things
+
+1241
+00:52:16,000 --> 00:52:17,000
+which don't have meaning.
+
+1242
+00:52:17,000 --> 00:52:22,000
+You're putting ordering of values to languages,
+
+1243
+00:52:22,000 --> 00:52:23,000
+while you're just one hot.
+
+1244
+00:52:23,000 --> 00:52:27,000
+I mean, they're just discrete, completely independent.
+
+1245
+00:52:27,000 --> 00:52:28,000
+OK?
+
+1246
+00:52:28,000 --> 00:52:30,000
+Good, let's move on.
+
+1247
+00:52:30,000 --> 00:52:32,000
+So what we're doing is projecting input vector
+
+1248
+00:52:32,000 --> 00:52:33,000
+to the output vector.
+
+1249
+00:52:33,000 --> 00:52:36,000
+So the dimension n was the, what was that?
+
+1250
+00:52:36,000 --> 00:52:37,000
+The vocabulary size, right?
+
+1251
+00:52:37,000 --> 00:52:40,000
+So one hot encoding of back of words.
+
+1252
+00:52:40,000 --> 00:52:43,000
+And the out is the number of classes now.
+
+1253
+00:52:43,000 --> 00:52:50,000
+So recall from the last lecture that we're doing this,
+
+1254
+00:52:50,000 --> 00:52:51,000
+basically, we talked about it already,
+
+1255
+00:52:51,000 --> 00:52:53,000
+with this high dimensional linear function.
+
+1256
+00:52:53,000 --> 00:52:55,000
+So the projection from in to out,
+
+1257
+00:52:55,000 --> 00:52:59,000
+basically, by multiplying by matrix
+
+1258
+00:52:59,000 --> 00:53:00,000
+and adding some bias term.
+
+1259
+00:53:00,000 --> 00:53:01,000
+So we had it before.
+
+1260
+00:53:01,000 --> 00:53:05,000
+And actually, this is a simple neural network.
+
+1261
+00:53:05,000 --> 00:53:09,000
+It's a perceptron, which is simply a linear model, which
+
+1262
+00:53:09,000 --> 00:53:13,000
+is projecting to, projecting weights to, sorry,
+
+1263
+00:53:13,000 --> 00:53:16,000
+excuse me, projecting inputs through weights and biases
+
+1264
+00:53:16,000 --> 00:53:19,000
+to a high dimensional vector, or the number of classes vector.
+
+1265
+00:53:19,000 --> 00:53:21,000
+OK?
+
+1266
+00:53:21,000 --> 00:53:24,000
+So now how to find the prediction y, right?
+
+1267
+00:53:24,000 --> 00:53:27,000
+I mean, we want to find the, what is the language of that?
+
+1268
+00:53:27,000 --> 00:53:29,000
+We don't want to just a vector.
+
+1269
+00:53:29,000 --> 00:53:31,000
+We don't want to have this vector of reals.
+
+1270
+00:53:31,000 --> 00:53:33,000
+We want the highest one.
+
+1271
+00:53:34,000 --> 00:53:39,000
+So we are taking the argmax.
+
+1272
+00:53:39,000 --> 00:53:39,000
+OK?
+
+1273
+00:53:39,000 --> 00:53:43,000
+We're taking the maximum, where this projection is at highest.
+
+1274
+00:53:43,000 --> 00:53:44,000
+Right?
+
+1275
+00:53:44,000 --> 00:53:46,000
+I mean, this would be, we're talking right now about,
+
+1276
+00:53:46,000 --> 00:53:48,000
+like, you pick the highest number in there,
+
+1277
+00:53:48,000 --> 00:53:51,000
+and this is going to be your answer.
+
+1278
+00:53:51,000 --> 00:53:52,000
+So sanity check.
+
+1279
+00:53:52,000 --> 00:53:53,000
+So what is this y?
+
+1280
+00:53:53,000 --> 00:53:54,000
+What is this going to be?
+
+1281
+00:53:54,000 --> 00:54:01,000
+So we have this y hat is a vector of these predictions.
+
+1282
+00:54:01,000 --> 00:54:04,000
+So these are the six values.
+
+1283
+00:54:04,000 --> 00:54:06,000
+What is going to be, if you put it through argmax,
+
+1284
+00:54:06,000 --> 00:54:08,000
+what is going to be y hat?
+
+1285
+00:54:15,000 --> 00:54:16,000
+Exactly.
+
+1286
+00:54:16,000 --> 00:54:16,000
+Thank you.
+
+1287
+00:54:16,000 --> 00:54:19,000
+It's going to be index of 1 in the 1-hot encoding.
+
+1288
+00:54:19,000 --> 00:54:23,000
+So it's going to be the index of the maximum here.
+
+1289
+00:54:23,000 --> 00:54:28,000
+So we can, you can say it's 3, or it's this vector.
+
+1290
+00:54:28,000 --> 00:54:31,000
+These are equivalent, because we did this mapping from categories
+
+1291
+00:54:31,000 --> 00:54:31,000
+with 1-hot.
+
+1292
+00:54:31,000 --> 00:54:32,000
+OK?
+
+1293
+00:54:32,000 --> 00:54:34,000
+Everybody's with me with it?
+
+1294
+00:54:34,000 --> 00:54:37,000
+Argmax is picking the index of that.
+
+1295
+00:54:37,000 --> 00:54:39,000
+OK.
+
+1296
+00:54:39,000 --> 00:54:42,000
+Which is interesting, because, well, it doesn't matter.
+
+1297
+00:54:42,000 --> 00:54:45,000
+OK, we don't have time for that.
+
+1298
+00:54:45,000 --> 00:54:48,000
+Because argmax, I mean, this is a discrete function,
+
+1299
+00:54:48,000 --> 00:54:50,000
+so what is argmax of vector?
+
+1300
+00:54:50,000 --> 00:54:52,000
+Like, what is, makes no sense.
+
+1301
+00:54:52,000 --> 00:54:57,000
+Because this is a vector, so what is argmax of the vector?
+
+1302
+00:54:57,000 --> 00:54:58,000
+Because vector is not a function.
+
+1303
+00:54:58,000 --> 00:55:01,000
+You have argmax of a function.
+
+1304
+00:55:01,000 --> 00:55:05,000
+Yeah, so this is the value of x, where the function is maximum.
+
+1305
+00:55:05,000 --> 00:55:06,000
+But a vector?
+
+1306
+00:55:06,000 --> 00:55:09,000
+So we implicitly assume we're taking this 1-hot encoding
+
+1307
+00:55:09,000 --> 00:55:11,000
+thing and just taking the position of that, right?
+
+1308
+00:55:11,000 --> 00:55:15,000
+So your answer was correct, but we're
+
+1309
+00:55:15,000 --> 00:55:17,000
+misusing the notation for mathematics.
+
+1310
+00:55:17,000 --> 00:55:20,000
+Like, argmax on a vector is kind of, oh, yeah, OK, sure.
+
+1311
+00:55:20,000 --> 00:55:22,000
+We take the maximum index.
+
+1312
+00:55:22,000 --> 00:55:23,000
+OK?
+
+1313
+00:55:25,000 --> 00:55:26,000
+Great.
+
+1314
+00:55:26,000 --> 00:55:29,000
+So now, I think this is important to mention.
+
+1315
+00:55:29,000 --> 00:55:31,000
+Like, we're talking about representations.
+
+1316
+00:55:31,000 --> 00:55:34,000
+And I think this is also, to me, was kind of sort
+
+1317
+00:55:34,000 --> 00:55:36,000
+of revealing this view.
+
+1318
+00:55:36,000 --> 00:55:38,000
+So let's dive deeper before jumping
+
+1319
+00:55:38,000 --> 00:55:41,000
+into how to make all these six models together into one
+
+1320
+00:55:41,000 --> 00:55:44,000
+and why this makes any sense.
+
+1321
+00:55:44,000 --> 00:55:48,000
+So what we are doing here is, while projecting this
+
+1322
+00:55:48,000 --> 00:55:50,000
+into this six-dimensional space, we're learning
+
+1323
+00:55:50,000 --> 00:55:52,000
+some sort of representation.
+
+1324
+00:55:52,000 --> 00:55:56,000
+So first, the vector x, we know the back of words.
+
+1325
+00:55:56,000 --> 00:55:58,000
+This is a representation of the document.
+
+1326
+00:55:58,000 --> 00:56:03,000
+We're representing a document as the average of back of words.
+
+1327
+00:56:03,000 --> 00:56:04,000
+Great.
+
+1328
+00:56:04,000 --> 00:56:06,000
+So the dimensions is the size of the vocabulary, for example.
+
+1329
+00:56:06,000 --> 00:56:07,000
+It's very sparse and so on.
+
+1330
+00:56:07,000 --> 00:56:10,000
+So it is a mathematical representation of text.
+
+1331
+00:56:10,000 --> 00:56:12,000
+We talked about it last time.
+
+1332
+00:56:12,000 --> 00:56:15,000
+On the other hand, the vector y hat
+
+1333
+00:56:15,000 --> 00:56:18,000
+is also a representation of the document, right?
+
+1334
+00:56:18,000 --> 00:56:20,000
+Because we project it somewhere to some different space,
+
+1335
+00:56:20,000 --> 00:56:23,000
+but it's representing still documents.
+
+1336
+00:56:23,000 --> 00:56:27,000
+And this representation is, well, it
+
+1337
+00:56:27,000 --> 00:56:30,000
+has six dimensions, so it's more compact.
+
+1338
+00:56:30,000 --> 00:56:32,000
+And this representation of this document
+
+1339
+00:56:32,000 --> 00:56:34,000
+is more specialized for this task,
+
+1340
+00:56:34,000 --> 00:56:37,000
+because we want it to be for this task.
+
+1341
+00:56:37,000 --> 00:56:40,000
+But it's still, it contains some representation
+
+1342
+00:56:40,000 --> 00:56:42,000
+of the input document, although it's
+
+1343
+00:56:42,000 --> 00:56:49,000
+kind of compressed from all the words into six-size vector.
+
+1344
+00:56:49,000 --> 00:56:51,000
+Everybody follow?
+
+1345
+00:56:51,000 --> 00:56:53,000
+Why is that so?
+
+1346
+00:56:53,000 --> 00:56:54,000
+It's still something about a document,
+
+1347
+00:56:54,000 --> 00:56:56,000
+and we do classification on top of that,
+
+1348
+00:56:56,000 --> 00:56:59,000
+but it carries some representation.
+
+1349
+00:56:59,000 --> 00:57:03,000
+So this is OK, but also the matrix
+
+1350
+00:57:03,000 --> 00:57:06,000
+is some learned representation, actually.
+
+1351
+00:57:06,000 --> 00:57:10,000
+And the matrix here, so we learn it, right?
+
+1352
+00:57:10,000 --> 00:57:12,000
+I mean, when we run the training and do
+
+1353
+00:57:12,000 --> 00:57:15,000
+the stochastic gradient thing, we learn the parameters,
+
+1354
+00:57:15,000 --> 00:57:16,000
+the matrix.
+
+1355
+00:57:16,000 --> 00:57:19,000
+And we can have two views on this W matrix
+
+1356
+00:57:19,000 --> 00:57:21,000
+from either S rows or columns.
+
+1357
+00:57:21,000 --> 00:57:23,000
+So we start with the columns.
+
+1358
+00:57:23,000 --> 00:57:25,000
+So this is the W matrix.
+
+1359
+00:57:25,000 --> 00:57:32,000
+So this is the W. And this size is the, what is this?
+
+1360
+00:57:32,000 --> 00:57:34,000
+This is the size of the vocabulary, right?
+
+1361
+00:57:34,000 --> 00:57:36,000
+So 100,000 or 10,000.
+
+1362
+00:57:36,000 --> 00:57:39,000
+And this is six columns.
+
+1363
+00:57:39,000 --> 00:57:42,000
+And we're projecting the vector through this matrix.
+
+1364
+00:57:42,000 --> 00:57:43,000
+Yes, you have a question?
+
+1365
+00:57:43,000 --> 00:57:47,000
+The vocabulary would comprise all the languages, right?
+
+1366
+00:57:47,000 --> 00:57:48,000
+Yes.
+
+1367
+00:57:48,000 --> 00:57:49,000
+Yeah, that's a great point.
+
+1368
+00:57:49,000 --> 00:57:51,000
+I mean, I just made up something,
+
+1369
+00:57:51,000 --> 00:57:55,000
+but it should be correctly, it should have all the languages,
+
+1370
+00:57:55,000 --> 00:57:57,000
+vocabulary for all the languages if you
+
+1371
+00:57:57,000 --> 00:57:58,000
+want to really do the task.
+
+1372
+00:57:58,000 --> 00:57:59,000
+Actually, if you really want to do
+
+1373
+00:57:59,000 --> 00:58:02,000
+the task of language identification,
+
+1374
+00:58:02,000 --> 00:58:04,000
+you wouldn't use words as units.
+
+1375
+00:58:04,000 --> 00:58:08,000
+You would use character bigrams.
+
+1376
+00:58:08,000 --> 00:58:10,000
+Who knows what is character bigram?
+
+1377
+00:58:13,000 --> 00:58:14,000
+What is a bigram of characters?
+
+1378
+00:58:18,000 --> 00:58:20,000
+It's exactly just two characters in a row.
+
+1379
+00:58:20,000 --> 00:58:22,000
+It's like AA, AB, AC.
+
+1380
+00:58:22,000 --> 00:58:24,000
+I mean, basically you cut everything
+
+1381
+00:58:24,000 --> 00:58:26,000
+into just bigram characters.
+
+1382
+00:58:26,000 --> 00:58:28,000
+And bigram characters are good features
+
+1383
+00:58:28,000 --> 00:58:31,000
+for language identification, not words,
+
+1384
+00:58:31,000 --> 00:58:34,000
+because words are different in different languages,
+
+1385
+00:58:34,000 --> 00:58:35,000
+but we have something small.
+
+1386
+00:58:35,000 --> 00:58:37,000
+OK.
+
+1387
+00:58:37,000 --> 00:58:39,000
+But let's pretend now this is just a vocabulary, OK?
+
+1388
+00:58:39,000 --> 00:58:41,000
+And this is the matrix.
+
+1389
+00:58:41,000 --> 00:58:42,000
+And what we are doing here, we're
+
+1390
+00:58:42,000 --> 00:58:45,000
+taking the input vector and multiply by matrix
+
+1391
+00:58:45,000 --> 00:58:47,000
+and add these constants.
+
+1392
+00:58:47,000 --> 00:58:48,000
+Let's just ignore the bias now.
+
+1393
+00:58:48,000 --> 00:58:52,000
+Let's just do this just the multiplication.
+
+1394
+00:58:52,000 --> 00:58:54,000
+So the perspective from the columns
+
+1395
+00:58:54,000 --> 00:58:58,000
+is that each of these six columns,
+
+1396
+00:58:58,000 --> 00:59:00,000
+and they correspond to language, like English, French,
+
+1397
+00:59:00,000 --> 00:59:07,000
+and so on, is this dimensional vector representation
+
+1398
+00:59:07,000 --> 00:59:12,000
+of this language in terms of its characteristics,
+
+1399
+00:59:12,000 --> 00:59:15,000
+characteristic word unigram patterns, or just bigram,
+
+1400
+00:59:15,000 --> 00:59:17,000
+whatever we have as the features, unigram pattern.
+
+1401
+00:59:17,000 --> 00:59:21,000
+So this is a vector representation of the language
+
+1402
+00:59:21,000 --> 00:59:23,000
+here in this learned matrix.
+
+1403
+00:59:23,000 --> 00:59:26,000
+And if we, for example, cluster these vectors,
+
+1404
+00:59:26,000 --> 00:59:30,000
+we can find similar languages, because they
+
+1405
+00:59:30,000 --> 00:59:35,000
+share the same sort of bigram or word unigram patterns here.
+
+1406
+00:59:35,000 --> 00:59:36,000
+So this is what we learn.
+
+1407
+00:59:36,000 --> 00:59:39,000
+We learn some representation of the language
+
+1408
+00:59:39,000 --> 00:59:41,000
+through this projection.
+
+1409
+00:59:41,000 --> 00:59:43,000
+So this is the column view.
+
+1410
+00:59:43,000 --> 00:59:45,000
+And there are any questions?
+
+1411
+00:59:45,000 --> 00:59:46,000
+Yes.
+
+1412
+00:59:46,000 --> 00:59:47,000
+I didn't understand the last sentence.
+
+1413
+00:59:47,000 --> 00:59:50,000
+How are the same word represented?
+
+1414
+00:59:50,000 --> 00:59:52,000
+Is that what you're saying?
+
+1415
+00:59:52,000 --> 00:59:58,000
+So these will be real numbers.
+
+1416
+00:59:58,000 --> 01:00:02,000
+And each of the language, the mapping to the language
+
+1417
+01:00:02,000 --> 01:00:06,000
+will represent which each of the word, how each of these words
+
+1418
+01:00:06,000 --> 01:00:11,000
+is represented, or some patterns of these words in the language,
+
+1419
+01:00:11,000 --> 01:00:12,000
+in all of them.
+
+1420
+01:00:12,000 --> 01:00:18,000
+So are the numbers in each row going to be similar?
+
+1421
+01:00:18,000 --> 01:00:20,000
+No, in each column, maybe.
+
+1422
+01:00:20,000 --> 01:00:23,000
+So if there were very similar languages,
+
+1423
+01:00:23,000 --> 01:00:25,000
+and you do language classification tasks,
+
+1424
+01:00:25,000 --> 01:00:27,000
+so you would learn this representation for language
+
+1425
+01:00:27,000 --> 01:00:30,000
+classification tasks, similar languages
+
+1426
+01:00:30,000 --> 01:00:33,000
+will end up with similar columns,
+
+1427
+01:00:33,000 --> 01:00:35,000
+because the words in there behave similar.
+
+1428
+01:00:35,000 --> 01:00:39,000
+They have similar weights in this classification.
+
+1429
+01:00:39,000 --> 01:00:42,000
+So the learning will push them, these two languages
+
+1430
+01:00:42,000 --> 01:00:43,000
+being somewhere close.
+
+1431
+01:00:43,000 --> 01:00:43,000
+OK?
+
+1432
+01:00:43,000 --> 01:00:45,000
+Does that answer your question?
+
+1433
+01:00:45,000 --> 01:00:47,000
+OK, cool.
+
+1434
+01:00:47,000 --> 01:00:48,000
+There is another view.
+
+1435
+01:00:48,000 --> 01:00:54,000
+And this is the row view, where each row corresponds to a,
+
+1436
+01:00:54,000 --> 01:00:55,000
+well, it's on the unigram.
+
+1437
+01:00:55,000 --> 01:00:57,000
+So it's a, yeah, it's a unigram, basically, a word.
+
+1438
+01:00:57,000 --> 01:00:59,000
+A unigram, and each word provides
+
+1439
+01:00:59,000 --> 01:01:06,000
+a six-dimensional vector representation of that word
+
+1440
+01:01:06,000 --> 01:01:09,000
+in terms of the languages it's prompting, so in this task.
+
+1441
+01:01:09,000 --> 01:01:12,000
+So each of these words is represented
+
+1442
+01:01:12,000 --> 01:01:18,000
+as a kind of like embeddings, or embedded vector,
+
+1443
+01:01:18,000 --> 01:01:19,000
+over all these six classes.
+
+1444
+01:01:19,000 --> 01:01:22,000
+So this is like learned representation of each word.
+
+1445
+01:01:22,000 --> 01:01:24,000
+All right?
+
+1446
+01:01:24,000 --> 01:01:27,000
+It has a meaning, because the word
+
+1447
+01:01:27,000 --> 01:01:32,000
+will have some projection to all these six classes.
+
+1448
+01:01:32,000 --> 01:01:33,000
+Yes?
+
+1449
+01:01:33,000 --> 01:01:37,000
+For other, you use the average of all other?
+
+1450
+01:01:37,000 --> 01:01:38,000
+No, no, no.
+
+1451
+01:01:39,000 --> 01:01:42,000
+We just said, like, other is also a parameter.
+
+1452
+01:01:42,000 --> 01:01:43,000
+Yeah.
+
+1453
+01:01:43,000 --> 01:01:44,000
+So there is no distinction.
+
+1454
+01:01:44,000 --> 01:01:46,000
+It's just six-column vector matrix,
+
+1455
+01:01:46,000 --> 01:01:51,000
+and we're just putting these classes as such.
+
+1456
+01:01:51,000 --> 01:01:53,000
+OK?
+
+1457
+01:01:53,000 --> 01:01:54,000
+So these are two views.
+
+1458
+01:01:54,000 --> 01:01:56,000
+I mean, I'll give you some time to think about later
+
+1459
+01:01:56,000 --> 01:02:02,000
+on what it really means, but we have a nice property here.
+
+1460
+01:02:02,000 --> 01:02:04,000
+So if you recall from last time, what
+
+1461
+01:02:04,000 --> 01:02:05,000
+is the average back of words?
+
+1462
+01:02:05,000 --> 01:02:07,000
+Basically, we're taking the one-off encoding
+
+1463
+01:02:07,000 --> 01:02:10,000
+for each word in the document, and sum them up, and just
+
+1464
+01:02:10,000 --> 01:02:12,000
+divide by the length of the document.
+
+1465
+01:02:12,000 --> 01:02:13,000
+Right?
+
+1466
+01:02:13,000 --> 01:02:14,000
+So this is what we did, like how we end up
+
+1467
+01:02:14,000 --> 01:02:16,000
+with this one-off representation,
+
+1468
+01:02:16,000 --> 01:02:19,000
+or average back of words representation.
+
+1469
+01:02:19,000 --> 01:02:22,000
+Now, if we look back at this formula,
+
+1470
+01:02:22,000 --> 01:02:29,000
+so multiplying the input by this ways, by this matrix,
+
+1471
+01:02:29,000 --> 01:02:32,000
+and forget about the bias for now,
+
+1472
+01:02:32,000 --> 01:02:34,000
+and plug in here the average back of words.
+
+1473
+01:02:34,000 --> 01:02:38,000
+So we're going to end up with something like that.
+
+1474
+01:02:38,000 --> 01:02:42,000
+So the x, basically, is represented
+
+1475
+01:02:42,000 --> 01:02:44,000
+as this average back of words, and we're just plugging here
+
+1476
+01:02:44,000 --> 01:02:47,000
+and multiplying by the matrix.
+
+1477
+01:02:47,000 --> 01:02:50,000
+So the next thing we can do is let's say, yeah, I mean,
+
+1478
+01:02:50,000 --> 01:02:54,000
+multiplication is, or now maybe I'll make it wrong,
+
+1479
+01:02:54,000 --> 01:02:55,000
+but it is associative.
+
+1480
+01:02:55,000 --> 01:02:58,000
+So we can plug this, get rid of those,
+
+1481
+01:02:58,000 --> 01:03:01,000
+and plug it in here in the sum.
+
+1482
+01:03:01,000 --> 01:03:02,000
+I guess we can do that.
+
+1483
+01:03:02,000 --> 01:03:03,000
+I'm pretty sure we can do that, but I
+
+1484
+01:03:03,000 --> 01:03:05,000
+don't know if it's association or commutativity,
+
+1485
+01:03:05,000 --> 01:03:06,000
+one of those.
+
+1486
+01:03:06,000 --> 01:03:07,000
+I'm sorry.
+
+1487
+01:03:07,000 --> 01:03:10,000
+So we can do that and plug, basically,
+
+1488
+01:03:10,000 --> 01:03:15,000
+the multiplication here and sum over them and do this average.
+
+1489
+01:03:15,000 --> 01:03:19,000
+And what we're doing here, so this is a one-hot vector,
+
+1490
+01:03:19,000 --> 01:03:23,000
+and we're multiplying the matrix by one-hot vector.
+
+1491
+01:03:23,000 --> 01:03:24,000
+This is effectively doing what?
+
+1492
+01:03:24,000 --> 01:03:26,000
+So we have a, let's try.
+
+1493
+01:03:26,000 --> 01:03:30,000
+We have a one-hot vector, 0, 1, 0, 0,
+
+1494
+01:03:30,000 --> 01:03:35,000
+and we have a matrix, which is maybe two rows.
+
+1495
+01:03:35,000 --> 01:03:49,000
+And here will be 8, 4, 7, 6, 2, 4, that's wrong, 2, 3, 9, 9.
+
+1496
+01:03:49,000 --> 01:03:50,000
+So what's going to be the input?
+
+1497
+01:03:50,000 --> 01:03:52,000
+What is this multiplication doing of this matrix?
+
+1498
+01:04:01,000 --> 01:04:02,000
+Exactly.
+
+1499
+01:04:02,000 --> 01:04:03,000
+It's selecting a row.
+
+1500
+01:04:03,000 --> 01:04:05,000
+It's just selecting a row, basically, because everything,
+
+1501
+01:04:05,000 --> 01:04:13,000
+so we multiply 0 by 8 plus 1 times 4 plus 0 plus 0,
+
+1502
+01:04:13,000 --> 01:04:17,000
+and the second will be 0 times 2 plus 1 times 3.
+
+1503
+01:04:17,000 --> 01:04:19,000
+So it's 3 plus 0 and 0.
+
+1504
+01:04:19,000 --> 01:04:23,000
+So we're going to end up with the 4, 3 vector, which
+
+1505
+01:04:23,000 --> 01:04:26,000
+is exactly selecting the second row, which
+
+1506
+01:04:26,000 --> 01:04:31,000
+is exactly corresponding to the position of the one.
+
+1507
+01:04:31,000 --> 01:04:32,000
+Everybody's with me?
+
+1508
+01:04:36,000 --> 01:04:39,000
+Good, because this means we're just
+
+1509
+01:04:39,000 --> 01:04:43,000
+selecting a row from this representation matrix, which
+
+1510
+01:04:43,000 --> 01:04:49,000
+corresponds to the word that position, position di.
+
+1511
+01:04:49,000 --> 01:04:55,000
+So you're basically taking the vector
+
+1512
+01:04:55,000 --> 01:05:00,000
+from this embedding matrix and make an average of them.
+
+1513
+01:05:00,000 --> 01:05:02,000
+Well, these two things come together here.
+
+1514
+01:05:02,000 --> 01:05:06,000
+So this learned representation, oh, sorry,
+
+1515
+01:05:06,000 --> 01:05:10,000
+this representation y and this representation y
+
+1516
+01:05:10,000 --> 01:05:11,000
+have two different views.
+
+1517
+01:05:11,000 --> 01:05:16,000
+One is basically saying, so this is continuous back
+
+1518
+01:05:16,000 --> 01:05:17,000
+of words representation.
+
+1519
+01:05:17,000 --> 01:05:21,000
+One is saying, we just sum word representation vectors.
+
+1520
+01:05:21,000 --> 01:05:25,000
+So this is this one we just saw in the last slide.
+
+1521
+01:05:25,000 --> 01:05:30,000
+So for each word, we're taking its row in the weight matrix
+
+1522
+01:05:30,000 --> 01:05:33,000
+and sum them up together and take an average.
+
+1523
+01:05:33,000 --> 01:05:39,000
+Or we take a back of word representation as before
+
+1524
+01:05:39,000 --> 01:05:42,000
+and multiply by this weight matrix again.
+
+1525
+01:05:42,000 --> 01:05:46,000
+And these are the same, but they give us different views.
+
+1526
+01:05:46,000 --> 01:05:49,000
+And this matrix is also called embedding matrix.
+
+1527
+01:05:49,000 --> 01:05:52,000
+So this is how we map from, let's say,
+
+1528
+01:05:52,000 --> 01:05:55,000
+sparse space or one-hot encoding to embed it
+
+1529
+01:05:55,000 --> 01:05:57,000
+to more dense space.
+
+1530
+01:05:57,000 --> 01:06:00,000
+And we will talk about embeddings and word embeddings
+
+1531
+01:06:00,000 --> 01:06:00,000
+later on.
+
+1532
+01:06:00,000 --> 01:06:01,000
+But this is where it comes from.
+
+1533
+01:06:01,000 --> 01:06:03,000
+Why is it so weird?
+
+1534
+01:06:03,000 --> 01:06:06,000
+We have two views on this learned weights.
+
+1535
+01:06:06,000 --> 01:06:11,000
+And they tell us something about the categories and columns
+
+1536
+01:06:11,000 --> 01:06:15,000
+also and the input tokens as rows.
+
+1537
+01:06:15,000 --> 01:06:17,000
+Yes.
+
+1538
+01:06:17,000 --> 01:06:21,000
+For example, we talked about 0, 1, 0, 2.
+
+1539
+01:06:21,000 --> 01:06:24,000
+In the null situation, is there going
+
+1540
+01:06:24,000 --> 01:06:28,000
+to be a vector that has the length of the vocabulary
+
+1541
+01:06:28,000 --> 01:06:29,000
+of all languages needed?
+
+1542
+01:06:29,000 --> 01:06:31,000
+Some does?
+
+1543
+01:06:31,000 --> 01:06:35,000
+Or like, think about the common word?
+
+1544
+01:06:35,000 --> 01:06:36,000
+Yes.
+
+1545
+01:06:36,000 --> 01:06:38,000
+Yeah, I mean, you have large matrices.
+
+1546
+01:06:38,000 --> 01:06:39,000
+That's true.
+
+1547
+01:06:39,000 --> 01:06:43,000
+You would have like in this, let's come back here.
+
+1548
+01:06:43,000 --> 01:06:46,000
+So for example, if we really want
+
+1549
+01:06:46,000 --> 01:06:50,000
+to classify a language here, so we would have,
+
+1550
+01:06:50,000 --> 01:06:52,000
+this would be the number of bigrams.
+
+1551
+01:06:52,000 --> 01:06:55,000
+It could be, let's say, 10,000.
+
+1552
+01:06:55,000 --> 01:06:59,000
+So it would be like 10,000 dimension vector.
+
+1553
+01:06:59,000 --> 01:07:04,000
+If we multiply into, if we have six languages,
+
+1554
+01:07:04,000 --> 01:07:11,000
+so this would have dimension of 10,000 rows times 6.
+
+1555
+01:07:11,000 --> 01:07:14,000
+And then the vector b would be a 6.
+
+1556
+01:07:14,000 --> 01:07:15,000
+Yeah, why not?
+
+1557
+01:07:18,000 --> 01:07:20,000
+OK, any other question?
+
+1558
+01:07:28,000 --> 01:07:31,000
+OK, good, let's move on.
+
+1559
+01:07:31,000 --> 01:07:33,000
+Now, oops, what was that?
+
+1560
+01:07:33,000 --> 01:07:34,000
+Sorry.
+
+1561
+01:07:34,000 --> 01:07:37,000
+Now, where are we?
+
+1562
+01:07:37,000 --> 01:07:38,000
+OK, so this is like what is embeddings
+
+1563
+01:07:38,000 --> 01:07:40,000
+are and what the projection is.
+
+1564
+01:07:40,000 --> 01:07:43,000
+And I think it gives interesting view on the embeddings.
+
+1565
+01:07:44,000 --> 01:07:46,000
+What is learned in this representation?
+
+1566
+01:07:46,000 --> 01:07:49,000
+So representation learning is centered to deep learning.
+
+1567
+01:07:49,000 --> 01:07:51,000
+So the main power of deep learning
+
+1568
+01:07:51,000 --> 01:07:54,000
+is basically the ability to learn good representation.
+
+1569
+01:07:54,000 --> 01:07:57,000
+So all these projection matrices are learned
+
+1570
+01:07:57,000 --> 01:07:59,000
+and they give us great representation.
+
+1571
+01:07:59,000 --> 01:08:01,000
+But let's come back to the task we had before.
+
+1572
+01:08:01,000 --> 01:08:07,000
+So OK, we have this multidimensional linear
+
+1573
+01:08:07,000 --> 01:08:07,000
+transformation.
+
+1574
+01:08:07,000 --> 01:08:09,000
+So we are projecting from one space to another,
+
+1575
+01:08:09,000 --> 01:08:11,000
+maybe from 10,000 to 6.
+
+1576
+01:08:11,000 --> 01:08:14,000
+But we want to turn it into probabilities for some reason,
+
+1577
+01:08:14,000 --> 01:08:20,000
+because we want to find the best prediction
+
+1578
+01:08:20,000 --> 01:08:22,000
+from these number of classes, for example.
+
+1579
+01:08:22,000 --> 01:08:23,000
+What is the language?
+
+1580
+01:08:23,000 --> 01:08:24,000
+And we want to give it a probability,
+
+1581
+01:08:24,000 --> 01:08:27,000
+because we have in the sigmoid, in the logistic regression,
+
+1582
+01:08:27,000 --> 01:08:29,000
+we had the binary logistic regression,
+
+1583
+01:08:29,000 --> 01:08:33,000
+we had this probability of being 1 or probability of being 2.
+
+1584
+01:08:33,000 --> 01:08:34,000
+Maybe you want to put probabilities
+
+1585
+01:08:34,000 --> 01:08:36,000
+of these predictions on these multiclass classification
+
+1586
+01:08:36,000 --> 01:08:38,000
+as well.
+
+1587
+01:08:38,000 --> 01:08:43,000
+So we want to turn output vector into probabilities
+
+1588
+01:08:43,000 --> 01:08:44,000
+of these different classes.
+
+1589
+01:08:44,000 --> 01:08:51,000
+So remember, we have this vector, this y hat.
+
+1590
+01:08:51,000 --> 01:08:56,000
+Y hat vector would be this six numbers.
+
+1591
+01:08:56,000 --> 01:08:59,000
+And we want to do something better.
+
+1592
+01:08:59,000 --> 01:09:00,000
+So let's quick recap.
+
+1593
+01:09:00,000 --> 01:09:02,000
+What is categorical probability distribution?
+
+1594
+01:09:02,000 --> 01:09:05,000
+So everybody had a background in probability theory
+
+1595
+01:09:05,000 --> 01:09:06,000
+a little bit.
+
+1596
+01:09:06,000 --> 01:09:10,000
+Who hasn't heard of categorical distribution or probability
+
+1597
+01:09:10,000 --> 01:09:11,000
+distribution at all?
+
+1598
+01:09:15,000 --> 01:09:16,000
+Great.
+
+1599
+01:09:16,000 --> 01:09:20,000
+So we have a random variable, which
+
+1600
+01:09:20,000 --> 01:09:23,000
+is defined over k categories.
+
+1601
+01:09:23,000 --> 01:09:25,000
+And these categories are distinct,
+
+1602
+01:09:25,000 --> 01:09:27,000
+and there's no ordering, and so on.
+
+1603
+01:09:27,000 --> 01:09:32,000
+And these are mapped to typically natural numbers,
+
+1604
+01:09:32,000 --> 01:09:34,000
+so 1, 2, up to k categories.
+
+1605
+01:09:35,000 --> 01:09:37,000
+In our categorical distribution, we
+
+1606
+01:09:37,000 --> 01:09:39,000
+would have English would be 1, and German 2,
+
+1607
+01:09:39,000 --> 01:09:41,000
+and so on, so on, so on.
+
+1608
+01:09:41,000 --> 01:09:45,000
+And then each category is parameterized
+
+1609
+01:09:45,000 --> 01:09:47,000
+with probability of this category.
+
+1610
+01:09:47,000 --> 01:09:50,000
+So for example, the probability of x being English
+
+1611
+01:09:50,000 --> 01:09:54,000
+would be, I don't know, some probability like 0.1.
+
+1612
+01:09:54,000 --> 01:10:03,000
+And the probability of x being 2 could be 0.4, and so on.
+
+1613
+01:10:03,000 --> 01:10:07,000
+So we're saying which of these different choices,
+
+1614
+01:10:07,000 --> 01:10:10,000
+what is the probability of each of them?
+
+1615
+01:10:10,000 --> 01:10:14,000
+And there is one thing that the categorical distribution
+
+1616
+01:10:14,000 --> 01:10:15,000
+has to take into account.
+
+1617
+01:10:15,000 --> 01:10:16,000
+These have to be positive, obviously,
+
+1618
+01:10:16,000 --> 01:10:18,000
+as probabilities between 0 and 1.
+
+1619
+01:10:18,000 --> 01:10:21,000
+And there must be one constraint on this whole thing, which
+
+1620
+01:10:21,000 --> 01:10:24,000
+is if this is a probability distribution,
+
+1621
+01:10:24,000 --> 01:10:27,000
+there is one condition or one definition.
+
+1622
+01:10:27,000 --> 01:10:28,000
+Yes?
+
+1623
+01:10:28,000 --> 01:10:29,000
+They have to sum up to 1.
+
+1624
+01:10:29,000 --> 01:10:31,000
+They have to sum up to 1, exactly.
+
+1625
+01:10:31,000 --> 01:10:36,000
+So all of them sum up to 1.
+
+1626
+01:10:36,000 --> 01:10:40,000
+So basically, then, if we had a vector over our six categories,
+
+1627
+01:10:40,000 --> 01:10:44,000
+1, 2, 3, 4, 5, 6, then it has to sum up
+
+1628
+01:10:44,000 --> 01:10:46,000
+to 1 to be a probability distribution
+
+1629
+01:10:46,000 --> 01:10:48,000
+over these categories.
+
+1630
+01:10:48,000 --> 01:10:51,000
+So I just want to bring this terminology here.
+
+1631
+01:10:51,000 --> 01:10:54,000
+But I guess this is clear case.
+
+1632
+01:10:54,000 --> 01:10:58,000
+The question here is that how to turn a vector, unbounded vector,
+
+1633
+01:10:58,000 --> 01:11:02,000
+in this, let's say, six-dimensional space
+
+1634
+01:11:02,000 --> 01:11:04,000
+into a categorical probability distribution.
+
+1635
+01:11:04,000 --> 01:11:09,000
+So now, the question is, we have, again,
+
+1636
+01:11:09,000 --> 01:11:11,000
+our six, which is a vector.
+
+1637
+01:11:11,000 --> 01:11:14,000
+And each of them could be from minus infinity to plus
+
+1638
+01:11:14,000 --> 01:11:15,000
+infinity.
+
+1639
+01:11:15,000 --> 01:11:17,000
+How to turn it into a categorical probability
+
+1640
+01:11:17,000 --> 01:11:18,000
+distribution?
+
+1641
+01:11:18,000 --> 01:11:20,000
+Any ideas?
+
+1642
+01:11:20,000 --> 01:11:22,000
+You first.
+
+1643
+01:11:22,000 --> 01:11:23,000
+Oh, OK, using the softmax.
+
+1644
+01:11:23,000 --> 01:11:24,000
+You know the answer already.
+
+1645
+01:11:24,000 --> 01:11:25,000
+OK, good.
+
+1646
+01:11:25,000 --> 01:11:27,000
+So I want to try something super naive.
+
+1647
+01:11:27,000 --> 01:11:30,000
+But if you know the softmax, this is the solution.
+
+1648
+01:11:30,000 --> 01:11:31,000
+Yeah.
+
+1649
+01:11:31,000 --> 01:11:32,000
+Any other?
+
+1650
+01:11:32,000 --> 01:11:34,000
+OK, so anyone who hasn't heard of softmax
+
+1651
+01:11:34,000 --> 01:11:36,000
+but has an idea, like, creative, like how to turn this vector
+
+1652
+01:11:36,000 --> 01:11:38,000
+into probability distribution.
+
+1653
+01:11:38,000 --> 01:11:39,000
+AUDIENCE 1
+
+1654
+01:11:39,000 --> 01:11:44,000
+Add up all the values and then divide each one by the other.
+
+1655
+01:11:44,000 --> 01:11:46,000
+OK, you would say you would sum up
+
+1656
+01:11:46,000 --> 01:11:50,000
+all these values and then basically normalizing
+
+1657
+01:11:50,000 --> 01:11:52,000
+each value by this sum.
+
+1658
+01:11:52,000 --> 01:11:53,000
+This is great.
+
+1659
+01:11:53,000 --> 01:11:55,000
+There is a catch.
+
+1660
+01:11:55,000 --> 01:11:56,000
+What is the catch if you do that?
+
+1661
+01:11:57,000 --> 01:11:58,000
+AUDIENCE 1 Negative number.
+
+1662
+01:11:58,000 --> 01:12:00,000
+Negative numbers.
+
+1663
+01:12:00,000 --> 01:12:01,000
+Yeah, it will break negative numbers.
+
+1664
+01:12:01,000 --> 01:12:03,000
+OK, so you hate negative numbers.
+
+1665
+01:12:03,000 --> 01:12:05,000
+AUDIENCE 1 I just take the absolute value.
+
+1666
+01:12:05,000 --> 01:12:07,000
+You could take an absolute value
+
+1667
+01:12:07,000 --> 01:12:11,000
+and divide it by the sum of that.
+
+1668
+01:12:11,000 --> 01:12:13,000
+And I think it will work, actually.
+
+1669
+01:12:13,000 --> 01:12:15,000
+I think it must work.
+
+1670
+01:12:15,000 --> 01:12:18,000
+Because you take, let's say, this,
+
+1671
+01:12:18,000 --> 01:12:20,000
+put it into absolute value.
+
+1672
+01:12:20,000 --> 01:12:24,000
+So xi absolute value over sum of j xj.
+
+1673
+01:12:24,000 --> 01:12:26,000
+OK, good.
+
+1674
+01:12:26,000 --> 01:12:32,000
+I think it's actually, it will be sufficient to do so.
+
+1675
+01:12:32,000 --> 01:12:37,000
+AUDIENCE 2 But it would lose the minus, right?
+
+1676
+01:12:37,000 --> 01:12:39,000
+You would lose the minus, right?
+
+1677
+01:12:39,000 --> 01:12:40,000
+Exactly.
+
+1678
+01:12:40,000 --> 01:12:41,000
+It's bad.
+
+1679
+01:12:41,000 --> 01:12:43,000
+It's the opposite, yes.
+
+1680
+01:12:43,000 --> 01:12:47,000
+So basically, you would lose half of the information
+
+1681
+01:12:47,000 --> 01:12:50,000
+you would have in the value.
+
+1682
+01:12:50,000 --> 01:12:51,000
+OK, so we need something else.
+
+1683
+01:12:51,000 --> 01:12:53,000
+But this is a great progress.
+
+1684
+01:12:53,000 --> 01:12:55,000
+Because this, we need to make it.
+
+1685
+01:12:55,000 --> 01:12:59,000
+OK, so the catch here, how to make any number positive
+
+1686
+01:12:59,000 --> 01:12:59,000
+number.
+
+1687
+01:12:59,000 --> 01:13:01,000
+So we're simplifying the question here.
+
+1688
+01:13:01,000 --> 01:13:06,000
+How to make any number, how to turn something
+
+1689
+01:13:06,000 --> 01:13:12,000
+from minus infinity to plus infinity into 0 to infinity.
+
+1690
+01:13:12,000 --> 01:13:13,000
+Yes.
+
+1691
+01:13:13,000 --> 01:13:16,000
+AUDIENCE 3 You could just use the lowest numbers
+
+1692
+01:13:16,000 --> 01:13:19,000
+to starting point, set it at 0.
+
+1693
+01:13:19,000 --> 01:13:20,000
+Yeah, you can set a baseline.
+
+1694
+01:13:20,000 --> 01:13:21,000
+But it's just arbitrary.
+
+1695
+01:13:21,000 --> 01:13:23,000
+Because it depends on the values.
+
+1696
+01:13:23,000 --> 01:13:25,000
+AUDIENCE 3 I mean, like, take the lowest number
+
+1697
+01:13:25,000 --> 01:13:28,000
+from the vector, like, that's a negative 10.
+
+1698
+01:13:28,000 --> 01:13:30,000
+Let the lowest number say, OK, we add 10.
+
+1699
+01:13:30,000 --> 01:13:32,000
+Yeah, exactly.
+
+1700
+01:13:32,000 --> 01:13:36,000
+You can put it sort of a bias in a way, like threshold,
+
+1701
+01:13:36,000 --> 01:13:37,000
+and then just add up.
+
+1702
+01:13:37,000 --> 01:13:39,000
+But it's depending on the values.
+
+1703
+01:13:39,000 --> 01:13:42,000
+And you want to do it a function like values independent.
+
+1704
+01:13:42,000 --> 01:13:44,000
+Any other idea how to turn this into?
+
+1705
+01:13:44,000 --> 01:13:48,000
+AUDIENCE 3 You could just have a power value.
+
+1706
+01:13:48,000 --> 01:13:50,000
+You can put a power value, like xy
+
+1707
+01:13:50,000 --> 01:13:51,000
+squared.
+
+1708
+01:13:54,000 --> 01:14:00,000
+AUDIENCE 3 These two, or the power of the number
+
+1709
+01:14:00,000 --> 01:14:01,000
+that we can add in here.
+
+1710
+01:14:01,000 --> 01:14:02,000
+Oh, 2 to x.
+
+1711
+01:14:08,000 --> 01:14:11,000
+Yes, I think you're on a good way.
+
+1712
+01:14:11,000 --> 01:14:12,000
+It should, yeah, exactly.
+
+1713
+01:14:12,000 --> 01:14:14,000
+You can do that.
+
+1714
+01:14:14,000 --> 01:14:19,000
+Yeah, and maybe we're not going to use 2 to power x.
+
+1715
+01:14:19,000 --> 01:14:22,000
+But we might use something different,
+
+1716
+01:14:22,000 --> 01:14:24,000
+which is nicely differentiable.
+
+1717
+01:14:24,000 --> 01:14:28,000
+So 2 power x is great.
+
+1718
+01:14:28,000 --> 01:14:32,000
+Anything else we can use instead of 2 power x?
+
+1719
+01:14:32,000 --> 01:14:34,000
+We just nice derivatives.
+
+1720
+01:14:34,000 --> 01:14:35,000
+e power x, exactly.
+
+1721
+01:14:35,000 --> 01:14:37,000
+Yeah, we're getting somewhere.
+
+1722
+01:14:37,000 --> 01:14:39,000
+OK, so this is great.
+
+1723
+01:14:39,000 --> 01:14:42,000
+This gives us positive numbers.
+
+1724
+01:14:42,000 --> 01:14:43,000
+This is even greater, because it gives us
+
+1725
+01:14:43,000 --> 01:14:47,000
+differentiation, which is just the same function.
+
+1726
+01:14:47,000 --> 01:14:52,000
+And what we end up here now, so if we replace this,
+
+1727
+01:14:52,000 --> 01:14:58,000
+this absolute values with this e to x, we found a softmax.
+
+1728
+01:14:58,000 --> 01:15:02,000
+Congratulations, great job.
+
+1729
+01:15:02,000 --> 01:15:02,000
+No, I mean, come on.
+
+1730
+01:15:02,000 --> 01:15:04,000
+I mean, you can think about it like,
+
+1731
+01:15:04,000 --> 01:15:06,000
+there's a reason why softmax looks like the softmax.
+
+1732
+01:15:06,000 --> 01:15:09,000
+If I should just show you the equation, like, OK, whatever.
+
+1733
+01:15:09,000 --> 01:15:12,000
+But if you come up with the idea, like how to build it,
+
+1734
+01:15:12,000 --> 01:15:14,000
+then it has a meaning.
+
+1735
+01:15:14,000 --> 01:15:17,000
+So we're putting everything.
+
+1736
+01:15:17,000 --> 01:15:21,000
+It's a nonlinear rejection from minus infinity
+
+1737
+01:15:21,000 --> 01:15:23,000
+to infinity to plus here.
+
+1738
+01:15:23,000 --> 01:15:24,000
+So this is the exponentiation denominator.
+
+1739
+01:15:24,000 --> 01:15:28,000
+And the denominator is just normalization constant.
+
+1740
+01:15:28,000 --> 01:15:29,000
+This is great.
+
+1741
+01:15:29,000 --> 01:15:31,000
+OK, so what is missing on the picture here?
+
+1742
+01:15:31,000 --> 01:15:34,000
+So we have a softmax, which kind of creates
+
+1743
+01:15:34,000 --> 01:15:35,000
+the probability distribution.
+
+1744
+01:15:35,000 --> 01:15:37,000
+This gives us the probability distribution
+
+1745
+01:15:37,000 --> 01:15:38,000
+over any real vector.
+
+1746
+01:15:38,000 --> 01:15:40,000
+This is important, by the way, to remember.
+
+1747
+01:15:40,000 --> 01:15:42,000
+I mean, you should know softmax.
+
+1748
+01:15:42,000 --> 01:15:44,000
+If you leave deep learning for an LP and come to someone,
+
+1749
+01:15:44,000 --> 01:15:46,000
+it's like, I don't remember softmax,
+
+1750
+01:15:46,000 --> 01:15:47,000
+but I can look it up on Wikipedia.
+
+1751
+01:15:47,000 --> 01:15:49,000
+No, I'm sorry.
+
+1752
+01:15:49,000 --> 01:15:51,000
+You should, I mean, no, this is easy.
+
+1753
+01:15:51,000 --> 01:15:53,000
+But you should know that.
+
+1754
+01:15:53,000 --> 01:15:54,000
+What's missing here for us?
+
+1755
+01:15:54,000 --> 01:15:56,000
+Because we want to plug the softmax somewhere later on.
+
+1756
+01:15:56,000 --> 01:15:58,000
+What is missing on the picture?
+
+1757
+01:16:01,000 --> 01:16:02,000
+We need to do something with the softmax.
+
+1758
+01:16:02,000 --> 01:16:05,000
+As with any other function, we are plugging into our functions,
+
+1759
+01:16:05,000 --> 01:16:07,000
+into our complete functions.
+
+1760
+01:16:10,000 --> 01:16:10,000
+Derivative.
+
+1761
+01:16:10,000 --> 01:16:12,000
+Yeah, we need the derivative, exactly.
+
+1762
+01:16:12,000 --> 01:16:16,000
+We need the derivative for each of these position
+
+1763
+01:16:16,000 --> 01:16:18,000
+to the arguments.
+
+1764
+01:16:18,000 --> 01:16:19,000
+And actually, I didn't look.
+
+1765
+01:16:19,000 --> 01:16:20,000
+I don't know.
+
+1766
+01:16:20,000 --> 01:16:23,000
+Take it as a homework.
+
+1767
+01:16:23,000 --> 01:16:25,000
+Because the Wikipedia solution was kind of ugly,
+
+1768
+01:16:25,000 --> 01:16:28,000
+and I hadn't time to do it by hand.
+
+1769
+01:16:28,000 --> 01:16:30,000
+So there is a derivative, obviously,
+
+1770
+01:16:30,000 --> 01:16:32,000
+of this function with respect to each argument.
+
+1771
+01:16:32,000 --> 01:16:35,000
+But it wasn't like this.
+
+1772
+01:16:35,000 --> 01:16:38,000
+It didn't look straightforward just to put it here on Wikipedia.
+
+1773
+01:16:38,000 --> 01:16:40,000
+So maybe you want to try it by hand.
+
+1774
+01:16:40,000 --> 01:16:43,000
+But there is a derivative, obviously.
+
+1775
+01:16:43,000 --> 01:16:45,000
+Great, so we have this softmax function.
+
+1776
+01:16:48,000 --> 01:16:49,000
+What else?
+
+1777
+01:16:49,000 --> 01:16:52,000
+Yeah, so softmax, actually, we typically
+
+1778
+01:16:52,000 --> 01:16:56,000
+use softmax in different setup, also
+
+1779
+01:16:56,000 --> 01:17:00,000
+with this thing called temperature, temperature T.
+
+1780
+01:17:00,000 --> 01:17:04,000
+And if you ever play with ChetGTP or some APIs from ChetGTP
+
+1781
+01:17:04,000 --> 01:17:07,000
+or GPT-4, there is a parameter called temperature.
+
+1782
+01:17:07,000 --> 01:17:08,000
+Have you seen that before?
+
+1783
+01:17:08,000 --> 01:17:09,000
+Anybody heard of temperature?
+
+1784
+01:17:09,000 --> 01:17:11,000
+You know why it's temperature?
+
+1785
+01:17:11,000 --> 01:17:13,000
+Because of this.
+
+1786
+01:17:13,000 --> 01:17:16,000
+It's just basically, it's putting.
+
+1787
+01:17:16,000 --> 01:17:20,000
+And this is coming from physics, as far as I know,
+
+1788
+01:17:20,000 --> 01:17:23,000
+because it has some meaning on the entropy of the universe
+
+1789
+01:17:23,000 --> 01:17:25,000
+or whatever.
+
+1790
+01:17:25,000 --> 01:17:27,000
+But it's basically dividing each of these constants
+
+1791
+01:17:27,000 --> 01:17:29,000
+by this temperature.
+
+1792
+01:17:29,000 --> 01:17:32,000
+And the meaning of that is that, for example, the input
+
+1793
+01:17:32,000 --> 01:17:35,000
+of softmax would be 3, 0, 1.
+
+1794
+01:17:35,000 --> 01:17:38,000
+And if we use no temperature, the output of the softmax
+
+1795
+01:17:38,000 --> 01:17:39,000
+is going to be like that.
+
+1796
+01:17:39,000 --> 01:17:41,000
+So this is a probability distribution.
+
+1797
+01:17:41,000 --> 01:17:42,000
+Everything is between 0 and 1.
+
+1798
+01:17:42,000 --> 01:17:45,000
+And as we see, 3 will be the biggest.
+
+1799
+01:17:45,000 --> 01:17:46,000
+0 will be somewhere low, but not 0.
+
+1800
+01:17:46,000 --> 01:17:51,000
+And 1 will be somewhere low, but not as big as that.
+
+1801
+01:17:51,000 --> 01:17:57,000
+If we use high temperature, this is getting more uniform.
+
+1802
+01:17:57,000 --> 01:17:58,000
+And why is it in ChetGPT?
+
+1803
+01:17:58,000 --> 01:18:02,000
+Because you can put temperature on the sampling, basically,
+
+1804
+01:18:02,000 --> 01:18:03,000
+of the next word, something like that.
+
+1805
+01:18:03,000 --> 01:18:06,000
+So high temperature means more randomness
+
+1806
+01:18:06,000 --> 01:18:11,000
+in the sampling of the next word, while low temperature
+
+1807
+01:18:11,000 --> 01:18:16,000
+means basically almost certainty in the distribution.
+
+1808
+01:18:16,000 --> 01:18:19,000
+So the temperature is just a parameter
+
+1809
+01:18:19,000 --> 01:18:23,000
+which has an influence on the output of the softmax.
+
+1810
+01:18:23,000 --> 01:18:24,000
+Any question?
+
+1811
+01:18:28,000 --> 01:18:29,000
+Great.
+
+1812
+01:18:34,000 --> 01:18:36,000
+So we have a softmax.
+
+1813
+01:18:36,000 --> 01:18:38,000
+We're going to plug the softmax somewhere.
+
+1814
+01:18:38,000 --> 01:18:39,000
+That's for sure.
+
+1815
+01:18:39,000 --> 01:18:45,000
+But we had a loss function for the sigmoid.
+
+1816
+01:18:45,000 --> 01:18:49,000
+So the loss function, what was the name again?
+
+1817
+01:18:49,000 --> 01:18:52,000
+Binary cross-entropy was the loss function,
+
+1818
+01:18:52,000 --> 01:18:54,000
+was these two logarithms and things like that.
+
+1819
+01:18:54,000 --> 01:18:58,000
+But what are we going to do for the softmax?
+
+1820
+01:18:58,000 --> 01:19:02,000
+Well, we're going to use a categorical cross-entropy, also
+
+1821
+01:19:02,000 --> 01:19:05,000
+known as negative log likelihood.
+
+1822
+01:19:05,000 --> 01:19:06,000
+Remember this, please.
+
+1823
+01:19:06,000 --> 01:19:08,000
+This is central to machine learning
+
+1824
+01:19:08,000 --> 01:19:10,000
+and negative log likelihood.
+
+1825
+01:19:10,000 --> 01:19:11,000
+What you're doing, yeah?
+
+1826
+01:19:11,000 --> 01:19:13,000
+I'm minimizing negative log likelihood.
+
+1827
+01:19:13,000 --> 01:19:13,000
+OK, good.
+
+1828
+01:19:13,000 --> 01:19:14,000
+What does it mean?
+
+1829
+01:19:14,000 --> 01:19:16,000
+Yeah, so it's a categorical cross-entropy.
+
+1830
+01:19:16,000 --> 01:19:17,000
+OK, what does it mean?
+
+1831
+01:19:17,000 --> 01:19:18,000
+So this is it.
+
+1832
+01:19:18,000 --> 01:19:23,000
+Basically, we have, again, so we have the y vector
+
+1833
+01:19:23,000 --> 01:19:27,000
+is the vector of the distribution of the class's
+
+1834
+01:19:27,000 --> 01:19:27,000
+labels.
+
+1835
+01:19:27,000 --> 01:19:29,000
+And now we have two options.
+
+1836
+01:19:29,000 --> 01:19:33,000
+So this would be basically a one-hot encoding.
+
+1837
+01:19:33,000 --> 01:19:39,000
+So 0, 0, 1, 0, 0, 0 would be the hard decision.
+
+1838
+01:19:39,000 --> 01:19:42,000
+But you say, maybe you want a distribution of languages.
+
+1839
+01:19:42,000 --> 01:19:43,000
+So it could be anything, actually.
+
+1840
+01:19:43,000 --> 01:19:49,000
+I mean, we can have like, it could be 0.5 German and 0.5
+
+1841
+01:19:49,000 --> 01:19:51,000
+English, and the rest would be zeros.
+
+1842
+01:19:51,000 --> 01:19:51,000
+Maybe.
+
+1843
+01:19:51,000 --> 01:19:52,000
+Why not?
+
+1844
+01:19:52,000 --> 01:19:55,000
+I mean, as long as this is probability distribution,
+
+1845
+01:19:55,000 --> 01:19:56,000
+we're fine.
+
+1846
+01:19:56,000 --> 01:20:00,000
+But typically, we use one-hot encoding for the labels.
+
+1847
+01:20:00,000 --> 01:20:03,000
+And the output of softmax, as we just saw,
+
+1848
+01:20:03,000 --> 01:20:05,000
+will be something like this.
+
+1849
+01:20:05,000 --> 01:20:08,000
+So maybe this would be the output of the softmax.
+
+1850
+01:20:08,000 --> 01:20:13,000
+So some distribution which sums up to 1.
+
+1851
+01:20:13,000 --> 01:20:17,000
+What we are trying to do is to make
+
+1852
+01:20:17,000 --> 01:20:19,000
+the difference of these two distributions
+
+1853
+01:20:19,000 --> 01:20:22,000
+as small as possible.
+
+1854
+01:20:22,000 --> 01:20:25,000
+So this is a probability distribution, very spiky here.
+
+1855
+01:20:25,000 --> 01:20:26,000
+This is a probability distribution.
+
+1856
+01:20:26,000 --> 01:20:28,000
+And we want to make this distribution
+
+1857
+01:20:28,000 --> 01:20:29,000
+difference as small as possible.
+
+1858
+01:20:29,000 --> 01:20:29,000
+Why?
+
+1859
+01:20:29,000 --> 01:20:31,000
+Because we want the model to predict
+
+1860
+01:20:31,000 --> 01:20:33,000
+what is in the gold standard data.
+
+1861
+01:20:33,000 --> 01:20:34,000
+How to do that?
+
+1862
+01:20:34,000 --> 01:20:36,000
+We're using this negative log-likelihood,
+
+1863
+01:20:36,000 --> 01:20:40,000
+or cross-entropy loss, which has this very nice formula,
+
+1864
+01:20:40,000 --> 01:20:42,000
+or very ugly formula, depending on perspective.
+
+1865
+01:20:42,000 --> 01:20:45,000
+And it's, yeah.
+
+1866
+01:20:45,000 --> 01:20:47,000
+So it's basically iterating over all these categories
+
+1867
+01:20:47,000 --> 01:20:50,000
+and computing log of 1, multiplying
+
+1868
+01:20:50,000 --> 01:20:51,000
+by the value of the other.
+
+1869
+01:20:51,000 --> 01:20:53,000
+And so why is this so?
+
+1870
+01:20:53,000 --> 01:20:55,000
+What is this coming from?
+
+1871
+01:20:55,000 --> 01:20:57,000
+I mean, maybe you could remember this one.
+
+1872
+01:20:57,000 --> 01:20:59,000
+Yeah, I guess you can remember that.
+
+1873
+01:21:01,000 --> 01:21:02,000
+But why is this?
+
+1874
+01:21:02,000 --> 01:21:04,000
+Where is this coming from?
+
+1875
+01:21:04,000 --> 01:21:05,000
+I mean, why is this so?
+
+1876
+01:21:05,000 --> 01:21:07,000
+Like minus logarithms from one, the other.
+
+1877
+01:21:07,000 --> 01:21:08,000
+There is a meaning.
+
+1878
+01:21:08,000 --> 01:21:11,000
+So typically, you will find this as you learn it.
+
+1879
+01:21:11,000 --> 01:21:14,000
+And this is a little cross-entropy loss.
+
+1880
+01:21:14,000 --> 01:21:14,000
+Think about it.
+
+1881
+01:21:14,000 --> 01:21:21,000
+We want to find a distance between two distributions.
+
+1882
+01:21:21,000 --> 01:21:25,000
+So how do you find distance, or differences
+
+1883
+01:21:25,000 --> 01:21:27,000
+between two distributions?
+
+1884
+01:21:27,000 --> 01:21:29,000
+Anybody who has probability theory,
+
+1885
+01:21:29,000 --> 01:21:31,000
+how do you compare two distributions?
+
+1886
+01:21:31,000 --> 01:21:34,000
+Is there a way, if you have one distribution
+
+1887
+01:21:34,000 --> 01:21:37,000
+and another distribution over the same values,
+
+1888
+01:21:37,000 --> 01:21:39,000
+how do you measure the difference
+
+1889
+01:21:39,000 --> 01:21:40,000
+between two distributions?
+
+1890
+01:21:40,000 --> 01:21:41,000
+Is there a way?
+
+1891
+01:21:44,000 --> 01:21:45,000
+Exactly, KL?
+
+1892
+01:21:48,000 --> 01:21:50,000
+Divergence.
+
+1893
+01:21:50,000 --> 01:21:52,000
+KL divergence or divergence?
+
+1894
+01:21:52,000 --> 01:21:54,000
+Yes, so KL divergence.
+
+1895
+01:21:54,000 --> 01:21:55,000
+OK, good.
+
+1896
+01:21:55,000 --> 01:21:58,000
+How do you compute KL divergence?
+
+1897
+01:21:58,000 --> 01:22:00,000
+Anybody knows how to compute KL divergence?
+
+1898
+01:22:05,000 --> 01:22:05,000
+It's been a while.
+
+1899
+01:22:05,000 --> 01:22:06,000
+I know, I'm sorry.
+
+1900
+01:22:06,000 --> 01:22:09,000
+Yes, but if you go to KL divergence,
+
+1901
+01:22:09,000 --> 01:22:11,000
+it's an expectation over a function of one variable.
+
+1902
+01:22:11,000 --> 01:22:13,000
+And there's some logarithm in there.
+
+1903
+01:22:13,000 --> 01:22:15,000
+And it's like, oh, it looks similar.
+
+1904
+01:22:15,000 --> 01:22:19,000
+OK, yes, because this is coming from the KL divergence.
+
+1905
+01:22:19,000 --> 01:22:21,000
+So this is optional slide.
+
+1906
+01:22:21,000 --> 01:22:24,000
+I don't want to scare you off, because I scared off last year
+
+1907
+01:22:24,000 --> 01:22:24,000
+everybody here.
+
+1908
+01:22:24,000 --> 01:22:27,000
+So I'm not going to go through this.
+
+1909
+01:22:27,000 --> 01:22:32,000
+But this is the KL divergence over two probabilities
+
+1910
+01:22:32,000 --> 01:22:34,000
+over the same random variable with the same range.
+
+1911
+01:22:34,000 --> 01:22:40,000
+And this is as an expectation of the PY.
+
+1912
+01:22:40,000 --> 01:22:43,000
+And here's the function of the random variable, which is QY.
+
+1913
+01:22:43,000 --> 01:22:48,000
+OK, so yeah, this is the definition of KL divergence.
+
+1914
+01:22:48,000 --> 01:22:50,000
+And then if you do the math and logarithms and blah, blah, blah,
+
+1915
+01:22:50,000 --> 01:22:53,000
+blah, blah, you end up with two things.
+
+1916
+01:22:53,000 --> 01:22:56,000
+You can decompose this into two things.
+
+1917
+01:22:56,000 --> 01:22:58,000
+OK, what is this?
+
+1918
+01:22:58,000 --> 01:23:00,000
+Anyone knows this from probability theory?
+
+1919
+01:23:00,000 --> 01:23:02,000
+What is H typically?
+
+1920
+01:23:06,000 --> 01:23:08,000
+So this is the entropy.
+
+1921
+01:23:08,000 --> 01:23:10,000
+So you compose this KL divergence
+
+1922
+01:23:10,000 --> 01:23:15,000
+into entropy of Y. And this is expectation
+
+1923
+01:23:15,000 --> 01:23:17,000
+of the other thing.
+
+1924
+01:23:17,000 --> 01:23:22,000
+And if you do the math here and make this explicit,
+
+1925
+01:23:22,000 --> 01:23:25,000
+the expectation here, you end up with this formula.
+
+1926
+01:23:25,000 --> 01:23:28,000
+This is exactly coming from there.
+
+1927
+01:23:28,000 --> 01:23:30,000
+So basically, you want to compare two distributions.
+
+1928
+01:23:30,000 --> 01:23:33,000
+You use KL divergence.
+
+1929
+01:23:33,000 --> 01:23:35,000
+You decompose KL divergence into two parts.
+
+1930
+01:23:35,000 --> 01:23:39,000
+And one part doesn't really depend on the predictions.
+
+1931
+01:23:39,000 --> 01:23:42,000
+So you just get rid of it, because you cannot optimize it.
+
+1932
+01:23:42,000 --> 01:23:45,000
+And take the part you need to optimize.
+
+1933
+01:23:45,000 --> 01:23:49,000
+And this is going to be cross-entropy.
+
+1934
+01:23:49,000 --> 01:23:54,000
+OK, so there's a reason why this looks like how it looks like.
+
+1935
+01:23:54,000 --> 01:23:56,000
+But you can also remember the formula.
+
+1936
+01:23:56,000 --> 01:24:03,000
+If you do it for two, if k is 2, you will end up with,
+
+1937
+01:24:03,000 --> 01:24:05,000
+surprise, surprise, surprise, surprise, surprise, surprise,
+
+1938
+01:24:05,000 --> 01:24:07,000
+surprise, surprise, surprise, surprise.
+
+1939
+01:24:07,000 --> 01:24:09,000
+Oh, Jesus, it's long.
+
+1940
+01:24:09,000 --> 01:24:13,000
+You will end up with this.
+
+1941
+01:24:13,000 --> 01:24:17,000
+So this is the cross-entropy for two variables.
+
+1942
+01:24:17,000 --> 01:24:19,000
+We don't use sum here, but it's the same thing.
+
+1943
+01:24:19,000 --> 01:24:21,000
+Just spit out exactly.
+
+1944
+01:24:21,000 --> 01:24:23,000
+OK?
+
+1945
+01:24:23,000 --> 01:24:26,000
+It's coming from the KL divergence.
+
+1946
+01:24:26,000 --> 01:24:29,000
+Oops, that was too slow, too fast.
+
+1947
+01:24:29,000 --> 01:24:31,000
+OK, and I think we'll actually finish today, maybe,
+
+1948
+01:24:31,000 --> 01:24:32,000
+hopefully.
+
+1949
+01:24:32,000 --> 01:24:34,000
+So this is like optional slide, but that you know it's
+
+1950
+01:24:34,000 --> 01:24:35,000
+coming from somewhere.
+
+1951
+01:24:35,000 --> 01:24:37,000
+There is a meaning.
+
+1952
+01:24:37,000 --> 01:24:39,000
+So we had this linear functions.
+
+1953
+01:24:39,000 --> 01:24:40,000
+OK, I'm sorry.
+
+1954
+01:24:40,000 --> 01:24:43,000
+I need just six minutes, and we're through it.
+
+1955
+01:24:43,000 --> 01:24:43,000
+Is it OK?
+
+1956
+01:24:43,000 --> 01:24:45,000
+Cool.
+
+1957
+01:24:45,000 --> 01:24:48,000
+Good, so now it's coming to final.
+
+1958
+01:24:48,000 --> 01:24:51,000
+We have the linear layer.
+
+1959
+01:24:51,000 --> 01:24:53,000
+We put a softmax on top of that.
+
+1960
+01:24:53,000 --> 01:24:54,000
+Did we do that?
+
+1961
+01:24:54,000 --> 01:24:55,000
+I guess so.
+
+1962
+01:24:55,000 --> 01:24:57,000
+No, the softmax will give you probability distribution
+
+1963
+01:24:57,000 --> 01:24:59,000
+over these outputs of this linear transformation.
+
+1964
+01:24:59,000 --> 01:25:03,000
+Linear transformation, six-size vector, softmax,
+
+1965
+01:25:03,000 --> 01:25:05,000
+turn it into probability distribution,
+
+1966
+01:25:05,000 --> 01:25:07,000
+and you pick the maximum.
+
+1967
+01:25:07,000 --> 01:25:10,000
+Or you know the probability of each class
+
+1968
+01:25:10,000 --> 01:25:13,000
+from the predictions.
+
+1969
+01:25:13,000 --> 01:25:15,000
+The whole thing, the whole fun of deep learning
+
+1970
+01:25:15,000 --> 01:25:17,000
+is that you can stack things together.
+
+1971
+01:25:17,000 --> 01:25:21,000
+So what you can do is, well, this looks ugly, right?
+
+1972
+01:25:21,000 --> 01:25:22,000
+It's not.
+
+1973
+01:25:22,000 --> 01:25:23,000
+Stay with me.
+
+1974
+01:25:23,000 --> 01:25:27,000
+So we have, again, our input vector and the weights,
+
+1975
+01:25:27,000 --> 01:25:29,000
+and this is the linear transformation.
+
+1976
+01:25:29,000 --> 01:25:31,000
+So we have one linear transformation
+
+1977
+01:25:31,000 --> 01:25:32,000
+as we had before.
+
+1978
+01:25:32,000 --> 01:25:39,000
+What if we take this and do another transformation here
+
+1979
+01:25:39,000 --> 01:25:43,000
+with another set of parameters, and then compute a loss
+
+1980
+01:25:43,000 --> 01:25:46,000
+and make predictions?
+
+1981
+01:25:46,000 --> 01:25:50,000
+So we would basically inline the first.
+
+1982
+01:25:50,000 --> 01:25:52,000
+This would be the first linear function
+
+1983
+01:25:52,000 --> 01:25:54,000
+into another linear transformation.
+
+1984
+01:25:54,000 --> 01:25:56,000
+And we have more dimensions here.
+
+1985
+01:25:56,000 --> 01:25:58,000
+So this is the input dimension.
+
+1986
+01:25:58,000 --> 01:25:59,000
+There will be the output dimension.
+
+1987
+01:25:59,000 --> 01:26:01,000
+And of course, to make this multiplication work,
+
+1988
+01:26:01,000 --> 01:26:06,000
+we have these matrices and biases vectors.
+
+1989
+01:26:06,000 --> 01:26:09,000
+D1 is the dimensionality of the first function,
+
+1990
+01:26:09,000 --> 01:26:11,000
+and then there's the other function.
+
+1991
+01:26:11,000 --> 01:26:14,000
+So can we do that?
+
+1992
+01:26:14,000 --> 01:26:15,000
+We could be stacking things together
+
+1993
+01:26:16,000 --> 01:26:22,000
+and having more projections, basically.
+
+1994
+01:26:22,000 --> 01:26:25,000
+So we would basically project our high-dimensional space
+
+1995
+01:26:25,000 --> 01:26:31,000
+into another space, and then we can project from this space
+
+1996
+01:26:31,000 --> 01:26:33,000
+to yet another space with the hope
+
+1997
+01:26:33,000 --> 01:26:37,000
+that we will end up with a great representation of the problem
+
+1998
+01:26:37,000 --> 01:26:41,000
+that the classification will be easy.
+
+1999
+01:26:41,000 --> 01:26:42,000
+There is one catch with that.
+
+2000
+01:26:42,000 --> 01:26:45,000
+I mean, so first question is, are you with me on this?
+
+2001
+01:26:45,000 --> 01:26:49,000
+We can stack things together and have some linear functions
+
+2002
+01:26:49,000 --> 01:26:50,000
+on top of each other.
+
+2003
+01:26:50,000 --> 01:26:51,000
+Does it make sense?
+
+2004
+01:26:54,000 --> 01:26:56,000
+And the dimensions have meaning, is there?
+
+2005
+01:26:56,000 --> 01:26:58,000
+I mean, meaning in terms of they have to match.
+
+2006
+01:26:58,000 --> 01:26:59,000
+So this is great.
+
+2007
+01:26:59,000 --> 01:27:04,000
+But what happens if you do linear transformation
+
+2008
+01:27:04,000 --> 01:27:06,000
+after another linear transformation?
+
+2009
+01:27:06,000 --> 01:27:07,000
+What do you end up with?
+
+2010
+01:27:07,000 --> 01:27:10,000
+What will be the output function?
+
+2011
+01:27:10,000 --> 01:27:13,000
+So you can basically put them together
+
+2012
+01:27:13,000 --> 01:27:15,000
+and get one linear transformation.
+
+2013
+01:27:15,000 --> 01:27:16,000
+Exactly.
+
+2014
+01:27:16,000 --> 01:27:20,000
+If you do linear transformation one after each other,
+
+2015
+01:27:20,000 --> 01:27:23,000
+you will end up with one linear transformation in total.
+
+2016
+01:27:23,000 --> 01:27:24,000
+So it will still be linear.
+
+2017
+01:27:24,000 --> 01:27:29,000
+So it won't solve the problem of nonlinearity in the data.
+
+2018
+01:27:29,000 --> 01:27:30,000
+I don't think we talk.
+
+2019
+01:27:30,000 --> 01:27:32,000
+Did we talk about nonlinearity in the data or not?
+
+2020
+01:27:32,000 --> 01:27:33,000
+I don't think so.
+
+2021
+01:27:33,000 --> 01:27:35,000
+OK, we should address that.
+
+2022
+01:27:35,000 --> 01:27:36,000
+Yeah, sorry.
+
+2023
+01:27:36,000 --> 01:27:39,000
+It's a glitch in the screenplay as well.
+
+2024
+01:27:39,000 --> 01:27:43,000
+But the idea is that, OK, we can stack them together.
+
+2025
+01:27:43,000 --> 01:27:46,000
+And in order to learn better representation, not just
+
+2026
+01:27:46,000 --> 01:27:49,000
+linear representations, what is linear representation?
+
+2027
+01:27:49,000 --> 01:27:53,000
+Just projecting something on maybe on a wall in 2D.
+
+2028
+01:27:53,000 --> 01:27:55,000
+But all the distances will be still the same.
+
+2029
+01:27:55,000 --> 01:27:57,000
+But we want to learn better representation,
+
+2030
+01:27:57,000 --> 01:28:00,000
+which kind of tears maybe the dimensions apart
+
+2031
+01:28:00,000 --> 01:28:02,000
+or the instances apart.
+
+2032
+01:28:02,000 --> 01:28:08,000
+So the trick here is that we add a nonlinearity in here.
+
+2033
+01:28:08,000 --> 01:28:12,000
+So we take the output of the first, let's call it layer.
+
+2034
+01:28:12,000 --> 01:28:13,000
+Why not?
+
+2035
+01:28:13,000 --> 01:28:15,000
+Because it is a layer.
+
+2036
+01:28:15,000 --> 01:28:19,000
+And push it through some nonlinear function.
+
+2037
+01:28:19,000 --> 01:28:23,000
+And then the rest is the same as before.
+
+2038
+01:28:23,000 --> 01:28:23,000
+Yes?
+
+2039
+01:28:23,000 --> 01:28:25,000
+What's the y?
+
+2040
+01:28:25,000 --> 01:28:26,000
+Where's the y?
+
+2041
+01:28:26,000 --> 01:28:27,000
+What is the y?
+
+2042
+01:28:27,000 --> 01:28:29,000
+x is the input.
+
+2043
+01:28:29,000 --> 01:28:30,000
+Yes.
+
+2044
+01:28:30,000 --> 01:28:32,000
+And y is the label.
+
+2045
+01:28:32,000 --> 01:28:34,000
+Yeah, so this is the same setup.
+
+2046
+01:28:34,000 --> 01:28:37,000
+We have an input.
+
+2047
+01:28:37,000 --> 01:28:40,000
+And this is the GALT label.
+
+2048
+01:28:40,000 --> 01:28:43,000
+GALT label as we had before.
+
+2049
+01:28:43,000 --> 01:28:46,000
+But we just, this is in between.
+
+2050
+01:28:46,000 --> 01:28:48,000
+The transformation is getting more complicated.
+
+2051
+01:28:48,000 --> 01:28:52,000
+Here it was just two linear transformation
+
+2052
+01:28:52,000 --> 01:28:53,000
+on top of each other.
+
+2053
+01:28:53,000 --> 01:28:54,000
+But they don't give any added value
+
+2054
+01:28:54,000 --> 01:28:57,000
+because it will be still linear, like two matrices
+
+2055
+01:28:57,000 --> 01:28:58,000
+after each other.
+
+2056
+01:28:58,000 --> 01:29:02,000
+But here we're adding some nonlinear,
+
+2057
+01:29:02,000 --> 01:29:04,000
+excuse me, nonlinear function in there,
+
+2058
+01:29:04,000 --> 01:29:07,000
+which we typically call also a activation function.
+
+2059
+01:29:10,000 --> 01:29:14,000
+And it's doing some nested things in the space.
+
+2060
+01:29:14,000 --> 01:29:17,000
+So you project somewhere and push it
+
+2061
+01:29:17,000 --> 01:29:20,000
+through some nonlinearity, which will do
+
+2062
+01:29:20,000 --> 01:29:22,000
+some weird things in this space.
+
+2063
+01:29:24,000 --> 01:29:27,000
+So everybody's with me on that.
+
+2064
+01:29:27,000 --> 01:29:29,000
+Yes.
+
+2065
+01:29:29,000 --> 01:29:29,000
+Yes.
+
+2066
+01:29:32,000 --> 01:29:33,000
+Mm-hmm.
+
+2067
+01:29:36,000 --> 01:29:36,000
+Yes.
+
+2068
+01:29:42,000 --> 01:29:44,000
+Yes, I guess this is correct.
+
+2069
+01:29:44,000 --> 01:29:48,000
+This should be T1, exactly.
+
+2070
+01:29:48,000 --> 01:29:49,000
+Thank you very much.
+
+2071
+01:29:49,000 --> 01:29:51,000
+Yeah, great catch.
+
+2072
+01:29:51,000 --> 01:29:51,000
+Great catch.
+
+2073
+01:29:51,000 --> 01:29:52,000
+Thanks a lot.
+
+2074
+01:29:52,000 --> 01:29:53,000
+Yes.
+
+2075
+01:29:53,000 --> 01:29:55,000
+I copy pasted it and then, yes.
+
+2076
+01:29:55,000 --> 01:29:57,000
+Yeah, that's correct, exactly.
+
+2077
+01:29:57,000 --> 01:29:59,000
+Well, let's come back here.
+
+2078
+01:29:59,000 --> 01:30:01,000
+So this I have to fix.
+
+2079
+01:30:01,000 --> 01:30:03,000
+But we're plugging in the activation here.
+
+2080
+01:30:03,000 --> 01:30:05,000
+And the activation definitely will be, yes.
+
+2081
+01:30:05,000 --> 01:30:07,000
+I mean, now the dimensions are correct.
+
+2082
+01:30:07,000 --> 01:30:11,000
+So it will be applied to a vector of this dimension.
+
+2083
+01:30:11,000 --> 01:30:12,000
+And the vector comes out.
+
+2084
+01:30:12,000 --> 01:30:14,000
+So we're not doing any transformation here.
+
+2085
+01:30:14,000 --> 01:30:16,000
+We just apply this on each element
+
+2086
+01:30:16,000 --> 01:30:23,000
+of this vector coming out of this layer.
+
+2087
+01:30:23,000 --> 01:30:27,000
+OK, any questions?
+
+2088
+01:30:27,000 --> 01:30:27,000
+Good.
+
+2089
+01:30:27,000 --> 01:30:29,000
+So what is this nonlinear function could be?
+
+2090
+01:30:29,000 --> 01:30:32,000
+What is a nonlinear function?
+
+2091
+01:30:32,000 --> 01:30:33,000
+If you say ReLU, don't say it.
+
+2092
+01:30:33,000 --> 01:30:37,000
+If you say something else, say it.
+
+2093
+01:30:37,000 --> 01:30:38,000
+10h.
+
+2094
+01:30:38,000 --> 01:30:39,000
+10h, yes.
+
+2095
+01:30:39,000 --> 01:30:42,000
+OK, well, we already had a nonlinear function before.
+
+2096
+01:30:42,000 --> 01:30:43,000
+10h is great.
+
+2097
+01:30:43,000 --> 01:30:48,000
+So 10 tangoes hypergolic flux, which maps everything into,
+
+2098
+01:30:48,000 --> 01:30:51,000
+oh, how is that?
+
+2099
+01:30:51,000 --> 01:30:52,000
+Maybe like that.
+
+2100
+01:30:52,000 --> 01:30:58,000
+So between minus 0.5 and 0.5, is it correct?
+
+2101
+01:30:58,000 --> 01:30:59,000
+I hope so.
+
+2102
+01:31:02,000 --> 01:31:03,000
+Is it minus 1 to 1?
+
+2103
+01:31:03,000 --> 01:31:05,000
+OK.
+
+2104
+01:31:05,000 --> 01:31:08,000
+No, no, no, let's make it right.
+
+2105
+01:31:08,000 --> 01:31:11,000
+So minus 1 and 1.
+
+2106
+01:31:11,000 --> 01:31:12,000
+And we had another one.
+
+2107
+01:31:12,000 --> 01:31:16,000
+We had something very similar, almost very similar.
+
+2108
+01:31:16,000 --> 01:31:17,000
+We had a sigmoid.
+
+2109
+01:31:17,000 --> 01:31:18,000
+Exactly.
+
+2110
+01:31:18,000 --> 01:31:22,000
+So it could be a sigmoid, which maps everything, basically.
+
+2111
+01:31:22,000 --> 01:31:24,000
+And this is, as I said, this is, here's
+
+2112
+01:31:24,000 --> 01:31:25,000
+coming up what's coming out of here.
+
+2113
+01:31:25,000 --> 01:31:27,000
+It's a vector.
+
+2114
+01:31:27,000 --> 01:31:32,000
+And we're applying this on each element independently.
+
+2115
+01:31:32,000 --> 01:31:35,000
+So we can use 10h.
+
+2116
+01:31:35,000 --> 01:31:36,000
+We can use sigmoid.
+
+2117
+01:31:36,000 --> 01:31:37,000
+They used to be popular.
+
+2118
+01:31:37,000 --> 01:31:39,000
+We have something else you were saying.
+
+2119
+01:31:39,000 --> 01:31:41,000
+No, you were saying ReLU.
+
+2120
+01:31:41,000 --> 01:31:43,000
+OK, we have ReLU.
+
+2121
+01:31:43,000 --> 01:31:45,000
+So we have ReLU, which is very weird actual activation
+
+2122
+01:31:45,000 --> 01:31:48,000
+function, because it's saying just, yeah,
+
+2123
+01:31:48,000 --> 01:31:53,000
+everything which is positive will stay the same.
+
+2124
+01:31:53,000 --> 01:31:57,000
+For it will be like the input will be the output
+
+2125
+01:31:57,000 --> 01:31:59,000
+if this is a positive number.
+
+2126
+01:31:59,000 --> 01:32:02,000
+And if it's negative, it will be just 0.
+
+2127
+01:32:02,000 --> 01:32:05,000
+So basically, we're kind of like breaking
+
+2128
+01:32:05,000 --> 01:32:08,000
+the function in the middle and saying,
+
+2129
+01:32:08,000 --> 01:32:13,000
+or you can say it will maximum of the input or the 0.
+
+2130
+01:32:13,000 --> 01:32:16,000
+So OK, this is great.
+
+2131
+01:32:16,000 --> 01:32:19,000
+What do we need to compute for this thing?
+
+2132
+01:32:19,000 --> 01:32:22,000
+I mean, everything has to be, we need
+
+2133
+01:32:22,000 --> 01:32:26,000
+for every function we plug into the network, we need what?
+
+2134
+01:32:26,000 --> 01:32:27,000
+We need derivative.
+
+2135
+01:32:27,000 --> 01:32:31,000
+So what's going to be derivative of ReLU?
+
+2136
+01:32:31,000 --> 01:32:33,000
+0 and 1?
+
+2137
+01:32:33,000 --> 01:32:34,000
+Yeah, exactly.
+
+2138
+01:32:34,000 --> 01:32:38,000
+So the derivative here will be 0.
+
+2139
+01:32:38,000 --> 01:32:40,000
+And here the derivative will be 1.
+
+2140
+01:32:40,000 --> 01:32:41,000
+It's beautiful.
+
+2141
+01:32:45,000 --> 01:32:48,000
+Like we have this thing at the 0 minus.
+
+2142
+01:32:48,000 --> 01:32:49,000
+And this is a catch.
+
+2143
+01:32:49,000 --> 01:32:52,000
+Yes, what's this?
+
+2144
+01:32:52,000 --> 01:32:53,000
+It's the continuous.
+
+2145
+01:32:53,000 --> 01:32:54,000
+Yeah, you cannot do it.
+
+2146
+01:32:54,000 --> 01:32:54,000
+Exactly.
+
+2147
+01:32:54,000 --> 01:32:57,000
+So what you're saying is that's why
+
+2148
+01:32:57,000 --> 01:32:59,000
+we don't need to have continuous functions,
+
+2149
+01:32:59,000 --> 01:33:02,000
+because this is not continuous in a way like it's
+
+2150
+01:33:02,000 --> 01:33:03,000
+differential at every point.
+
+2151
+01:33:03,000 --> 01:33:05,000
+Because here we're kind of breaking it.
+
+2152
+01:33:05,000 --> 01:33:08,000
+So we arbitrarily choose saying like at 0
+
+2153
+01:33:08,000 --> 01:33:11,000
+is going to be 1 or 0, just by definition.
+
+2154
+01:33:11,000 --> 01:33:12,000
+We don't care about it.
+
+2155
+01:33:12,000 --> 01:33:15,000
+Because the chances it will be exactly 0 is super low.
+
+2156
+01:33:15,000 --> 01:33:19,000
+But if so, you can say, yeah, let's let the derivative be 1
+
+2157
+01:33:19,000 --> 01:33:21,000
+or 0.
+
+2158
+01:33:21,000 --> 01:33:23,000
+Yeah, yeah, like a design choice.
+
+2159
+01:33:23,000 --> 01:33:25,000
+You say, in my implementation, I'm
+
+2160
+01:33:25,000 --> 01:33:27,000
+going to use derivative of 1 for everything which
+
+2161
+01:33:27,000 --> 01:33:31,000
+is greater or equal to 0.
+
+2162
+01:33:31,000 --> 01:33:32,000
+But it does not affect that much.
+
+2163
+01:33:32,000 --> 01:33:34,000
+It doesn't affect that much.
+
+2164
+01:33:34,000 --> 01:33:36,000
+Exactly, exactly.
+
+2165
+01:33:36,000 --> 01:33:38,000
+And this is the ReLU.
+
+2166
+01:33:38,000 --> 01:33:41,000
+ReLU is like one of the most widely used nonlinearities
+
+2167
+01:33:41,000 --> 01:33:44,000
+in deep learning and natural language processing so far.
+
+2168
+01:33:44,000 --> 01:33:47,000
+So it has nice derivatives, nice implementation.
+
+2169
+01:33:47,000 --> 01:33:50,000
+It's very fast, because it's just the identity function
+
+2170
+01:33:50,000 --> 01:33:52,000
+or just basically one liner.
+
+2171
+01:33:52,000 --> 01:33:54,000
+So it's super fast as well to compute.
+
+2172
+01:33:54,000 --> 01:33:56,000
+And we're going to plug it on many places.
+
+2173
+01:33:56,000 --> 01:33:59,000
+Any question?
+
+2174
+01:33:59,000 --> 01:34:00,000
+Great, we're through.
+
+2175
+01:34:00,000 --> 01:34:01,000
+Made it.
+
+2176
+01:34:01,000 --> 01:34:06,000
+So binary classification as linear function
+
+2177
+01:34:06,000 --> 01:34:07,000
+works in words.
+
+2178
+01:34:07,000 --> 01:34:08,000
+Yeah, we hit it.
+
+2179
+01:34:08,000 --> 01:34:11,000
+So cross-entropy logistic loss, important to remember.
+
+2180
+01:34:11,000 --> 01:34:15,000
+Then mini-batch SGD is very important.
+
+2181
+01:34:15,000 --> 01:34:17,000
+Actually, everything is important,
+
+2182
+01:34:17,000 --> 01:34:18,000
+except for the child divergence.
+
+2183
+01:34:19,000 --> 01:34:22,000
+If you want to sound smart in a bar, you can learn this well.
+
+2184
+01:34:22,000 --> 01:34:25,000
+And then we have the stacking and multilayer perceptron.
+
+2185
+01:34:25,000 --> 01:34:26,000
+OK, thanks a lot.
+
+2186
+01:34:26,000 --> 01:34:28,000
+See you in a week.
+
