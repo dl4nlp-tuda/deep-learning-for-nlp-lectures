@@ -47,6 +47,13 @@ May 9, 2023
 
 * [Slides as PDF](/pdf/dl4nlp2023-lecture05.pdf), [YouTube recording](https://www.youtube.com/watch?v=hqcFkKymRdw)
 
+## Lecture 6: Text classification 3: Learning word embeddings
+
+May 16, 2023
+
+* [Slides as PDF](/pdf/dl4nlp2023-lecture06.pdf)
+
+
 ## Subtitles/Close caption
 
 Thanks to Jan Kühnemund for generating the close caption for YouTube with Open Whisper. We track the subtitles here under `subtitles`, so if you spot an error there (there are many, such as "tanh" -> "10h"), just open a bug or PR.
