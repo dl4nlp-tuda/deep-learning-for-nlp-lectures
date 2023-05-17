@@ -1,0 +1,4712 @@
+1
+00:00:00,000 --> 00:00:08,000
+Good afternoon, everybody.
+
+2
+00:00:08,000 --> 00:00:11,000
+Welcome to deep learning for NLP lecture.
+
+3
+00:00:11,000 --> 00:00:12,000
+Oh, this should be six.
+
+4
+00:00:12,000 --> 00:00:13,000
+So the first typo now.
+
+5
+00:00:13,000 --> 00:00:14,000
+Great.
+
+6
+00:00:16,000 --> 00:00:16,000
+Yeah.
+
+7
+00:00:16,000 --> 00:00:17,000
+Slowly, but steadily.
+
+8
+00:00:17,000 --> 00:00:19,000
+I hope this is the last one as well on the slides.
+
+9
+00:00:20,000 --> 00:00:23,000
+Anyway, so welcome to the sixth lecture for deep learning on NLP.
+
+10
+00:00:23,000 --> 00:00:26,000
+And today we're going to be talking about, oops, sorry.
+
+11
+00:00:26,000 --> 00:00:26,000
+It's too loud.
+
+12
+00:00:26,000 --> 00:00:28,000
+Classification and learning.
+
+13
+00:00:28,000 --> 00:00:28,000
+Word.
+
+14
+00:00:28,000 --> 00:00:30,000
+Is it too loud or is it okay?
+
+15
+00:00:31,000 --> 00:00:31,000
+Okay, good.
+
+16
+00:00:33,000 --> 00:00:37,000
+Learning word embeddings because last time we were talking quite a bit about
+
+17
+00:00:37,000 --> 00:00:38,000
+word embeddings and language models.
+
+18
+00:00:39,000 --> 00:00:43,000
+And today, well, what should we learn today?
+
+19
+00:00:43,000 --> 00:00:48,000
+Um, maybe we want to learn how to solve a problem and the problem is the following.
+
+20
+00:00:49,000 --> 00:00:52,000
+So I'm going to give you a large corpus of just plain text data.
+
+21
+00:00:53,000 --> 00:00:54,000
+And I think it's really too loud.
+
+22
+00:00:56,000 --> 00:00:56,000
+One, two.
+
+23
+00:00:58,000 --> 00:00:58,000
+Okay.
+
+24
+00:00:59,000 --> 00:00:59,000
+Maybe now better.
+
+25
+00:01:00,000 --> 00:01:03,000
+Um, I'll give you a large corpus of plain text data.
+
+26
+00:01:04,000 --> 00:01:09,000
+Um, let's say, I don't know, uh, news wires or Wikipedia or the internet.
+
+27
+00:01:09,000 --> 00:01:09,000
+Okay.
+
+28
+00:01:10,000 --> 00:01:17,000
+And I want to ask you to build a model that will answer such a word analogy tasks.
+
+29
+00:01:18,000 --> 00:01:23,000
+So I want to solve, for example, Germany to Berlin is like France
+
+30
+00:01:23,000 --> 00:01:25,000
+to what should be the answer.
+
+31
+00:01:28,000 --> 00:01:29,000
+Yeah, Paris.
+
+32
+00:01:29,000 --> 00:01:30,000
+Nice.
+
+33
+00:01:30,000 --> 00:01:30,000
+Good.
+
+34
+00:01:31,000 --> 00:01:31,000
+It's a sanity check.
+
+35
+00:01:31,000 --> 00:01:32,000
+Okay.
+
+36
+00:01:32,000 --> 00:01:32,000
+So you're here.
+
+37
+00:01:32,000 --> 00:01:33,000
+Welcome to deep learning.
+
+38
+00:01:33,000 --> 00:01:37,000
+Uh, number six or men to King is like woman to.
+
+39
+00:01:39,000 --> 00:01:39,000
+To a queen.
+
+40
+00:01:39,000 --> 00:01:40,000
+Right?
+
+41
+00:01:40,000 --> 00:01:42,000
+So how can you build such a model?
+
+42
+00:01:42,000 --> 00:01:47,000
+If I just give you a large corpus of just plain text data in English.
+
+43
+00:01:48,000 --> 00:01:50,000
+Sounds kind of challenging, right?
+
+44
+00:01:50,000 --> 00:01:51,000
+Because you have no labels.
+
+45
+00:01:51,000 --> 00:01:55,000
+You just want to learn something about reasoning and analogy and something
+
+46
+00:01:55,000 --> 00:01:57,000
+about words and their meaning.
+
+47
+00:01:57,000 --> 00:01:57,000
+Right?
+
+48
+00:01:58,000 --> 00:02:03,000
+So I can promise you, or even guarantee you that after this lecture, at the end
+
+49
+00:02:03,000 --> 00:02:08,000
+of this lecture, you should be able to solve this task and maybe even like the
+
+50
+00:02:08,000 --> 00:02:13,000
+code, it's like programming, if you really try hard, um, yes.
+
+51
+00:02:13,000 --> 00:02:14,000
+Okay.
+
+52
+00:02:14,000 --> 00:02:16,000
+So, but before we jump on, do that.
+
+53
+00:02:16,000 --> 00:02:19,000
+So last time we talked about neural language models and, and word embedding.
+
+54
+00:02:19,000 --> 00:02:24,000
+So just a quick recapitulation, because I thought I'm going to change a little
+
+55
+00:02:24,000 --> 00:02:29,000
+bit, the depiction of the, you know, the, um, how we kind of, um, draw these,
+
+56
+00:02:29,000 --> 00:02:33,000
+uh, these diagrams, so they used to be round, but I just changed them a little
+
+57
+00:02:33,000 --> 00:02:38,000
+bit to, you know, to the squares or rectangles to be more compact, but still,
+
+58
+00:02:38,000 --> 00:02:41,000
+I mean, this is the narrow language model that we, as we had last time.
+
+59
+00:02:41,000 --> 00:02:47,000
+So we're trying to predict a, the word that's coming after these three words.
+
+60
+00:02:47,000 --> 00:02:52,000
+So the black dog and the next word should be barks.
+
+61
+00:02:53,000 --> 00:02:54,000
+And this is what you're trying to predict.
+
+62
+00:02:54,000 --> 00:02:55,000
+This is our gold standard sort of data.
+
+63
+00:02:56,000 --> 00:03:01,000
+And this neural language model kind of has this lookup table, um, for
+
+64
+00:03:01,000 --> 00:03:03,000
+looking up these embeddings here.
+
+65
+00:03:03,000 --> 00:03:04,000
+So what is an embedding?
+
+66
+00:03:04,000 --> 00:03:05,000
+What was that again?
+
+67
+00:03:05,000 --> 00:03:05,000
+Here?
+
+68
+00:03:06,000 --> 00:03:08,000
+What was here in these E matrix?
+
+69
+00:03:10,000 --> 00:03:11,000
+Anyone remember it's, what was the embedding?
+
+70
+00:03:11,000 --> 00:03:12,000
+So what is an embedding for a word?
+
+71
+00:03:13,000 --> 00:03:13,000
+Yes.
+
+72
+00:03:13,000 --> 00:03:16,000
+So for each word, it's a vector with many different.
+
+73
+00:03:17,000 --> 00:03:18,000
+It's exactly for each word.
+
+74
+00:03:18,000 --> 00:03:23,000
+It's just a, it's an entry in the matrix and a row in the matrix with some
+
+75
+00:03:23,000 --> 00:03:26,000
+dimensionality, which is up to us to specify and just a real valued kind of
+
+76
+00:03:26,000 --> 00:03:29,000
+representation of the one of the encoding word.
+
+77
+00:03:30,000 --> 00:03:30,000
+Okay.
+
+78
+00:03:30,000 --> 00:03:34,000
+So, and then this narrow language model to the context together.
+
+79
+00:03:34,000 --> 00:03:37,000
+So this preceding words as a concatenation.
+
+80
+00:03:37,000 --> 00:03:39,000
+So stack them after one each other.
+
+81
+00:03:40,000 --> 00:03:43,000
+And then here, this is what, well, what is this again?
+
+82
+00:03:44,000 --> 00:03:46,000
+This is what, what is this part?
+
+83
+00:03:46,000 --> 00:03:47,000
+It doesn't name.
+
+84
+00:03:48,000 --> 00:03:52,000
+Maybe, maybe it doesn't name anyone remembers what it is or what do you think
+
+85
+00:03:52,000 --> 00:03:52,000
+it is?
+
+86
+00:03:52,000 --> 00:03:56,000
+Anyone remembers this part?
+
+87
+00:03:57,000 --> 00:03:57,000
+Yes.
+
+88
+00:03:59,000 --> 00:03:59,000
+Yeah.
+
+89
+00:03:59,000 --> 00:04:02,000
+It's like a multi-layer perceptron or two layer perceptron.
+
+90
+00:04:02,000 --> 00:04:02,000
+Exactly.
+
+91
+00:04:02,000 --> 00:04:06,000
+So here, this is the sort of first layer, first linear layer.
+
+92
+00:04:06,000 --> 00:04:11,000
+Then there is this a nonlinear activation function, which is typically
+
+93
+00:04:12,000 --> 00:04:13,000
+relu's or something else.
+
+94
+00:04:14,000 --> 00:04:18,000
+And then there's another linear projection into, into what?
+
+95
+00:04:18,000 --> 00:04:19,000
+So what is coming out of here?
+
+96
+00:04:19,000 --> 00:04:20,000
+It's again, important.
+
+97
+00:04:20,000 --> 00:04:21,000
+What is coming out of here?
+
+98
+00:04:21,000 --> 00:04:23,000
+The projection, because we're trying to predict a word.
+
+99
+00:04:23,000 --> 00:04:25,000
+What, so what is it coming out of all this?
+
+100
+00:04:26,000 --> 00:04:28,000
+Is it, is it a vector?
+
+101
+00:04:29,000 --> 00:04:32,000
+You, what, what is, what is the size of the vector?
+
+102
+00:04:33,000 --> 00:04:34,000
+This is the size of the vocabulary.
+
+103
+00:04:34,000 --> 00:04:35,000
+Exactly.
+
+104
+00:04:35,000 --> 00:04:41,000
+Because we're trying to say which of these X thousand words is the maximum
+
+105
+00:04:41,000 --> 00:04:43,000
+should be like the max here.
+
+106
+00:04:43,000 --> 00:04:46,000
+This will be our, our predicted things.
+
+107
+00:04:46,000 --> 00:04:46,000
+Okay.
+
+108
+00:04:46,000 --> 00:04:48,000
+So this is like, we just had a recapitulation from last time.
+
+109
+00:04:49,000 --> 00:04:53,000
+And again, the green nodes are the train of parameters, which we
+
+110
+00:04:53,000 --> 00:04:55,000
+very fancy denoted theta.
+
+111
+00:04:55,000 --> 00:05:00,000
+So the matrix of embeddings and the year, the, the weights and biases for
+
+112
+00:05:00,000 --> 00:05:02,000
+both layers and the gray nodes are constants.
+
+113
+00:05:02,000 --> 00:05:03,000
+Okay.
+
+114
+00:05:03,000 --> 00:05:05,000
+Any question to this, to this diagram?
+
+115
+00:05:10,000 --> 00:05:10,000
+Good.
+
+116
+00:05:10,000 --> 00:05:13,000
+So we were going to simplify a little bit because it's like very clumsy.
+
+117
+00:05:14,000 --> 00:05:19,000
+So we're going to first turn this lookup into something shorter
+
+118
+00:05:19,000 --> 00:05:20,000
+and we're going to call it.
+
+119
+00:05:21,000 --> 00:05:25,000
+Just V it's a function which takes a, a takes a one-hot
+
+120
+00:05:25,000 --> 00:05:27,000
+encoding and produces the embedding.
+
+121
+00:05:27,000 --> 00:05:28,000
+So this is just a lookup function.
+
+122
+00:05:28,000 --> 00:05:31,000
+It's shorter and not so clumsy.
+
+123
+00:05:31,000 --> 00:05:35,000
+Then we also going to kind of clamp together the linear layer.
+
+124
+00:05:35,000 --> 00:05:36,000
+So remember, I'm going to come back.
+
+125
+00:05:36,000 --> 00:05:40,000
+Now we have this linear layer and all these parameters where some of like,
+
+126
+00:05:40,000 --> 00:05:42,000
+you know, independent or not independent, but not part of that.
+
+127
+00:05:42,000 --> 00:05:47,000
+So we can't them together into just one, one linear layer, like
+
+128
+00:05:47,000 --> 00:05:49,000
+we just train of parameters, W and B.
+
+129
+00:05:49,000 --> 00:05:49,000
+Okay.
+
+130
+00:05:49,000 --> 00:05:51,000
+So it's just more compact representation of the network.
+
+131
+00:05:52,000 --> 00:05:57,000
+So these are two linear layers and here's still the, the, the
+
+132
+00:05:57,000 --> 00:05:59,000
+non-linear activation in between.
+
+133
+00:06:00,000 --> 00:06:00,000
+Okay.
+
+134
+00:06:00,000 --> 00:06:01,000
+Everybody's fine with that.
+
+135
+00:06:01,000 --> 00:06:03,000
+So we're just making it simple and smaller.
+
+136
+00:06:03,000 --> 00:06:05,000
+So it's more compact because we're going to, yes.
+
+137
+00:06:10,000 --> 00:06:11,000
+Okay.
+
+138
+00:06:11,000 --> 00:06:13,000
+Can you read what's on the, on the first, on the top?
+
+139
+00:06:15,000 --> 00:06:15,000
+Yeah.
+
+140
+00:06:15,000 --> 00:06:17,000
+We forgot a softmax for actually predicting the
+
+141
+00:06:17,000 --> 00:06:18,000
+distribution over the vocabulary.
+
+142
+00:06:18,000 --> 00:06:18,000
+Yes.
+
+143
+00:06:18,000 --> 00:06:19,000
+That's a, that's a great thing.
+
+144
+00:06:20,000 --> 00:06:20,000
+Exactly.
+
+145
+00:06:20,000 --> 00:06:24,000
+So in order to really be a language model that kind of predict the, the, the
+
+146
+00:06:24,000 --> 00:06:30,000
+word after these last linear layer, we want to normalize it into a probability
+
+147
+00:06:30,000 --> 00:06:32,000
+distribution, which we didn't, I mean, this layer doesn't do any
+
+148
+00:06:32,000 --> 00:06:34,000
+probability distribution whatsoever.
+
+149
+00:06:34,000 --> 00:06:37,000
+What comes in, what comes out of this, out of this layer is just
+
+150
+00:06:37,000 --> 00:06:38,000
+a vector of real values.
+
+151
+00:06:38,000 --> 00:06:39,000
+Could be anything.
+
+152
+00:06:39,000 --> 00:06:42,000
+Could be minus infinity to plus infinity over the place.
+
+153
+00:06:43,000 --> 00:06:46,000
+And we want to kind of softmax to it, to probability distribution.
+
+154
+00:06:46,000 --> 00:06:46,000
+Right?
+
+155
+00:06:46,000 --> 00:06:48,000
+So everybody knows what softmax is?
+
+156
+00:06:49,000 --> 00:06:52,000
+I mean, in the meantime, everybody should kind of remember what is a softmax
+
+157
+00:06:52,000 --> 00:06:54,000
+because it's really, really important, right?
+
+158
+00:06:55,000 --> 00:06:59,000
+Which kind of could be a hint that maybe we'll ask this in the, in the exam as well.
+
+159
+00:07:00,000 --> 00:07:04,000
+Maybe not, you know, but this is a strong signal.
+
+160
+00:07:04,000 --> 00:07:05,000
+You should know softmax.
+
+161
+00:07:05,000 --> 00:07:05,000
+Really.
+
+162
+00:07:06,000 --> 00:07:06,000
+Okay.
+
+163
+00:07:07,000 --> 00:07:11,000
+So we have a softmax and then this is the loss exactly.
+
+164
+00:07:11,000 --> 00:07:15,000
+And we're predicting, we're trying to, we're computing the
+
+165
+00:07:15,000 --> 00:07:17,000
+cross-entropy here, kind of.
+
+166
+00:07:18,000 --> 00:07:21,000
+And this gets optimized through stochastic gradient descent.
+
+167
+00:07:21,000 --> 00:07:21,000
+Okay.
+
+168
+00:07:21,000 --> 00:07:25,000
+So this is the, the neural language model now in its completeness for predicting
+
+169
+00:07:25,000 --> 00:07:27,000
+the distribution of the next word.
+
+170
+00:07:27,000 --> 00:07:28,000
+Any question?
+
+171
+00:07:34,000 --> 00:07:34,000
+Okay.
+
+172
+00:07:35,000 --> 00:07:39,000
+So before we jump into how to train word embeddings and how to solve this analogy
+
+173
+00:07:39,000 --> 00:07:43,000
+task, we need to talk about the dot product.
+
+174
+00:07:44,000 --> 00:07:44,000
+Okay.
+
+175
+00:07:44,000 --> 00:07:46,000
+So this is a quote from the famous, famous movie.
+
+176
+00:07:46,000 --> 00:07:47,000
+We need to talk about Kevin.
+
+177
+00:07:47,000 --> 00:07:49,000
+Everybody knows the movie.
+
+178
+00:07:49,000 --> 00:07:50,000
+It's a very nice movie, by the way.
+
+179
+00:07:50,000 --> 00:07:53,000
+So it's a drama from, I don't know, like from the early 2000s.
+
+180
+00:07:54,000 --> 00:07:57,000
+We need to talk about a dot product and why we need to talk about dot product
+
+181
+00:07:57,000 --> 00:08:01,000
+because it has some inherent properties, which will be super useful today in this
+
+182
+00:08:01,000 --> 00:08:04,000
+lecture, and we need to really understand what the dot product is doing, right?
+
+183
+00:08:04,000 --> 00:08:05,000
+So what is it a product?
+
+184
+00:08:05,000 --> 00:08:05,000
+Okay.
+
+185
+00:08:05,000 --> 00:08:07,000
+So let's have a look at the geometry of dot product.
+
+186
+00:08:08,000 --> 00:08:11,000
+If this is just a recapitulation for you, if you know it, that's fine.
+
+187
+00:08:11,000 --> 00:08:14,000
+I mean, you can now take a break, but maybe you will get a new perspective
+
+188
+00:08:14,000 --> 00:08:15,000
+on what the dot product is.
+
+189
+00:08:15,000 --> 00:08:16,000
+Okay.
+
+190
+00:08:16,000 --> 00:08:17,000
+So we have two vectors.
+
+191
+00:08:17,000 --> 00:08:19,000
+So now let's begin two dimensions first.
+
+192
+00:08:19,000 --> 00:08:20,000
+Okay.
+
+193
+00:08:20,000 --> 00:08:22,000
+We have two vectors, V and U.
+
+194
+00:08:24,000 --> 00:08:26,000
+So what is the dot product of these two vectors?
+
+195
+00:08:27,000 --> 00:08:29,000
+How can you, how can you compute the product?
+
+196
+00:08:32,000 --> 00:08:33,000
+What is a dot product?
+
+197
+00:08:34,000 --> 00:08:37,000
+These vectors have several elements or entries.
+
+198
+00:08:37,000 --> 00:08:38,000
+Yes.
+
+199
+00:08:38,000 --> 00:08:41,000
+So we can divide each element by one.
+
+200
+00:08:41,000 --> 00:08:41,000
+Exactly.
+
+201
+00:08:41,000 --> 00:08:45,000
+We take each, yes, that's correct.
+
+202
+00:08:45,000 --> 00:08:46,000
+We take each dimension of these vectors.
+
+203
+00:08:46,000 --> 00:08:51,000
+So there's n dimensions, which is two, and we just multiply each dimension,
+
+204
+00:08:51,000 --> 00:08:54,000
+each element at these dimensions with the other vector.
+
+205
+00:08:54,000 --> 00:08:55,000
+Okay.
+
+206
+00:08:55,000 --> 00:08:59,000
+So we multiply x1 from one vector with x1 of the other and so on.
+
+207
+00:08:59,000 --> 00:08:59,000
+Okay.
+
+208
+00:08:59,000 --> 00:09:00,000
+This is the, this is nice.
+
+209
+00:09:01,000 --> 00:09:02,000
+What is the meaning of that?
+
+210
+00:09:03,000 --> 00:09:05,000
+What are we, what are we getting out of it?
+
+211
+00:09:10,000 --> 00:09:15,000
+Oh, if these vectors are orthogonal, then it will be zero.
+
+212
+00:09:15,000 --> 00:09:15,000
+That's yeah.
+
+213
+00:09:15,000 --> 00:09:16,000
+That's a nice property.
+
+214
+00:09:17,000 --> 00:09:17,000
+Actually.
+
+215
+00:09:17,000 --> 00:09:18,000
+That's true.
+
+216
+00:09:19,000 --> 00:09:20,000
+What else can we say about it?
+
+217
+00:09:20,000 --> 00:09:23,000
+Like any, any like geometric kind of interpretation?
+
+218
+00:09:27,000 --> 00:09:29,000
+It's also projecting one vector to the other.
+
+219
+00:09:29,000 --> 00:09:30,000
+That's correct.
+
+220
+00:09:30,000 --> 00:09:30,000
+We're getting somewhere.
+
+221
+00:09:30,000 --> 00:09:31,000
+That's nice.
+
+222
+00:09:32,000 --> 00:09:34,000
+Any other geometric interpretation of the dot product?
+
+223
+00:09:37,000 --> 00:09:40,000
+It's related to the angle between these two things.
+
+224
+00:09:40,000 --> 00:09:40,000
+Exactly.
+
+225
+00:09:40,000 --> 00:09:45,000
+Because if you, if you make it a triangle and do a little bit of trigonometry and
+
+226
+00:09:45,000 --> 00:09:50,000
+normalization of the vectors, you end up with the geometric definition, or it's
+
+227
+00:09:50,000 --> 00:09:53,000
+not a definition, it's basically geometric computation of this, of the dot product,
+
+228
+00:09:54,000 --> 00:09:59,000
+which is a cosine of this theta angle and these two things.
+
+229
+00:09:59,000 --> 00:09:59,000
+Okay.
+
+230
+00:09:59,000 --> 00:10:01,000
+So what is, what is this?
+
+231
+00:10:02,000 --> 00:10:03,000
+Length.
+
+232
+00:10:03,000 --> 00:10:04,000
+It's a length.
+
+233
+00:10:04,000 --> 00:10:05,000
+It has a special name also.
+
+234
+00:10:05,000 --> 00:10:06,000
+It's the norm.
+
+235
+00:10:06,000 --> 00:10:08,000
+It has even more special name.
+
+236
+00:10:08,000 --> 00:10:09,000
+Which norm?
+
+237
+00:10:10,000 --> 00:10:12,000
+L2 norm or Euclidean norm.
+
+238
+00:10:12,000 --> 00:10:12,000
+Exactly.
+
+239
+00:10:12,000 --> 00:10:15,000
+So this is the length of the, of the vector.
+
+240
+00:10:15,000 --> 00:10:21,000
+So we multiply by length, the two vectors and cosinus of this theta.
+
+241
+00:10:21,000 --> 00:10:21,000
+Okay.
+
+242
+00:10:21,000 --> 00:10:22,000
+This is pretty cool, right?
+
+243
+00:10:22,000 --> 00:10:26,000
+So we know the dot product has something to do with the length of the vectors and
+
+244
+00:10:26,000 --> 00:10:28,000
+also with the angle the vectors are taking to it.
+
+245
+00:10:28,000 --> 00:10:30,000
+This is nice geometric interpretation.
+
+246
+00:10:30,000 --> 00:10:31,000
+Who said the projection?
+
+247
+00:10:31,000 --> 00:10:32,000
+You were the projection.
+
+248
+00:10:32,000 --> 00:10:33,000
+Okay, exactly.
+
+249
+00:10:33,000 --> 00:10:37,000
+So it's called, it has many names, like one of them is scalar projection.
+
+250
+00:10:37,000 --> 00:10:38,000
+Sure.
+
+251
+00:10:38,000 --> 00:10:38,000
+Coming.
+
+252
+00:10:39,000 --> 00:10:44,000
+And if you do the, you know, a little bit of trigonometry here and take the angles
+
+253
+00:10:44,000 --> 00:10:49,000
+and so on, you, you will find that exact, actually it's projecting, projecting one
+
+254
+00:10:49,000 --> 00:10:53,000
+vector and the other, and it's basically a string of the projection or string of
+
+255
+00:10:53,000 --> 00:10:54,000
+the association.
+
+256
+00:10:54,000 --> 00:10:54,000
+Okay.
+
+257
+00:10:54,000 --> 00:10:55,000
+So this is really nice.
+
+258
+00:10:55,000 --> 00:10:57,000
+Dot product has many, many names.
+
+259
+00:10:58,000 --> 00:10:58,000
+This is really nice.
+
+260
+00:10:58,000 --> 00:11:04,000
+Dot product has many, many views on that and they might have a meaning, which is
+
+261
+00:11:04,000 --> 00:11:04,000
+great.
+
+262
+00:11:04,000 --> 00:11:04,000
+Okay.
+
+263
+00:11:04,000 --> 00:11:09,000
+So then we also had, let's, let's have a look at the product of the, of something
+
+264
+00:11:09,000 --> 00:11:10,000
+called the unit vector.
+
+265
+00:11:10,000 --> 00:11:10,000
+Okay.
+
+266
+00:11:10,000 --> 00:11:12,000
+So what is the, what is the unit vector?
+
+267
+00:11:15,000 --> 00:11:16,000
+What is the unit vector?
+
+268
+00:11:16,000 --> 00:11:16,000
+Yes.
+
+269
+00:11:24,000 --> 00:11:27,000
+Well, no, I mean, actually the norm is just one.
+
+270
+00:11:27,000 --> 00:11:29,000
+So a norm of a unit vector is one.
+
+271
+00:11:29,000 --> 00:11:32,000
+It can point anywhere it wants, but it has to be length of one.
+
+272
+00:11:32,000 --> 00:11:32,000
+Okay.
+
+273
+00:11:32,000 --> 00:11:33,000
+Exactly.
+
+274
+00:11:34,000 --> 00:11:38,000
+And you can inscribe it in the, in the circle of, of the radius of one.
+
+275
+00:11:38,000 --> 00:11:43,000
+So here you and we are, are unit vectors because their length is one.
+
+276
+00:11:43,000 --> 00:11:46,000
+You know, how can you compute the length of the, of the, of the vectors?
+
+277
+00:11:47,000 --> 00:11:48,000
+Pythagorean theorem.
+
+278
+00:11:48,000 --> 00:11:51,000
+So basically it's basic, basic trigonometry or basic Pythagorean theorem.
+
+279
+00:11:52,000 --> 00:11:53,000
+So they have unit, unit length.
+
+280
+00:11:54,000 --> 00:11:57,000
+And now let's, let's look at this.
+
+281
+00:11:57,000 --> 00:11:59,000
+So what could be now?
+
+282
+00:11:59,000 --> 00:11:59,000
+Okay.
+
+283
+00:11:59,000 --> 00:12:00,000
+Let me see.
+
+284
+00:12:00,000 --> 00:12:03,000
+What could be a, a dot product of these two vectors?
+
+285
+00:12:04,000 --> 00:12:05,000
+So they're unit vectors.
+
+286
+00:12:05,000 --> 00:12:06,000
+So what is their dot product now?
+
+287
+00:12:08,000 --> 00:12:09,000
+It has something to do with the angle.
+
+288
+00:12:09,000 --> 00:12:12,000
+So the angle is roughly 45 degrees, right?
+
+289
+00:12:12,000 --> 00:12:14,000
+So what could be their dot product?
+
+290
+00:12:14,000 --> 00:12:17,000
+I'll, I'll give you a second to think about it because I, I have coffee today.
+
+291
+00:12:18,000 --> 00:12:20,000
+Exceptionally, and it's actually pretty good.
+
+292
+00:12:23,000 --> 00:12:26,000
+So what is the dot product of these two, two vectors?
+
+293
+00:12:27,000 --> 00:12:28,000
+Cosine of the angle.
+
+294
+00:12:29,000 --> 00:12:30,000
+Yeah, just the cosine of the angle.
+
+295
+00:12:30,000 --> 00:12:31,000
+Exactly.
+
+296
+00:12:31,000 --> 00:12:38,000
+That's the point because now, since both of them are of length one, we have just
+
+297
+00:12:38,000 --> 00:12:39,000
+the cosine of the angle.
+
+298
+00:12:39,000 --> 00:12:39,000
+Okay.
+
+299
+00:12:39,000 --> 00:12:39,000
+This is cool.
+
+300
+00:12:39,000 --> 00:12:41,000
+So now let's have a look at the cosine.
+
+301
+00:12:42,000 --> 00:12:44,000
+What is how the cosine looks like?
+
+302
+00:12:44,000 --> 00:12:44,000
+Okay.
+
+303
+00:12:44,000 --> 00:12:46,000
+This is a very fancy function.
+
+304
+00:12:47,000 --> 00:12:51,000
+Which is periodic after 360 degrees or two pi.
+
+305
+00:12:52,000 --> 00:12:56,000
+I guess two pi, yes, two pi, but I just use the degrees here.
+
+306
+00:12:56,000 --> 00:13:00,000
+And now, well, this is roughly 45 degrees.
+
+307
+00:13:01,000 --> 00:13:05,000
+So 45 degrees, cosine is something zero.
+
+308
+00:13:05,000 --> 00:13:07,000
+It's a one over square root of two, I guess.
+
+309
+00:13:08,000 --> 00:13:09,000
+No, two square root of two over two.
+
+310
+00:13:09,000 --> 00:13:10,000
+Yes.
+
+311
+00:13:10,000 --> 00:13:11,000
+Okay.
+
+312
+00:13:11,000 --> 00:13:11,000
+So this is cool.
+
+313
+00:13:12,000 --> 00:13:14,000
+Now somebody said, well, what if they're orthogonal?
+
+314
+00:13:14,000 --> 00:13:16,000
+So this is correct.
+
+315
+00:13:16,000 --> 00:13:23,000
+Orthogonal vectors, unit vectors or any orthogonal vectors have a zero dot product.
+
+316
+00:13:24,000 --> 00:13:29,000
+And now if you look at this, the angle of the cosine of 90 degrees is zero.
+
+317
+00:13:29,000 --> 00:13:30,000
+So everything plays out nicely.
+
+318
+00:13:32,000 --> 00:13:32,000
+Okay.
+
+319
+00:13:33,000 --> 00:13:41,000
+What could be like the least similar or the most different vector from you now?
+
+320
+00:13:41,000 --> 00:13:42,000
+Where should it point?
+
+321
+00:13:44,000 --> 00:13:44,000
+Yes.
+
+322
+00:13:44,000 --> 00:13:46,000
+Directly in the opposite direction.
+
+323
+00:13:46,000 --> 00:13:46,000
+Exactly.
+
+324
+00:13:46,000 --> 00:13:47,000
+In the opposite direction.
+
+325
+00:13:47,000 --> 00:13:50,000
+So the vector z now is going in the opposite direction.
+
+326
+00:13:50,000 --> 00:13:55,000
+So, you know, we have 180 degrees and their dot product is minus one.
+
+327
+00:13:56,000 --> 00:13:57,000
+Okay.
+
+328
+00:13:57,000 --> 00:13:59,000
+So this is just a recap of trigonometry.
+
+329
+00:13:59,000 --> 00:14:00,000
+Everybody's with me on that?
+
+330
+00:14:00,000 --> 00:14:01,000
+Any questions?
+
+331
+00:14:06,000 --> 00:14:07,000
+Great.
+
+332
+00:14:07,000 --> 00:14:07,000
+Okay.
+
+333
+00:14:07,000 --> 00:14:17,000
+So now unit vector is fine, but in general, the dot product is unbounded in real values.
+
+334
+00:14:18,000 --> 00:14:23,000
+Which means now we have two vectors, u and v, and their dot product is, yeah, this is larger than zero.
+
+335
+00:14:23,000 --> 00:14:23,000
+Right?
+
+336
+00:14:23,000 --> 00:14:24,000
+Why is that so?
+
+337
+00:14:24,000 --> 00:14:30,000
+Because they're pointing in kind of similar direction and the angle is less than 90 degrees.
+
+338
+00:14:31,000 --> 00:14:31,000
+Okay.
+
+339
+00:14:31,000 --> 00:14:37,000
+So now what if we extend this v vector into something larger?
+
+340
+00:14:37,000 --> 00:14:40,000
+So what is going to happen with the dot product?
+
+341
+00:14:40,000 --> 00:14:41,000
+Let's call it w.
+
+342
+00:14:43,000 --> 00:14:44,000
+How is going to the dot product?
+
+343
+00:14:44,000 --> 00:14:45,000
+How is it going to change?
+
+344
+00:14:46,000 --> 00:14:47,000
+Is it going to be what?
+
+345
+00:14:50,000 --> 00:14:51,000
+It's going to increase.
+
+346
+00:14:51,000 --> 00:14:55,000
+So it's going to be in relation to u times v.
+
+347
+00:14:56,000 --> 00:14:58,000
+It's going to be smaller, same, bigger.
+
+348
+00:14:59,000 --> 00:14:59,000
+Exactly.
+
+349
+00:15:00,000 --> 00:15:00,000
+Yeah.
+
+350
+00:15:00,000 --> 00:15:04,000
+Because I mean, we're, we're extended the norm of the vector.
+
+351
+00:15:04,000 --> 00:15:06,000
+So it increases the dot product.
+
+352
+00:15:06,000 --> 00:15:09,000
+So u times v, u dot product v is larger than u times v.
+
+353
+00:15:09,000 --> 00:15:09,000
+Right?
+
+354
+00:15:09,000 --> 00:15:13,000
+So when we are extending the product, but don't change the angle, it's also changing the dot product.
+
+355
+00:15:13,000 --> 00:15:17,000
+If we just grow the vector into the infinity, we get infinity dot product.
+
+356
+00:15:17,000 --> 00:15:18,000
+That's fine.
+
+357
+00:15:18,000 --> 00:15:19,000
+That's why it's unbounded.
+
+358
+00:15:19,000 --> 00:15:19,000
+Okay.
+
+359
+00:15:20,000 --> 00:15:21,000
+Everybody's with me.
+
+360
+00:15:22,000 --> 00:15:22,000
+Okay, cool.
+
+361
+00:15:23,000 --> 00:15:26,000
+So now let's have another vector here.
+
+362
+00:15:27,000 --> 00:15:30,000
+And this is going to be this one.
+
+363
+00:15:30,000 --> 00:15:31,000
+So how is this?
+
+364
+00:15:31,000 --> 00:15:32,000
+So it's going to be y.
+
+365
+00:15:33,000 --> 00:15:38,000
+How is y times u behaves with respect to all these, all these things?
+
+366
+00:15:38,000 --> 00:15:42,000
+What's going to be the result of the product of y times u?
+
+367
+00:15:44,000 --> 00:15:47,000
+It's going to be negative.
+
+368
+00:15:47,000 --> 00:15:47,000
+Exactly.
+
+369
+00:15:47,000 --> 00:15:50,000
+Because we're across the 90 degree boundary.
+
+370
+00:15:50,000 --> 00:15:51,000
+So it's going to be on the other side.
+
+371
+00:15:51,000 --> 00:15:53,000
+So it's going to be smaller than zero.
+
+372
+00:15:53,000 --> 00:15:53,000
+Okay.
+
+373
+00:15:53,000 --> 00:15:54,000
+So we're changed.
+
+374
+00:15:54,000 --> 00:15:58,000
+We basically changed the sign of the dot product.
+
+375
+00:15:58,000 --> 00:16:06,000
+And now if we finish the argument and just exchange here, or sorry, extend here, the y into something larger.
+
+376
+00:16:06,000 --> 00:16:09,000
+So z, what's going to be z times u.
+
+377
+00:16:10,000 --> 00:16:17,000
+So obviously follow the pattern and z times u is going to be in relation to z times y is going to be even smaller.
+
+378
+00:16:20,000 --> 00:16:22,000
+Because, because everything plays out here.
+
+379
+00:16:23,000 --> 00:16:23,000
+Okay.
+
+380
+00:16:23,000 --> 00:16:26,000
+So is it clear what the dot product is doing?
+
+381
+00:16:26,000 --> 00:16:29,000
+So it depends on the angle and also it depends on the length of the vectors.
+
+382
+00:16:30,000 --> 00:16:34,000
+And it could be from minus negative to plus negative.
+
+383
+00:16:35,000 --> 00:16:38,000
+And when the vectors kind of are orthogonal, it's going to be zero.
+
+384
+00:16:39,000 --> 00:16:42,000
+And then anything else will be either negative or positive.
+
+385
+00:16:43,000 --> 00:16:46,000
+And it kind of shows the strength of the association of these two vectors.
+
+386
+00:16:46,000 --> 00:16:47,000
+Okay.
+
+387
+00:16:47,000 --> 00:16:47,000
+Any questions?
+
+388
+00:16:53,000 --> 00:16:54,000
+Well, I have a question.
+
+389
+00:16:54,000 --> 00:17:00,000
+So we talk about, so, well, you know, strength of association and we're moving one vector.
+
+390
+00:17:00,000 --> 00:17:02,000
+So the vectors are basically dots.
+
+391
+00:17:03,000 --> 00:17:08,000
+I mean, there is, this is an origin and the vectors are just dots in the space.
+
+392
+00:17:08,000 --> 00:17:11,000
+I mean, you can pull them as these nice arrows, but they're basically dots.
+
+393
+00:17:11,000 --> 00:17:17,000
+How do you measure kind of relation between dots in a space?
+
+394
+00:17:17,000 --> 00:17:23,000
+There's another kind of thing where you can say, well, this is somehow in relation to something else.
+
+395
+00:17:24,000 --> 00:17:24,000
+Right.
+
+396
+00:17:24,000 --> 00:17:26,000
+I mean, yes.
+
+397
+00:17:28,000 --> 00:17:28,000
+Exactly.
+
+398
+00:17:28,000 --> 00:17:31,000
+You can just look, you know, how far these points are from each other.
+
+399
+00:17:31,000 --> 00:17:35,000
+So Euclidean metrics, you know, how far are the others?
+
+400
+00:17:35,000 --> 00:17:38,000
+So the question is, how does the product is related to Euclidean distance?
+
+401
+00:17:39,000 --> 00:17:39,000
+Yeah.
+
+402
+00:17:39,000 --> 00:17:45,000
+I mean, if we want to be things together, you know, closer, we can use dot product or we can use Euclidean distance.
+
+403
+00:17:45,000 --> 00:17:49,000
+So is there any, you know, what's the relation of Euclidean distance with the dot product?
+
+404
+00:17:49,000 --> 00:17:51,000
+This is a fair question to ask, right?
+
+405
+00:17:52,000 --> 00:17:54,000
+Because now, you know, here we extend it.
+
+406
+00:17:55,000 --> 00:17:56,000
+We extended the point here.
+
+407
+00:17:56,000 --> 00:17:59,000
+So we change also the Euclidean distance from here to here.
+
+408
+00:17:59,000 --> 00:18:00,000
+So what is the relation here?
+
+409
+00:18:01,000 --> 00:18:04,000
+Well, actually, it's kind of interesting and nice.
+
+410
+00:18:04,000 --> 00:18:05,000
+So.
+
+411
+00:18:07,000 --> 00:18:08,000
+So Euclidean distance, right?
+
+412
+00:18:09,000 --> 00:18:13,000
+We take one, we subtract two vectors and then complete the L2 norm.
+
+413
+00:18:14,000 --> 00:18:15,000
+So this is the Euclidean distance.
+
+414
+00:18:15,000 --> 00:18:17,000
+Everybody's with me what Euclidean distance is?
+
+415
+00:18:19,000 --> 00:18:19,000
+Very good.
+
+416
+00:18:19,000 --> 00:18:23,000
+So basically for each, it's a Pythagorean theorem, but in many dimensions.
+
+417
+00:18:25,000 --> 00:18:25,000
+Right.
+
+418
+00:18:25,000 --> 00:18:26,000
+So.
+
+419
+00:18:27,000 --> 00:18:30,000
+Well, we take the square of the Euclidean distance to make this argument more simple.
+
+420
+00:18:32,000 --> 00:18:40,000
+And so we take this Euclidean distance and put a square of that, which means we get rid of this very ugly square root.
+
+421
+00:18:40,000 --> 00:18:44,000
+So it goes away and then we just plug here in the definition.
+
+422
+00:18:44,000 --> 00:18:47,000
+OK, so this is the definition we have for each dimension.
+
+423
+00:18:47,000 --> 00:18:49,000
+We just subtract and make a square out of it.
+
+424
+00:18:50,000 --> 00:18:54,000
+Which we can also just rewrite into the product of these two things.
+
+425
+00:18:54,000 --> 00:18:56,000
+Yeah, this is just a simple algebraic operation.
+
+426
+00:18:56,000 --> 00:18:59,000
+We we're not doing anything fancy here.
+
+427
+00:18:59,000 --> 00:19:03,000
+OK, so once we get here, we can just multiply these things together.
+
+428
+00:19:03,000 --> 00:19:07,000
+So we multiply this with this, this with this and so on.
+
+429
+00:19:07,000 --> 00:19:07,000
+So on.
+
+430
+00:19:08,000 --> 00:19:09,000
+We end up with these three terms.
+
+431
+00:19:10,000 --> 00:19:12,000
+OK, so still this is an algebraic operation.
+
+432
+00:19:12,000 --> 00:19:14,000
+Nothing very fancy because these are just some real numbers.
+
+433
+00:19:15,000 --> 00:19:18,000
+OK, once we did this, what can we do with the sum?
+
+434
+00:19:19,000 --> 00:19:20,000
+Sum has a very nice property.
+
+435
+00:19:20,000 --> 00:19:22,000
+Sum has a very nice property.
+
+436
+00:19:23,000 --> 00:19:28,000
+So we can basically split this into sum of, well, sum of these,
+
+437
+00:19:31,000 --> 00:19:34,000
+sum of these additions is the addition of the sum.
+
+438
+00:19:34,000 --> 00:19:39,000
+So we can split it into three and put a sum at each entry.
+
+439
+00:19:39,000 --> 00:19:45,000
+So we're going to basically split it into sum of that, sum of that part and sum of that part.
+
+440
+00:19:45,000 --> 00:19:47,000
+So it's still another linear operation.
+
+441
+00:19:48,000 --> 00:19:54,000
+And what we end up here with, OK, well, this looks like a definition of a dot product.
+
+442
+00:19:54,000 --> 00:19:56,000
+Oh, yeah, this is the product of u with itself.
+
+443
+00:19:56,000 --> 00:19:57,000
+OK, nice.
+
+444
+00:19:58,000 --> 00:20:00,000
+This is another dot product of v with itself.
+
+445
+00:20:01,000 --> 00:20:05,000
+And this is two dot products, two times the product of u and v.
+
+446
+00:20:06,000 --> 00:20:08,000
+Wow, OK, not bad.
+
+447
+00:20:08,000 --> 00:20:14,000
+And then obviously, if we have u and v are unit vectors, so length one,
+
+448
+00:20:14,000 --> 00:20:21,000
+then this becomes one times one and one times one, which we get two minus two times their dot product.
+
+449
+00:20:21,000 --> 00:20:25,000
+OK, so there is actually a relationship between Euclidean distance and dot product.
+
+450
+00:20:26,000 --> 00:20:31,000
+Dot product is kind of more, it's more complex because it could be also negative,
+
+451
+00:20:31,000 --> 00:20:33,000
+which tells you something about, well, you need to have the origin.
+
+452
+00:20:33,000 --> 00:20:34,000
+That's the point.
+
+453
+00:20:34,000 --> 00:20:40,000
+I mean, distance of two points is independent of whenever you shift the origin of your space,
+
+454
+00:20:40,000 --> 00:20:41,000
+the Euclidean distance won't change.
+
+455
+00:20:42,000 --> 00:20:45,000
+If you shift your origin, then the dot product will change because you're
+
+456
+00:20:45,000 --> 00:20:47,000
+measuring the angle to the origin.
+
+457
+00:20:48,000 --> 00:20:54,000
+But having shown this, we know that if you want to minimize the square of the Euclidean distance,
+
+458
+00:20:55,000 --> 00:21:02,000
+it is proportional to maximizing cosine similarity, because the bigger this gets,
+
+459
+00:21:03,000 --> 00:21:04,000
+the smaller this gets.
+
+460
+00:21:06,000 --> 00:21:06,000
+It's nice, right?
+
+461
+00:21:06,000 --> 00:21:11,000
+So if you want to move things more together in space using Euclidean distance,
+
+462
+00:21:13,000 --> 00:21:16,000
+you can maximize, you can try to maximize their dot product.
+
+463
+00:21:17,000 --> 00:21:21,000
+This is an important observation for what comes later on.
+
+464
+00:21:21,000 --> 00:21:23,000
+OK, so everybody's with me.
+
+465
+00:21:23,000 --> 00:21:25,000
+I'll give you a second to think about it.
+
+466
+00:21:25,000 --> 00:21:27,000
+Anybody?
+
+467
+00:21:49,000 --> 00:21:50,000
+Yes.
+
+468
+00:21:55,000 --> 00:22:01,000
+Yes, that's a good point. But you have to factor out, I mean, in general, if you have unit vectors,
+
+469
+00:22:01,000 --> 00:22:05,000
+then this holds. If you don't have unit vectors, you're changing the length of one of these,
+
+470
+00:22:05,000 --> 00:22:10,000
+sorry, you're changing the length of one of those terms because you're extending the vector.
+
+471
+00:22:18,000 --> 00:22:24,000
+Yeah, okay, so this is, if you have unit vectors, then there's equality.
+
+472
+00:22:25,000 --> 00:22:30,000
+And that's correct. But then you cannot change the length of the vector because it has unit vector.
+
+473
+00:22:36,000 --> 00:22:40,000
+Yeah, okay, okay, so proportional is like, okay, let's put it like that, proportional.
+
+474
+00:22:41,000 --> 00:22:47,000
+Yeah, I mean, this is, you know, there's three terms here. And if you change one,
+
+475
+00:22:47,000 --> 00:22:52,000
+obviously it will change the rest of the product. That's true, yes. But if you have a unit vector,
+
+476
+00:22:52,000 --> 00:22:56,000
+there's equality. And then maybe you don't want to change the length of the vectors,
+
+477
+00:22:56,000 --> 00:23:00,000
+but their direction. And that's what matters, basically, the geometry, not the length.
+
+478
+00:23:00,000 --> 00:23:03,000
+Yes, but it's a good point, yeah. Any other question?
+
+479
+00:23:06,000 --> 00:23:13,000
+Okay, so everybody now should kind of have more insight into what the dot product is. So it's kind
+
+480
+00:23:13,000 --> 00:23:17,000
+of strength of the association, has something to do with the angle, with the geometry. And also,
+
+481
+00:23:17,000 --> 00:23:23,000
+it's somehow related to the Euclidean distance of these points. So the closer two points are,
+
+482
+00:23:23,000 --> 00:23:29,000
+the smaller the dot product is, because the angle is smaller and the Euclidean distance is also
+
+483
+00:23:29,000 --> 00:23:35,000
+smaller. Okay, sorry, the closer they are, the greater their dot product is. Yeah, that's the
+
+484
+00:23:35,000 --> 00:23:42,000
+point, exactly. The far, you know, the more apart from each other, the smaller the product is,
+
+485
+00:23:42,000 --> 00:23:49,000
+even like negative. Okay, well, that's it for the dot product, and we'll use it later on. But now
+
+486
+00:23:49,000 --> 00:23:55,000
+we have to move to actually the word embeddings, and how can we get them? So fast forward,
+
+487
+00:23:56,000 --> 00:24:00,000
+let's talk about the distributional hypothesis, and why is it important, and where does it come from?
+
+488
+00:24:03,000 --> 00:24:07,000
+So if you recall, one of the word encodings, basically where you have
+
+489
+00:24:08,000 --> 00:24:16,000
+a vocabulary of some size, let's say 3000, which is super small, then each word is represented as
+
+490
+00:24:16,000 --> 00:24:25,000
+just almost 3000 zeros, and one is just one. One position is set to one, one sort of one item.
+
+491
+00:24:26,000 --> 00:24:31,000
+And the point is that there is no notion of any sort of semantic similarity. So all words are
+
+492
+00:24:31,000 --> 00:24:36,000
+equally similar or dissimilar. What does it mean here in this example? So you have a word nice,
+
+493
+00:24:37,000 --> 00:24:42,000
+which is represented as this one of vector, and at some position, there is just one,
+
+494
+00:24:42,000 --> 00:24:48,000
+you know, single one. And you have the same for words pleasant and horrible. The point is,
+
+495
+00:24:49,000 --> 00:24:57,000
+all of them are, you know, having distance too. So there is no notion like maybe nice
+
+496
+00:24:58,000 --> 00:25:05,000
+is somehow more similar to pleasant, and less similar or dissimilar from horrible,
+
+497
+00:25:05,000 --> 00:25:11,000
+but you have no chance to tell apart, because they're all kind of in this highly dimensional
+
+498
+00:25:11,000 --> 00:25:16,000
+space, and the distance between each of two is the same, right? Is it a good thing or a bad thing?
+
+499
+00:25:17,000 --> 00:25:21,000
+Well, it depends, but if you work with natural language processing, and you want to maybe
+
+500
+00:25:21,000 --> 00:25:29,000
+classify movies and represent your document as a bag of words using one-hot encoding,
+
+501
+00:25:30,000 --> 00:25:34,000
+you want to keep some sort of generalization where if you see something in your training data,
+
+502
+00:25:35,000 --> 00:25:41,000
+a nice movie, you want to be able to say, well, maybe pleasant movie also has the same label.
+
+503
+00:25:41,000 --> 00:25:46,000
+You want to generalize between maybe synonyms, but one-hot encoding doesn't
+
+504
+00:25:46,000 --> 00:25:51,000
+capture any of these synonyms, anything at all. There's just categorical random variables, okay?
+
+505
+00:25:54,000 --> 00:25:59,000
+It's bad. So it's actually bad. We want something better. Maybe we want something where
+
+506
+00:25:59,000 --> 00:26:07,000
+the words in some vector space will be closer to each other if they're somehow similar, right?
+
+507
+00:26:07,000 --> 00:26:13,000
+So this is the idea, and actually it comes from, even from linguistics from as early as 1930s,
+
+508
+00:26:14,000 --> 00:26:20,000
+35, and it's called the distributional hypothesis. And this distributional hypothesis
+
+509
+00:26:20,000 --> 00:26:26,000
+states that words are similar if they appear in similar contexts, okay?
+
+510
+00:26:26,000 --> 00:26:32,000
+So, and it makes a lot of sense. So intuitively when we encounter a sentence with an unknown word
+
+511
+00:26:32,000 --> 00:26:39,000
+such as the word, okay, I can't pronounce it, vampinjuk, in the following sentence,
+
+512
+00:26:39,000 --> 00:26:43,000
+I'll read you a sentence and you will tell me what vampinjuk is, okay? So what do you think
+
+513
+00:26:43,000 --> 00:26:48,000
+is vampinjuk? Think it for yourself. No, okay, so let's brainstorm. What is a vampinjuk?
+
+514
+00:26:48,000 --> 00:26:52,000
+Okay, interesting problem, Emil. Okay, this is cool. Okay, any other idea what is a vampinjuk?
+
+515
+00:26:54,000 --> 00:26:56,000
+It sounds like an animal, right?
+
+516
+00:26:56,000 --> 00:27:04,000
+Form of what? A tent.
+
+517
+00:27:04,000 --> 00:27:09,000
+Oh, Native American tent. Okay, yes, it sounds like, it sounds a bit Indian,
+
+518
+00:27:09,000 --> 00:27:12,000
+so it could be a tent. Okay, good. Any other cool idea what a vampinjuk is?
+
+519
+00:27:13,000 --> 00:27:16,000
+I have no idea, I mean, but it sounds like an animal. Okay, but I'm biased because I knew the
+
+520
+00:27:16,000 --> 00:27:19,000
+answer already. I mean, there's no answer, it's just made up word. Maybe, I don't know.
+
+521
+00:27:20,000 --> 00:27:28,000
+Marco saw a hairy little vampinjuk crouching behind a tree. So, although we have no idea
+
+522
+00:27:28,000 --> 00:27:32,000
+what vampinjuk is, we now know it's, it's maybe it's some sort of animal, maybe it's small,
+
+523
+00:27:32,000 --> 00:27:38,000
+it's hairy, like a squirrel, and it's crouching behind a tree. So, we know it's a vampire.
+
+524
+00:27:38,000 --> 00:28:07,000
+Okay, so we infer the meaning of the word based on the context in which it occurs.
+
+525
+00:28:08,000 --> 00:28:13,000
+Okay, fine example, everybody's using it. I mean, humans just work like that.
+
+526
+00:28:14,000 --> 00:28:22,000
+Any questions to vampinjuk? So, this is cool. I mean, so, we have a context, and the word in the
+
+527
+00:28:22,000 --> 00:28:27,000
+context is somehow similar to other words in the context. Because if we replace vampinjuk with
+
+528
+00:28:28,000 --> 00:28:33,000
+a squirrel, Marco saw a hairy little squirrel crouching behind a tree. Yeah, this is something
+
+529
+00:28:33,000 --> 00:28:37,000
+we've seen before, maybe in the stories. So, you replace squirrel with vampinjuk, and yeah,
+
+530
+00:28:37,000 --> 00:28:43,000
+I mean, in the context, it's something like the squirrel. Wow, okay, so maybe we can use it for
+
+531
+00:28:43,000 --> 00:28:50,000
+representing words, right? We can use the context for representing words. How can we do that? How
+
+532
+00:28:50,000 --> 00:28:55,000
+can we use context for representing words? What would be like the most simple solution you would
+
+533
+00:28:55,000 --> 00:29:04,000
+use for representing words in a context? Yes? Take n words left and right, okay, and then?
+
+534
+00:29:07,000 --> 00:29:09,000
+You're on the good way, so then?
+
+535
+00:29:15,000 --> 00:29:20,000
+Anyone else? So, this is a great starting point. So, we take some context, n words left and right.
+
+536
+00:29:20,000 --> 00:29:21,000
+What can we do then?
+
+537
+00:29:27,000 --> 00:29:30,000
+The words are similar, but yeah, but how do you do that? Like,
+
+538
+00:29:33,000 --> 00:29:37,000
+distance, we don't have any vectors to begin with. We have just text and vampinjuk here in the
+
+539
+00:29:37,000 --> 00:29:48,000
+middle. Yeah, I'm with you. Maybe it's like already advanced. I mean, we need something
+
+540
+00:29:48,000 --> 00:30:06,000
+more simpler. Okay, anyone else? Yes? Oh, yes, okay, you're taking it too advanced. You're
+
+541
+00:30:06,000 --> 00:30:11,000
+taking it to the end of the lecture. Okay, something even simpler, something very simple.
+
+542
+00:30:11,000 --> 00:30:16,000
+How can we represent the word using its context? We get a context, two words left, maybe two words
+
+543
+00:30:17,000 --> 00:30:27,000
+on the right. Maybe extend the definition of the encoding and then the index of the last word.
+
+544
+00:30:30,000 --> 00:30:33,000
+Okay, so you would extend the one-hot encoding into something
+
+545
+00:30:33,000 --> 00:30:37,000
+bigger. I agree with you. I would even extend it to some matrix.
+
+546
+00:30:41,000 --> 00:30:45,000
+Like vocabulary, and I would extend to the matrix. Sorry, you were first.
+
+547
+00:30:46,000 --> 00:30:50,000
+Maybe the average of the word I'm getting. Oh, okay, you can do that as well. That's
+
+548
+00:30:50,000 --> 00:30:54,000
+already super fancy. We'll get there. Any other simpler idea?
+
+549
+00:30:55,000 --> 00:31:15,000
+Okay, so we have a vector of words, and we put one if this word appears in the context.
+
+550
+00:31:15,000 --> 00:31:24,000
+Yes, exactly. So we create a matrix where we just have here, here would be the words.
+
+551
+00:31:26,000 --> 00:31:33,000
+Each entry is a word, and here each column is a context, like maybe two words before
+
+552
+00:31:35,000 --> 00:31:40,000
+and two words after. So we collect for each word all these different contexts,
+
+553
+00:31:41,000 --> 00:31:47,000
+and then maybe just count how many times this word appeared. So one here would be like one
+
+554
+00:31:47,000 --> 00:31:57,000
+pinyuk, and here would be context, Harry Little crouching behind, right? Harry Little
+
+555
+00:31:57,000 --> 00:32:02,000
+crouching behind, and we would just say, yeah, I saw it once. Okay, and here you would basically
+
+556
+00:32:02,000 --> 00:32:12,000
+construct a word context matrix, and just counting the occurrences of the word in the context. Yes.
+
+557
+00:32:18,000 --> 00:32:24,000
+Yes, so this is like the most simplest thing. You just count occurrences. What do you do with the
+
+558
+00:32:24,000 --> 00:32:29,000
+matrix? Do you want to make relative, probabilistic, and so on? It's a matter of research.
+
+559
+00:32:29,000 --> 00:32:34,000
+So the word context matrices, it's actually a long, long, long line of research in NLP and
+
+560
+00:32:34,000 --> 00:32:39,000
+distribution semantics. And then here's again the formalization. So each row represents a word from
+
+561
+00:32:39,000 --> 00:32:44,000
+the vocabulary, and each column represents a linguistic context in which the word appears,
+
+562
+00:32:44,000 --> 00:32:48,000
+and then each of these entries quantifies the strength of association between word and the
+
+563
+00:32:48,000 --> 00:32:54,000
+context. So it could be like counts, basically, or could be proper, somehow like weighted counts,
+
+564
+00:32:54,000 --> 00:32:59,000
+or something like that, exactly. So it's counting and estimating from large corpus.
+
+565
+00:33:00,000 --> 00:33:05,000
+So everybody's with me? This is a very simple solution to the problem. You have a word,
+
+566
+00:33:05,000 --> 00:33:10,000
+and then you represent it as a vector, where each of the entry in the vector is kind of
+
+567
+00:33:11,000 --> 00:33:16,000
+the strength of the association with each of these contexts. Yes.
+
+568
+00:33:25,000 --> 00:33:30,000
+Exactly. Gigantic is the good word. Very high dimensions is kind of like very decently said,
+
+569
+00:33:30,000 --> 00:33:36,000
+exactly. Because you will have, if you just do like n-grams, you will have like, so if you just
+
+570
+00:33:36,000 --> 00:33:42,000
+do like previous and next word, and you have a vocabulary of 50,000, how many contexts you will
+
+571
+00:33:42,000 --> 00:33:49,000
+have? 50,000 times 50,000. So it's going to be a huge context vector. So this is one problem. So
+
+572
+00:33:49,000 --> 00:33:54,000
+these explicit word vectors are super highly dimensional, could be even millions. So it could
+
+573
+00:33:54,000 --> 00:34:00,000
+be like super gigantic. The second is data sparsity. So some of these entries may be
+
+574
+00:34:00,000 --> 00:34:08,000
+incorrect because we didn't observe enough data points, because of this just, you would need like
+
+575
+00:34:08,000 --> 00:34:12,000
+super, super, super huge corpus to estimate these probabilities or probabilities, estimate the
+
+576
+00:34:12,000 --> 00:34:19,000
+counts correctly. So it will be somehow not a good estimate. What can you do with such a high
+
+577
+00:34:19,000 --> 00:34:26,000
+average matrix is something typically has been done before deep learning in NLP. It's a dimension
+
+578
+00:34:26,000 --> 00:34:34,000
+reduction techniques, such as singular value decomposition, so SVD. Anyone heard of SVD before?
+
+579
+00:34:37,000 --> 00:34:39,000
+Okay, what is SVD?
+
+580
+00:34:44,000 --> 00:34:46,000
+That's fine. Who remembers what is SVD?
+
+581
+00:34:49,000 --> 00:34:54,000
+Oh, sorry. Yeah, you can. Okay. What is SVD?
+
+582
+00:35:00,000 --> 00:35:02,000
+Yeah, something like that.
+
+583
+00:35:12,000 --> 00:35:17,000
+Okay, yeah. Yes, yes. So I guess it's right. I don't remember exactly what it is, because it's
+
+584
+00:35:17,000 --> 00:35:23,000
+not used anymore as a mainstream tool. But you decompose one matrix into a product of three
+
+585
+00:35:23,000 --> 00:35:27,000
+matrices, and you use some eigenvalues for that in the middle or something like that. It's very
+
+586
+00:35:27,000 --> 00:35:32,000
+complicated linear algebra thing. So we don't tackle that. That's great, because we have something
+
+587
+00:35:32,000 --> 00:35:38,000
+better, which is not so bad. SVD is actually hard to scale. So the algorithm for SVD, it's,
+
+588
+00:35:38,000 --> 00:35:47,000
+I guess, the bottleneck is the size of the matrix. So, okay, good. So we have something simple,
+
+589
+00:35:47,000 --> 00:35:52,000
+methods, but they are not the best, maybe. So maybe you have something better. Well, what was
+
+590
+00:35:52,000 --> 00:35:58,000
+the goal? Okay, so yeah, we want to, we're interested in learning representations of words
+
+591
+00:35:58,000 --> 00:36:05,000
+in context. Okay, yeah. So count-based matrices, what else? Well, we had something for learning
+
+592
+00:36:05,000 --> 00:36:10,000
+representation of words in a context, right? We had it already. What was that? We learned
+
+593
+00:36:10,000 --> 00:36:23,000
+representation of words in a context. Using what? And the language models in neural networks.
+
+594
+00:36:23,000 --> 00:36:29,000
+Exactly. We had language models in neural networks that kind of took a context, predicting
+
+595
+00:36:29,000 --> 00:36:34,000
+the next word, and through that, learn the embedding representation. Yeah, we have it
+
+596
+00:36:34,000 --> 00:36:41,000
+already. We have another way of learning word representation of words based on their context.
+
+597
+00:36:41,000 --> 00:36:45,000
+Okay, this is what we did. So we learned something here, and we also learned something in this matrix.
+
+598
+00:36:46,000 --> 00:36:52,000
+So we learned something about words in their context. Can we utilize it for learning
+
+599
+00:36:53,000 --> 00:37:00,000
+some of these so-called embeddings? So embeddings matrix here. So we can definitely use
+
+600
+00:37:01,000 --> 00:37:05,000
+neural language models for learning word embeddings. We can do that, but there's,
+
+601
+00:37:06,000 --> 00:37:10,000
+yeah, there's a price we have to pay for that, and maybe there's better ways of learning these
+
+602
+00:37:10,000 --> 00:37:18,000
+embeddings. Okay, what is, okay, the interesting thing. So what is, remember now, our counting
+
+603
+00:37:18,000 --> 00:37:23,000
+base, like two words left, two words right. What we are having here in this language model?
+
+604
+00:37:23,000 --> 00:37:28,000
+We only have like on the left hand side. So yeah, why? Well, because we said like language
+
+605
+00:37:28,000 --> 00:37:31,000
+model is from left to right, and we have this Markov property, and we have this count-based
+
+606
+00:37:31,000 --> 00:37:36,000
+language model, blah, blah, blah. But if we want to learn like the embeddings, so maybe it's,
+
+607
+00:37:36,000 --> 00:37:40,000
+you know, maybe we can, we don't use that. Yeah, we have another thing here, which is kind of
+
+608
+00:37:40,000 --> 00:37:46,000
+complicated, or maybe confidentially quite hard. What was that again? If you're doing this language
+
+609
+00:37:46,000 --> 00:37:51,000
+models, neural language model. There is a language model. So we have a language model,
+
+610
+00:37:51,000 --> 00:37:54,000
+neural language model. There is something which costs a lot of time to compute.
+
+611
+00:37:56,000 --> 00:37:58,000
+The softmax, why is it so?
+
+612
+00:38:02,000 --> 00:38:09,000
+The denominator is a summation over 50,000 items. Super costly, super costly to compute,
+
+613
+00:38:09,000 --> 00:38:15,000
+but it's fine. Okay, we, okay, maybe we can solve it somehow. All right, so let's move on.
+
+614
+00:38:16,000 --> 00:38:19,000
+Let's move from neural language models to training word embeddings. So the goal of the
+
+615
+00:38:19,000 --> 00:38:23,000
+neural language model was to predict probability distribution over next word,
+
+616
+00:38:23,000 --> 00:38:25,000
+continue it, condition on the previous words. Okay, great.
+
+617
+00:38:27,000 --> 00:38:32,000
+And as a side product, it learned some useful word embeddings. But the point is,
+
+618
+00:38:34,000 --> 00:38:38,000
+what if, what if we don't need the probability distribution, but just we want to learn these
+
+619
+00:38:38,000 --> 00:38:43,000
+word embeddings, right? We just want to learn these, sorry, I'm going back. We want to learn
+
+620
+00:38:43,000 --> 00:38:47,000
+this. We don't care about what's predicted here, whether it's probability or not. We don't care.
+
+621
+00:38:48,000 --> 00:38:55,000
+We care about like good representation of words. So, okay, what if we don't need this probability?
+
+622
+00:38:55,000 --> 00:39:02,000
+So we can do two things, which I already mentioned a little bit. We can just relax our Markov
+
+623
+00:39:02,000 --> 00:39:08,000
+assumption and we can, we don't have to look in just to the past, but we can maybe look into the
+
+624
+00:39:08,000 --> 00:39:15,000
+future, left and right. Why not? Count-based, you know, count-based techniques did it as well,
+
+625
+00:39:15,000 --> 00:39:21,000
+so we can do it too. Why not? And we can just completely get rid of this normalization in
+
+626
+00:39:21,000 --> 00:39:28,000
+softmax because we aren't interested in probability distribution. Will it make it faster? Yes. Hell,
+
+627
+00:39:28,000 --> 00:39:33,000
+yeah. Will it make it better? We will see. Okay. So let's, let's do the simplification. So the first
+
+628
+00:39:33,000 --> 00:39:39,000
+one is we're going to ditch the Markov property. So we will look into the future. Here, so
+
+629
+00:39:39,000 --> 00:39:44,000
+previously we had like the black dog and the next word was bark, right? Now we say, okay, well,
+
+630
+00:39:44,000 --> 00:39:52,000
+the target word is in the middle. So we're going to take the context, we can concatenate together
+
+631
+00:39:52,000 --> 00:39:58,000
+as we had before, and then squeeze it through the, you know, two layers, blah, blah, blah,
+
+632
+00:39:58,000 --> 00:40:05,000
+and here's still the softmax and we're going to predict the middle word. So it's basically the
+
+633
+00:40:05,000 --> 00:40:11,000
+same as we had before in the never-language model, but now we don't model like the third word given
+
+634
+00:40:11,000 --> 00:40:14,000
+the first and the second, but we just model the second given the first and the third.
+
+635
+00:40:16,000 --> 00:40:20,000
+We can do that. We don't care about left, right. We just take the context. Okay. Any questions?
+
+636
+00:40:21,000 --> 00:40:27,000
+Yes. You first, you second. So am I getting it right that we're throwing everything away, but
+
+637
+00:40:28,000 --> 00:40:32,000
+it's not the context, right? We're using the context, but we're saying, well, the context
+
+638
+00:40:32,000 --> 00:40:37,000
+doesn't have to be just from left to right. Yeah, but it's just the context. Just the context, yeah.
+
+639
+00:40:37,000 --> 00:40:39,000
+I don't, I don't think I understood your question.
+
+640
+00:40:43,000 --> 00:40:44,000
+Okay. You had a question.
+
+641
+00:40:46,000 --> 00:40:53,000
+This only takes one word or two words. Usually the context is a lot bigger.
+
+642
+00:40:53,000 --> 00:40:56,000
+Yeah, that's correct. But my slides are too small to put like more context in there.
+
+643
+00:40:56,000 --> 00:41:04,000
+So obviously you could have more here the word and here the word, which go through V and V
+
+644
+00:41:04,000 --> 00:41:11,000
+and V and concatenate them. And here again, two words V and concatenate, right?
+
+645
+00:41:21,000 --> 00:41:24,000
+What do you mean? Like the, so you want to take context?
+
+646
+00:41:24,000 --> 00:41:30,000
+If you take context, I don't like predict the next word, you just take the next X word.
+
+647
+00:41:30,000 --> 00:41:30,000
+Yes.
+
+648
+00:41:30,000 --> 00:41:34,000
+For context, you also take the next X word.
+
+649
+00:41:34,000 --> 00:41:34,000
+Yes.
+
+650
+00:41:34,000 --> 00:41:38,000
+And after, so I would imagine you would need a lot more.
+
+651
+00:41:39,000 --> 00:41:44,000
+Well, if you do it wisely, not, I mean, you can, yeah. So how big the, how big the content is,
+
+652
+00:41:44,000 --> 00:41:51,000
+context is here, kind of it. So if I take one, two, three, four, five context words and concatenate
+
+653
+00:41:51,000 --> 00:41:56,000
+them from this, I'm going to have like a large vector, which is combination of five vectors.
+
+654
+00:41:56,000 --> 00:42:00,000
+Yes, that's correct. Maybe that's fine. Maybe there's a better way to do so
+
+655
+00:42:01,000 --> 00:42:06,000
+better than concatenation. Right. But I can say, yeah, let's take a previous 10 words.
+
+656
+00:42:06,000 --> 00:42:11,000
+And after 10 words, theoretically, I can do that. It's like taking a, in their language model,
+
+657
+00:42:11,000 --> 00:42:16,000
+taking N previous words and predicting the next word. And you can do that in a language model,
+
+658
+00:42:16,000 --> 00:42:20,000
+because it just grows linearly, not like in the, in the count based language models. Okay.
+
+659
+00:42:21,000 --> 00:42:21,000
+Any other question?
+
+660
+00:42:25,000 --> 00:42:28,000
+All right, good. So now we're modeling the middle word. This is fine.
+
+661
+00:42:28,000 --> 00:42:34,000
+So nothing substantially changed. Now we want to give up the costly probability distribution.
+
+662
+00:42:36,000 --> 00:42:42,000
+So instead of predicting the probability distribution, we just want to predict some score
+
+663
+00:42:43,000 --> 00:42:50,000
+of the context and the target word. So what, what could such a score be? Let's say,
+
+664
+00:42:50,000 --> 00:42:54,000
+now forget about predicting probability of the word. You have a target word and you want to,
+
+665
+00:42:54,000 --> 00:42:57,000
+you have a context and you want to score it somehow.
+
+666
+00:43:00,000 --> 00:43:02,000
+And maybe the score is something which you want to predict,
+
+667
+00:43:03,000 --> 00:43:08,000
+like as a variable. So you want to score word and context.
+
+668
+00:43:08,000 --> 00:43:16,000
+What could, what could be a score? What is it something like we would,
+
+669
+00:43:16,000 --> 00:43:20,000
+which scores we would prefer for certain things and which we kind of don't like?
+
+670
+00:43:28,000 --> 00:43:29,000
+Say again, loud. Sorry. Maybe it's right.
+
+671
+00:43:30,000 --> 00:43:36,000
+You have a target word that never appears in the context.
+
+672
+00:43:36,000 --> 00:43:41,000
+Oh, if you have a target word that never appears in the context, then it should be low score.
+
+673
+00:43:44,000 --> 00:43:48,000
+And if it appears in the context, it should be high score. Yeah. That makes actually a lot of
+
+674
+00:43:48,000 --> 00:43:55,000
+sense. Yeah. So the idea is that we have a word target word, and if the target word actually
+
+675
+00:43:55,000 --> 00:44:02,000
+appears in the context, it should be kind of okay. So yes, I want this. And if the target
+
+676
+00:44:02,000 --> 00:44:07,000
+word doesn't appear in the context, it should be lower score. It's same with the counts and
+
+677
+00:44:07,000 --> 00:44:11,000
+the count-based metrics. Like there was a zero for words which don't appear in this context.
+
+678
+00:44:11,000 --> 00:44:15,000
+Okay. Yeah. This is exactly what we want to do. So we prefer words in their true context
+
+679
+00:44:16,000 --> 00:44:21,000
+and we penalize words in their sort of like untrue context. So for words that don't appear,
+
+680
+00:44:21,000 --> 00:44:28,000
+how we get this? I mean, how we get words in true context and words in untrue context or
+
+681
+00:44:29,000 --> 00:44:34,000
+they never been there? We're going to use a very, very nice trick. We're going to use
+
+682
+00:44:34,000 --> 00:44:40,000
+something called negative sampling. So instead of predicting the probability distribution of the
+
+683
+00:44:40,000 --> 00:44:46,000
+target word, we create an artificial binary task by randomly shuffling the target word.
+
+684
+00:44:46,000 --> 00:44:53,000
+And we're going to say that for a positive example, so we have a positive example,
+
+685
+00:44:53,000 --> 00:45:03,000
+and this is taken from the corpus where the word is actually has been spotted in the context.
+
+686
+00:45:04,000 --> 00:45:13,000
+Okay. So for example, the and dog and the target word was black. So here the word would be black
+
+687
+00:45:14,000 --> 00:45:19,000
+and you would be the dog. And this would be a positive example. For a negative example,
+
+688
+00:45:19,000 --> 00:45:23,000
+though, we would kind of shuffle the word and change it to something else.
+
+689
+00:45:25,000 --> 00:45:30,000
+And maybe this something never actually appeared in the corpus. So this would be like negative.
+
+690
+00:45:30,000 --> 00:45:34,000
+And we're going to say, well, this is going to be value one is going to be a value zero.
+
+691
+00:45:35,000 --> 00:45:42,000
+Does it make sense? So we randomly replace the target word.
+
+692
+00:45:43,000 --> 00:45:49,000
+Making it as a negative example. Okay. So how do we sample this negative word?
+
+693
+00:45:50,000 --> 00:45:56,000
+Yes. So we can use, we can put, we can randomly sample it from the, from the vocabulary,
+
+694
+00:45:56,000 --> 00:45:59,000
+but maybe you want to kind of follow the distribution of words in the vocabulary.
+
+695
+00:45:59,000 --> 00:46:03,000
+So we're going to estimate a probability distribution by just counting and dividing.
+
+696
+00:46:03,000 --> 00:46:07,000
+So corpus based frequency or summary weighting. This is not really important, but obviously you
+
+697
+00:46:07,000 --> 00:46:12,000
+want to maybe sample words that are more common than words that are just super awkward
+
+698
+00:46:12,000 --> 00:46:17,000
+and just appears, you know, with super low probability, but basically randomly sampling,
+
+699
+00:46:18,000 --> 00:46:24,000
+resample the target word. So I have two examples of that. Maybe it will be even clearer afterwards.
+
+700
+00:46:24,000 --> 00:46:28,000
+So here's our network and this is the positive example. And we had it before. So this is cool.
+
+701
+00:46:28,000 --> 00:46:36,000
+So we have the black dog and the black is the target word and what we're going to do now.
+
+702
+00:46:37,000 --> 00:46:42,000
+So, you know, okay. So the label is one, right? Because this is the true example. It's like a
+
+703
+00:46:42,000 --> 00:46:47,000
+positive one. It happened. So, and we're using this architecture as yet before, this is the
+
+704
+00:46:47,000 --> 00:46:51,000
+neural language model kind of change into predicting the, you know, the middle word.
+
+705
+00:46:52,000 --> 00:46:56,000
+So we're going to somehow model the context. So before that it was concatenation, maybe it will
+
+706
+00:46:56,000 --> 00:47:01,000
+be something else. We're going to somehow combine it with the, with the target word, because we need
+
+707
+00:47:01,000 --> 00:47:08,000
+to plug it together. And then there will be some hidden layers as before. And we've put it through.
+
+708
+00:47:08,000 --> 00:47:13,000
+Oh, now we put it through a sigmoid and yeah. Why is it sigmoid here? Okay.
+
+709
+00:47:17,000 --> 00:47:23,000
+Because this is a binary classification, right? We are saying it's either Y is in zero or one.
+
+710
+00:47:23,000 --> 00:47:28,000
+So we've squeezed everything through sigmoids. So there were from this hidden layers comes a
+
+711
+00:47:28,000 --> 00:47:33,000
+single real value and we squeeze it through sigmoid. And obviously in sigmoid, if this real
+
+712
+00:47:33,000 --> 00:47:40,000
+value is positive, then the sigmoid will be, the output of the sigmoid will be larger than 0.5.
+
+713
+00:47:41,000 --> 00:47:46,000
+Everybody's with me on that? Okay. So if this is coming positive and we have the sigmoid,
+
+714
+00:47:48,000 --> 00:47:50,000
+oops, sorry. No, no, no, no, no. Wrong. Sigmoid.
+
+715
+00:47:52,000 --> 00:47:57,000
+So something like that. So if this is positive, then the sigmoid will be over 0.5.
+
+716
+00:47:58,000 --> 00:48:03,000
+Okay, good. So this is the positive example. Any questions? Yes.
+
+717
+00:48:03,000 --> 00:48:09,000
+If I get a value of, for example, 0.5, which means I'm not sure which is how do I then...
+
+718
+00:48:09,000 --> 00:48:12,000
+Yeah. Most likely you won't get 0.5. Most likely.
+
+719
+00:48:12,000 --> 00:48:15,000
+Something above like 0.6.
+
+720
+00:48:15,000 --> 00:48:18,000
+Yeah. Then you say it's positive. Yeah. It's like binary...
+
+721
+00:48:18,000 --> 00:48:22,000
+You say the sigmoid, then I convert the sigmoid value into 0.5.
+
+722
+00:48:22,000 --> 00:48:26,000
+Exactly. You convert the sigmoid output into the binary. I mean, you use the sigmoid for
+
+723
+00:48:27,000 --> 00:48:31,000
+in the cross entropy loss, basically, because it gives you information how much uncertain the model
+
+724
+00:48:31,000 --> 00:48:36,000
+is. And if it's a true example, you want to be as close to one as possible. If it's negative,
+
+725
+00:48:36,000 --> 00:48:41,000
+as close to zero as possible. So typically the output, the prediction will be somehow like 90
+
+726
+00:48:41,000 --> 00:48:45,000
+something and or zero something. Yeah. Any questions? Any other questions? Yeah.
+
+727
+00:48:46,000 --> 00:48:53,000
+You're just learning the embeddings for the first time and kind of...
+
+728
+00:48:53,000 --> 00:48:54,000
+Do you use embeddings for the first time?
+
+729
+00:48:54,000 --> 00:48:59,000
+No, I'm learning all of them. I'm learning embeddings for all of these works.
+
+730
+00:49:00,000 --> 00:49:04,000
+So like, but why is it like,
+
+731
+00:49:04,000 --> 00:49:09,000
+do you just use embeddings first of all when you're... I mean, all embeddings are then different?
+
+732
+00:49:10,000 --> 00:49:15,000
+Why are they different? Okay. Because I'm creating...
+
+733
+00:49:16,000 --> 00:49:20,000
+Why are they treated differently? I mean, they have different function in the model.
+
+734
+00:49:21,000 --> 00:49:28,000
+I mean, this is the... And doc is just the context. I want to have a context. And this is the
+
+735
+00:49:30,000 --> 00:49:37,000
+true kind of the true label. Sorry. Yeah. The true label, true word. And I want to combine them
+
+736
+00:49:37,000 --> 00:49:42,000
+somehow to make sure that if this context and the true label comes together, it comes with one here.
+
+737
+00:49:44,000 --> 00:49:48,000
+Because there's, I mean, you can combine... And there's a lot of freedom how to combine these
+
+738
+00:49:48,000 --> 00:49:52,000
+two together. Right. But if you want to, if you just cram them into one vector, maybe it won't
+
+739
+00:49:52,000 --> 00:49:59,000
+learn that well, I guess. So we have to... This thing will be crucial as we'll see later. Okay.
+
+740
+00:49:59,000 --> 00:50:00,000
+You have a question?
+
+741
+00:50:00,000 --> 00:50:08,000
+I wanted to create a task where you can evaluate it and see if it's good.
+
+742
+00:50:08,000 --> 00:50:08,000
+Yeah.
+
+743
+00:50:08,000 --> 00:50:12,000
+And make it as simple as possible.
+
+744
+00:50:12,000 --> 00:50:12,000
+Yes.
+
+745
+00:50:12,000 --> 00:50:17,000
+And why should we strain the other embeddings from the context?
+
+746
+00:50:18,000 --> 00:50:24,000
+Because we can just learn them like... For example, this context, it looks good at doc
+
+747
+00:50:24,000 --> 00:50:30,000
+because there's the fact that there are labels. We also get some extra information.
+
+748
+00:50:30,000 --> 00:50:35,000
+Exactly. Yes. Yes. You're learning for all of the words from the context at the same time. So it's
+
+749
+00:50:35,000 --> 00:50:38,000
+like it's extra bonus because you have the framework to do so because everything will
+
+750
+00:50:38,000 --> 00:50:47,000
+be deprecated and you get here the gradient of L with respect to E and here the gradient of L
+
+751
+00:50:47,000 --> 00:50:52,000
+with respect to E and here as well. So you just use it as in one pass, you learn more parameters
+
+752
+00:50:52,000 --> 00:50:58,000
+just by one pass for the target word than for other words. Okay. Because in the neural
+
+753
+00:50:58,000 --> 00:51:02,000
+language model, you have the same thing. You're learning the embeddings. Just come... Let me come
+
+754
+00:51:02,000 --> 00:51:07,000
+back here. You're learning the embeddings here for all of the words of the proceedings
+
+755
+00:51:07,000 --> 00:51:10,000
+words at the same time. Yeah. You do the same thing.
+
+756
+00:51:13,000 --> 00:51:15,000
+So coming back to the example. So this was a positive example.
+
+757
+00:51:17,000 --> 00:51:22,000
+And how would the negative example, it will be the very same architecture or the very same thing,
+
+758
+00:51:22,000 --> 00:51:29,000
+but here I replace the word, what was the black with some randomly sampled word, which is with
+
+759
+00:51:30,000 --> 00:51:36,000
+and the label is zero. Obviously the with doc, you won't see that at all. So it's random word
+
+760
+00:51:36,000 --> 00:51:40,000
+somehow makes no sense. And the model should recognize, oh, in this context, this word,
+
+761
+00:51:41,000 --> 00:51:45,000
+like linguistically makes no sense, but maybe it could be another word. It could be.
+
+762
+00:51:47,000 --> 00:51:50,000
+So actually I was thinking like, which word should I put in there? And I had no idea,
+
+763
+00:51:50,000 --> 00:51:55,000
+like what could be a random word? What could be a random word that doesn't have to do anything
+
+764
+00:51:55,000 --> 00:52:02,000
+with the, the, the, the, and doc. I don't know, like a lecture. Okay. Good. Lecture.
+
+765
+00:52:04,000 --> 00:52:11,000
+Nothing to do with doc or anything alike. Yes. What? Yeah. I don't know. So one,
+
+766
+00:52:11,000 --> 00:52:18,000
+one you can doc would be like cat and dogs. You never know. So like church. Okay. No lecture
+
+767
+00:52:18,000 --> 00:52:22,000
+doc also makes sense. So I, you know, it's really hard to become a big example, which kind of no,
+
+768
+00:52:22,000 --> 00:52:27,000
+don't make no sense anyway. So there is a word which is obviously wrong. And the network is
+
+769
+00:52:27,000 --> 00:52:34,000
+trying to punish the network for predicting predicting is correct. So it's trying to learn
+
+770
+00:52:34,000 --> 00:52:39,000
+that this is, this is not the right word. Yes. What happens with words like the, or a,
+
+771
+00:52:39,000 --> 00:52:45,000
+which can appear pretty much anywhere. They will learn some, some word embeddings that will be,
+
+772
+00:52:46,000 --> 00:52:51,000
+that will put them somewhere like more somewhere in the space, which I don't know. I think it's a
+
+773
+00:52:51,000 --> 00:52:56,000
+good question. Let's let's try it. Let's turn, let's train it. And let's have a look at the
+
+774
+00:52:56,000 --> 00:53:00,000
+word embeddings of these a and V and so on where they live. Maybe they live somewhere. So it's a
+
+775
+00:53:00,000 --> 00:53:05,000
+question. Maybe they will have some, some syntactic properties and they will be together because of
+
+776
+00:53:05,000 --> 00:53:10,000
+syntax. Maybe it really depends on the algorithm on the size of the context, what is in the context
+
+777
+00:53:11,000 --> 00:53:15,000
+and maybe the algorithm, which is, which is trainable. They will, they will have some
+
+778
+00:53:15,000 --> 00:53:20,000
+embeddings. You can also use embeddings for all out of vocabulary words as well. I need
+
+779
+00:53:20,000 --> 00:53:24,000
+to typically put it to, to zeros. Okay. Another question. Yes. No,
+
+780
+00:53:31,000 --> 00:53:32,000
+I didn't understand the question. Sorry.
+
+781
+00:53:32,000 --> 00:53:40,000
+I'm sorry. What do you mean by generalize?
+
+782
+00:53:53,000 --> 00:53:57,000
+Well, they can. Yeah. So whether if you train it on one corpus, whether they will be similar in
+
+783
+00:53:57,000 --> 00:54:03,000
+the other corpus, like generalized to other corpus or yes, yes. And no, I mean the idea I'll
+
+784
+00:54:03,000 --> 00:54:08,000
+get you. The idea is to, you learn these embeddings on some super large corpus. So you see like
+
+785
+00:54:08,000 --> 00:54:12,000
+pretty much everything in the language, which gives you a strong signal already to learn good
+
+786
+00:54:12,000 --> 00:54:16,000
+embeddings. And then you can use the embeddings later on to adapt to your, to whatever you're
+
+787
+00:54:16,000 --> 00:54:22,000
+doing in your downstream tasks, so to say. So they have some, they call pre-trained embeddings
+
+788
+00:54:22,000 --> 00:54:26,000
+because you pre-train, but you can then fine tune them sort of say, and on your task as well. But
+
+789
+00:54:26,000 --> 00:54:31,000
+the idea is they have some sort of good representation. We'll come to that in the
+
+790
+00:54:31,000 --> 00:54:37,000
+shortcomings at the end of the lecture. Okay. You had a question or comment? Good. Yes. Yeah. You
+
+791
+00:54:37,000 --> 00:54:41,000
+have to train it on billions of tokens, like a very super large corpus. Yes.
+
+792
+00:54:49,000 --> 00:54:55,000
+Yeah. They, they don't. It's just, there's so many things that, you know, like you can, well,
+
+793
+00:54:55,000 --> 00:55:01,000
+the thing is you can actually train like syntactic embeddings. If you have your, if you
+
+794
+00:55:01,000 --> 00:55:06,000
+ever data syntax bars before, so you treat the context from the syntax tree, you can do complicated
+
+795
+00:55:06,000 --> 00:55:10,000
+stuff if you want. This is like the basic one. We just, you don't need any pre-training at all.
+
+796
+00:55:10,000 --> 00:55:15,000
+We just tokenize the text and have a vocabulary. So there's many things, but there's some, some
+
+797
+00:55:15,000 --> 00:55:20,000
+embeddings can do some sort of like compositional it is. So if you do like negation and the next
+
+798
+00:55:20,000 --> 00:55:26,000
+word and sum them up, they will do something very fancy. Okay. So this is a negative sampling.
+
+799
+00:55:26,000 --> 00:55:32,000
+Everybody's fine with that. We treat it as binary. So we turn our task of predicting the
+
+800
+00:55:32,000 --> 00:55:38,000
+probability distribution of the missing word into saying, well, this word was here or this word
+
+801
+00:55:38,000 --> 00:55:45,000
+wasn't here at all. Binary. Zero one. Easy. It's like a fake task, but it's just great for learning
+
+802
+00:55:45,000 --> 00:55:49,000
+these embeddings because we don't care about probabilities. We just care about these embeddings.
+
+803
+00:55:49,000 --> 00:55:51,000
+They should learn some meaningful representation. Yes.
+
+804
+00:56:00,000 --> 00:56:00,000
+Exactly.
+
+805
+00:56:04,000 --> 00:56:07,000
+Boris, say again, how was that? Like for each context, there are more negative examples than
+
+806
+00:56:07,000 --> 00:56:13,000
+positive examples. Why, why, why should be the, why, it doesn't have to be the case. It's your
+
+807
+00:56:13,000 --> 00:56:17,000
+decision because you're sampling the data by yourself. You're taking a true context
+
+808
+00:56:19,000 --> 00:56:24,000
+and there's a middle word, which is a target word. And if you don't do anything, you only have the
+
+809
+00:56:24,000 --> 00:56:30,000
+positive example. In order to turn it into negative example, you say I'm flipping, I'm,
+
+810
+00:56:30,000 --> 00:56:34,000
+you know, changing the middle word into something else. And this is how you create your negative
+
+811
+00:56:34,000 --> 00:56:39,000
+example. So your data set could be super balanced. You can have the same number of positive,
+
+812
+00:56:39,000 --> 00:56:55,000
+the same number of negative examples. So that's why typically actually generate more negative
+
+813
+00:56:55,000 --> 00:57:02,000
+examples than positive examples. Yeah. We'll, we'll come to that. Okay. Can we move on? Right.
+
+814
+00:57:03,000 --> 00:57:08,000
+So we're moving to one of the famous algorithms for training word embedding, which is called
+
+815
+00:57:08,000 --> 00:57:15,000
+VirtueVec. So it's a bunch of algorithms and also a software package. It's just, by the way,
+
+816
+00:57:15,000 --> 00:57:20,000
+it's written in C and it's just one file of C code. And if you look into that, you, you would
+
+817
+00:57:20,000 --> 00:57:25,000
+be wondering like how much they cram into one, you know, line of one file of C code to train all
+
+818
+00:57:25,000 --> 00:57:33,000
+these, you know, fancy stuff. It was done by Tomas Mikulov in 2013 at Google. And then he moved to
+
+819
+00:57:33,000 --> 00:57:37,000
+Facebook later on and so on. He kicked off like this deep learning, a little bit helped, you know,
+
+820
+00:57:37,000 --> 00:57:42,000
+the deep learning wave, NLP. So the code is there. You can have a look in VirtueVec.C
+
+821
+00:57:43,000 --> 00:57:51,000
+and you'll be surprised, you know, Python is bad, but C code is even like even worse. It's really,
+
+822
+00:57:51,000 --> 00:57:55,000
+I mean, they made it for, for speed, right? So it's really, it's really optimized for speed,
+
+823
+00:57:55,000 --> 00:58:02,000
+not for readability. Anyway, so VirtueVec. VirtueVec simplifies the neural language model.
+
+824
+00:58:02,000 --> 00:58:05,000
+So this is our, again, our neural language model by removing the hidden layer.
+
+825
+00:58:06,000 --> 00:58:12,000
+So we just completely ditch this thing. We don't care about hidden layers, which means it's
+
+826
+00:58:12,000 --> 00:58:17,000
+actually turning into local linear model because we have a sigmoid and here is some features coming in.
+
+827
+00:58:18,000 --> 00:58:24,000
+So here, this is coming a real value and we turn it from sigmoid and just predict. Yeah. Why is it
+
+828
+00:58:24,000 --> 00:58:30,000
+so for speed? They just turn out like empirically, you don't need the whole hidden layers and stuff
+
+829
+00:58:30,000 --> 00:58:36,000
+like that for this particle use case for learning these embeddings. Okay, cool. So it's much faster.
+
+830
+00:58:36,000 --> 00:58:43,000
+Now, the question is how the heck are we modeling the context here? So we have words before and
+
+831
+00:58:43,000 --> 00:58:49,000
+words after through embeddings. How can we model the context? What can we do about it? Any ideas?
+
+832
+00:58:52,000 --> 00:59:00,000
+Yes. Why can you throw it away? Yeah. Why not? I mean, here you're combining
+
+833
+00:59:00,000 --> 00:59:06,000
+the context and the target word into something and then projecting it through something else,
+
+834
+00:59:06,000 --> 00:59:14,000
+like some hidden layers and so on. So you're doing like a multilayer perceptron, which gives you more,
+
+835
+00:59:14,000 --> 00:59:18,000
+let's say, expressivity in functions you can model. Yeah. But it's like your design choice
+
+836
+00:59:19,000 --> 00:59:23,000
+and it costs something, like it costs compute because you need to train the parameters here
+
+837
+00:59:23,000 --> 00:59:30,000
+and so on. Right. We were here. So let me just come back here. So you have these two hidden layers.
+
+838
+00:59:30,000 --> 00:59:34,000
+So we have to learn the weights and parameters and what's the size of these layers and so on.
+
+839
+00:59:35,000 --> 00:59:41,000
+Maybe you don't need it. And that's the case of this word. So they just basically,
+
+840
+00:59:41,000 --> 00:59:46,000
+after combination, just go through directly to the sigmoid to save compute.
+
+841
+00:59:46,000 --> 00:59:50,000
+Less parameters, much faster. Turn out that you don't need it.
+
+842
+00:59:50,000 --> 00:59:53,000
+Don't you need non-linearity also in the context?
+
+843
+00:59:56,000 --> 00:59:59,000
+Well, the only non-linearity is, well, you don't need a non-linearity. I mean,
+
+844
+00:59:59,000 --> 01:00:03,000
+the projection now is, yeah, that's a good question. So all these projections are
+
+845
+01:00:04,000 --> 01:00:10,000
+some hole in error, are they? I guess so. Yeah. That's interesting. Right. You don't
+
+846
+01:00:10,000 --> 01:00:16,000
+need a non-linearity here. I'll think about it. I'll think about it.
+
+847
+01:00:17,000 --> 01:00:22,000
+Why? What is happening here? Because there is no non-linear operation here. So it should be
+
+848
+01:00:22,000 --> 01:00:31,000
+some linear projection of the words. Yeah. Makes sense. Okay. Where are we? Yes. You asked us a
+
+849
+01:00:31,000 --> 01:00:36,000
+question. Any other question to this? Like we just completely make it more simple model. Okay. Good.
+
+850
+01:00:36,000 --> 01:00:40,000
+Yes. How can we model the context? Exactly. How can we model the context of these two words? So
+
+851
+01:00:40,000 --> 01:00:45,000
+we have this word here and this word here. So what should we plug here? How can we model the context?
+
+852
+01:00:46,000 --> 01:00:53,000
+The most easiest solution. Exactly. Just sum them. What did you propose?
+
+853
+01:00:54,000 --> 01:00:58,000
+Oh, there's, sorry. No, this is not one hop. This is embedding vector, which is
+
+854
+01:01:00,000 --> 01:01:06,000
+er-dim embedding. This is one hop and this is lookup. So it's taking
+
+855
+01:01:06,000 --> 01:01:15,000
+the vector from here and producing a vector. But you can exactly, you can just sum them up.
+
+856
+01:01:15,000 --> 01:01:25,000
+Why not? So we're gonna take each of those neighboring vectors and just sum them up here.
+
+857
+01:01:27,000 --> 01:01:30,000
+We can do average, but it's maybe too complicated. Just sum them up.
+
+858
+01:01:30,000 --> 01:01:34,000
+Why not? Okay. So this is how you model your context here.
+
+859
+01:01:37,000 --> 01:01:42,000
+And now, okay. Any questions? Why, why summing up the context? I mean, we've seen it before,
+
+860
+01:01:42,000 --> 01:01:47,000
+right? Do you remember the average back of words we had? Like you take your, you take your,
+
+861
+01:01:47,000 --> 01:01:52,000
+all the tokens in your document as vectors, could be one of the vectors, and you just sum them up
+
+862
+01:01:52,000 --> 01:01:59,000
+and do the average of that vector. Lecture one or two, two, two or three. Okay. So you just sum up
+
+863
+01:01:59,000 --> 01:02:10,000
+the vectors. If the dimensionality of that is, let's say, I don't know, 300, this will be also
+
+864
+01:02:10,000 --> 01:02:16,000
+300, obviously. We just sum these vectors together. Okay. And it's called continuous
+
+865
+01:02:16,000 --> 01:02:22,000
+back of words. Yeah. I think we had it already. The question is, okay, so we have a context
+
+866
+01:02:22,000 --> 01:02:35,000
+modeled as one vector, and we have the target word also modeled as a vector, which is the,
+
+867
+01:02:36,000 --> 01:02:45,000
+this is dimensionality, size of vocabulary times 300, maybe. Okay. Does it make sense?
+
+868
+01:02:46,000 --> 01:02:53,000
+Great. So how can we combine the context and the, and the target word? What is, what will be here
+
+869
+01:02:53,000 --> 01:02:58,000
+somehow combined? So it's abstract. I mean, I put it like abstract. I give you a second to
+
+870
+01:02:58,000 --> 01:03:03,000
+think about it. How can we combine these two vectors? And think about like what they're doing,
+
+871
+01:03:03,000 --> 01:03:08,000
+actually, because we have the true context and we have the false context. So how can we combine,
+
+872
+01:03:08,000 --> 01:03:10,000
+combine these two vectors together?
+
+873
+01:03:15,000 --> 01:03:22,000
+A little gentleman, like in the, in the back first. Yeah.
+
+874
+01:03:25,000 --> 01:03:32,000
+We can concatenate them. Okay. Fair enough. We can concatenate them. So, oops, where am I? We can
+
+875
+01:03:33,000 --> 01:03:40,000
+concat. Fair enough. Any idea? You were 10 seconds. We can take the dot product.
+
+876
+01:03:40,000 --> 01:03:49,000
+Any other idea? Same idea. Anything else we can combine them?
+
+877
+01:03:51,000 --> 01:03:52,000
+We can take the Euclidean distance.
+
+878
+01:03:57,000 --> 01:04:06,000
+So, okay, great. Yes. Like multiply, multiply as one vector to the other and get a matrix.
+
+879
+01:04:06,000 --> 01:04:12,000
+Yeah, we're kind of screwed because here we need a real number. Yeah, sorry. Well, actually,
+
+880
+01:04:12,000 --> 01:04:17,000
+okay, so this is the point. Concatenation is a nice idea, but here we need a real number. So,
+
+881
+01:04:18,000 --> 01:04:23,000
+sorry, that won't fly. For that, we would need like this multilayer perceptron in between
+
+882
+01:04:23,000 --> 01:04:28,000
+to squeeze it into one dimension. So it won't work. So here we had the dot product and Euclidean
+
+883
+01:04:28,000 --> 01:04:34,000
+distance. Okay, good. So they both, I kind of produce real number out of them. So a scalar.
+
+884
+01:04:34,000 --> 01:04:41,000
+This is great. What we learned also before, what's the dot product and Euclidean distance? Okay,
+
+885
+01:04:41,000 --> 01:04:47,000
+they have some something in, you know, they are somehow related. Not the same thing, but related.
+
+886
+01:04:47,000 --> 01:04:52,000
+What is cheaper? Euclidean distance or dot product? What is cheaper?
+
+887
+01:04:57,000 --> 01:05:02,000
+Why? Exactly. You don't need to square, you know, you don't need to square root,
+
+888
+01:05:02,000 --> 01:05:06,000
+you don't need to sum all these squares, you don't blah, blah, blah, blah. What is the dot product?
+
+889
+01:05:08,000 --> 01:05:12,000
+One times the other. So you can even like make it parallelizable. Yes.
+
+890
+01:05:13,000 --> 01:05:19,000
+You can vectorize it. Exactly. So if you run like large vectors on GPU, you can parallelize
+
+891
+01:05:19,000 --> 01:05:23,000
+even dot product and whatever. So dot product is great. It's just multiplication and summation.
+
+892
+01:05:23,000 --> 01:05:28,000
+You can parallelize it easily. Awesome. So it's going to be dot product because Euclidean distance
+
+893
+01:05:28,000 --> 01:05:35,000
+is also something like the product as we saw before. So maybe dot product is great. Yes. Okay,
+
+894
+01:05:35,000 --> 01:05:39,000
+good. Well, we have the product. That's a great idea to combine these two vectors.
+
+895
+01:05:40,000 --> 01:05:46,000
+So we're taking the context here, which is the summation of these context vectors,
+
+896
+01:05:46,000 --> 01:05:51,000
+and here's the target vector. So I'll flip that, right? I mean, here I have this in the middle,
+
+897
+01:05:52,000 --> 01:05:59,000
+and here I put the target word on the bottom just to make it clear. So we have the context,
+
+898
+01:05:59,000 --> 01:06:05,000
+this is the C vector. We have the target word, which is the W vector. I mean, these aren't like
+
+899
+01:06:05,000 --> 01:06:09,000
+weights in the linear layer, right? This is like just saying this is embedding of the target word.
+
+900
+01:06:09,000 --> 01:06:16,000
+And we just make a dot product and squash it through sigmoid and then say, well, if this is one,
+
+901
+01:06:16,000 --> 01:06:19,000
+this is a true context, if this is zero, this is the full context.
+
+902
+01:06:21,000 --> 01:06:26,000
+So the context words are just one-hot encodings, and they are pushed through this lookup embedding
+
+903
+01:06:26,000 --> 01:06:31,000
+layer. So the only learning... So this is the final thing. This is the continuous back of
+
+904
+01:06:31,000 --> 01:06:36,000
+words word to back. This is the thing you can implement in one afternoon in normal programming
+
+905
+01:06:36,000 --> 01:06:42,000
+language or in two weeks in C++. I don't know, or depending on your choice, whatever.
+
+906
+01:06:43,000 --> 01:06:48,000
+This is the thing. The only learnable parameters are just the embeddings. This is the only thing
+
+907
+01:06:48,000 --> 01:06:53,000
+you learn. Everything... Yes, you have a question. Yeah, sorry for getting back, but...
+
+908
+01:06:53,000 --> 01:07:03,000
+No worries. So the errors from E to the vectors, what exactly happened there? E is just a matrix.
+
+909
+01:07:03,000 --> 01:07:07,000
+E is a matrix, yes. It's just the row from... Yes, like you mean the V. What is V?
+
+910
+01:07:07,000 --> 01:07:22,000
+Yeah, that's the... That's the lookup. Yes. Yes. So V is the C times E,
+
+911
+01:07:24,000 --> 01:07:31,000
+right? The E matrix, which means that the embeddings matrix is... This is a size V,
+
+912
+01:07:31,000 --> 01:07:38,000
+and this is 300 or something, and you say, well, this is one hot, so 0, 0, 0, 1, 0, 0,
+
+913
+01:07:38,000 --> 01:07:44,000
+and you say, okay, 0, 0, 1. This is my row, exactly. Okay.
+
+914
+01:07:50,000 --> 01:07:50,000
+Yes.
+
+915
+01:07:51,000 --> 01:07:57,000
+You are measuring the similarity between the context and the target word.
+
+916
+01:07:57,000 --> 01:07:58,000
+Exactly.
+
+917
+01:07:58,000 --> 01:08:04,000
+But that makes sense here, because obviously they are not going to be similar even though
+
+918
+01:08:04,000 --> 01:08:05,000
+they are in the same context.
+
+919
+01:08:08,000 --> 01:08:14,000
+That's a question. What is this dot product doing, right? What is it doing? It's doing
+
+920
+01:08:14,000 --> 01:08:20,000
+some sort of similarity, because you want the vector of the target word to be more similar
+
+921
+01:08:20,000 --> 01:08:27,000
+to the true context than the... Sorry, you have a context. Okay, so start with the context.
+
+922
+01:08:27,000 --> 01:08:32,000
+This is a vector. It's going to be a longer vector than the standard vectors, because we
+
+923
+01:08:32,000 --> 01:08:37,000
+are just summing up all these context vectors. We're not taking the average here. We just have
+
+924
+01:08:37,000 --> 01:08:44,000
+a sum. So if you sum up several vectors, you end up with a longer vector. Doesn't matter. Yes.
+
+925
+01:08:45,000 --> 01:08:45,000
+It's weird.
+
+926
+01:08:45,000 --> 01:09:11,000
+Could be. Could be. I mean, so if I... I'm recording now, so I won't tell it. But if I
+
+927
+01:09:11,000 --> 01:09:16,000
+design the word to it, I would say, let's take the average. Not just the sum, but the average.
+
+928
+01:09:16,000 --> 01:09:19,000
+So the average of embeddings could be somehow like the centroid of their meaning, and this
+
+929
+01:09:19,000 --> 01:09:24,000
+would be the context. But the sum somehow works better. Maybe it's faster. Maybe it's the same
+
+930
+01:09:24,000 --> 01:09:25,000
+with the average. I don't know.
+
+931
+01:09:27,000 --> 01:09:35,000
+When you sum, isn't it possible also, for example, different contexts get to the same sum?
+
+932
+01:09:35,000 --> 01:09:40,000
+Yes, but it's very unlikely. Yes, I mean, you can get to the same space with different
+
+933
+01:09:40,000 --> 01:09:44,000
+contexts to the same point, but it's very unlikely, because you're in 300 dimensions plus.
+
+934
+01:09:45,000 --> 01:09:50,000
+So the dimension is really huge, to be honest. So the space is kind of very weird.
+
+935
+01:09:51,000 --> 01:09:54,000
+So you have the context vector, but let's think in three dimensions, because I can only think
+
+936
+01:09:54,000 --> 01:09:58,000
+in three dimensions. So let's have the context vector. And then you were saying, oh, in this
+
+937
+01:09:58,000 --> 01:10:09,000
+context vector, I want to push the true words closer to this vector and kind of push the negative
+
+938
+01:10:09,000 --> 01:10:19,000
+words on the other hand, like pointing in the other direction. And this is what the dot product
+
+939
+01:10:19,000 --> 01:10:26,000
+is doing. The dot product is positive. Yes, I'm trying to maximize the dot product. Exactly.
+
+940
+01:10:26,000 --> 01:10:31,000
+I'm trying to maximize this thing for the true context and minimize for the negative context.
+
+941
+01:10:31,000 --> 01:10:38,000
+So basically, I have this vector of the context. I want my true word pointing more in this
+
+942
+01:10:38,000 --> 01:10:43,000
+direction. So minimizing this angle, maximizing the dot product in the true context, and pushing
+
+943
+01:10:43,000 --> 01:10:50,000
+the false word, the negative word, in the opposite direction. This is what it's trying to learn. So
+
+944
+01:10:54,000 --> 01:11:00,000
+making this embedding space behave in a way that it learns these properties.
+
+945
+01:11:01,000 --> 01:11:09,000
+And when I want to do the gradient descent or something, do I take all of that
+
+946
+01:11:09,000 --> 01:11:12,000
+and derivate it towards the rows of u that I need?
+
+947
+01:11:12,000 --> 01:11:19,000
+Yes. The propagation here works always the same. So you compute for each. This is different. Each
+
+948
+01:11:19,000 --> 01:11:24,000
+of the blue ones is differential function, which means you have the derivatives with respect to
+
+949
+01:11:24,000 --> 01:11:35,000
+their parameters. And then for updating the e, you need the chain rule for multiple parents.
+
+950
+01:11:35,000 --> 01:11:41,000
+So you sub them up together and get a gradient as well. Yes. So this is just very... I think this is
+
+951
+01:11:41,000 --> 01:11:46,000
+the nice example why we should understand everything as computational graph. Like deep
+
+952
+01:11:46,000 --> 01:11:50,000
+learning is just computational graph. And on each of the nodes, you have the gradient. So if you
+
+953
+01:11:50,000 --> 01:11:55,000
+understand of the propagation on any computational graph, this is the same thing as we had before.
+
+954
+01:11:55,000 --> 01:11:59,000
+Like there's no difference. Each function has the derivatives with respect to their
+
+955
+01:12:00,000 --> 01:12:07,000
+kind of children or where it comes from, arguments, and there's no other magic in here.
+
+956
+01:12:10,000 --> 01:12:14,000
+So this is central. This is why the dot product is actually working here. I mean,
+
+957
+01:12:14,000 --> 01:12:19,000
+we could try to do the Euclidean distance, but the Euclidean distance is only positive. So it
+
+958
+01:12:19,000 --> 01:12:24,000
+wouldn't really push far away the negative thing. The negative thing is basically saying,
+
+959
+01:12:24,000 --> 01:12:27,000
+well, the vector should be completely somewhere else, like the different direction.
+
+960
+01:12:29,000 --> 01:12:34,000
+So the word2vec is learning useful embeddings and try to distinguish good word context pairs
+
+961
+01:12:34,000 --> 01:12:40,000
+from the bad ones. So we create a set of the correct context pairs from the corpus. We take
+
+962
+01:12:40,000 --> 01:12:47,000
+it somewhere and the set here, the body of these incorrect word pairs. And exactly the goal of
+
+963
+01:12:47,000 --> 01:12:51,000
+these algorithms is to estimate a probability. So this is going through sigmoid. The sigmoid,
+
+964
+01:12:51,000 --> 01:12:58,000
+as we know, is estimating probability of the true, something which is true, given the context.
+
+965
+01:12:59,000 --> 01:13:05,000
+And this should be high or even one for the pairs which are from the true context and low,
+
+966
+01:13:05,000 --> 01:13:10,000
+which is zero for the pairs from the... Right, because we're squeezing it through the... Sorry,
+
+967
+01:13:10,000 --> 01:13:20,000
+let me come back. This will be from minus infinity to plus infinity.
+
+968
+01:13:22,000 --> 01:13:31,000
+Excuse me. So minus infinity to plus infinity. This would be the output. But after here,
+
+969
+01:13:31,000 --> 01:13:40,000
+it's coming just between zero and one. So we're squeezing this negative and positive into zero
+
+970
+01:13:40,000 --> 01:13:49,000
+and one to make it trainable as a standard binary task. So the network scores one for
+
+971
+01:13:49,000 --> 01:13:53,000
+true and zero for the negative ones. And yes?
+
+972
+01:13:57,000 --> 01:14:05,000
+Quick side question. So when you have something like the black dog in CS34,
+
+973
+01:14:05,000 --> 01:14:11,000
+and you have the black dog a lot in the data set, you probably want to train this more often. So
+
+974
+01:14:11,000 --> 01:14:16,000
+if it is here more often in the data, does it also train more often? Or is it really nice?
+
+975
+01:14:17,000 --> 01:14:21,000
+Yeah, okay. So yeah, your question is like, if you have multiple same instances in the data,
+
+976
+01:14:21,000 --> 01:14:23,000
+when you sample them, what happens?
+
+977
+01:14:23,000 --> 01:14:29,000
+Like you have the brown dog, which is correct, the white dog and the black dog. It's like
+
+978
+01:14:29,000 --> 01:14:37,000
+a standard. You probably want the model to involve predicting the black dog or something like this.
+
+979
+01:14:37,000 --> 01:14:45,000
+Or like train it more on the black dog? Or is it just like anything is fine?
+
+980
+01:14:45,000 --> 01:14:50,000
+Anything is fine. Anything which is in this context will be taken as the, so the context
+
+981
+01:14:50,000 --> 01:14:55,000
+will be d and dog. That's fine. So there's context and then there's some objective in between.
+
+982
+01:14:55,000 --> 01:15:01,000
+So this model doesn't care if you predict like black or white or brown?
+
+983
+01:15:03,000 --> 01:15:08,000
+We are just, yeah, we'll come to that. We're just super open. It's just an ad hoc notion
+
+984
+01:15:08,000 --> 01:15:12,000
+of similarity. We just plug in there and don't care. We just predict everything which is in the
+
+985
+01:15:12,000 --> 01:15:14,000
+context. Yes?
+
+986
+01:15:20,000 --> 01:15:24,000
+Yeah, exactly. Yeah. Good enough. Exactly. How do you evaluate your embeddings? Are good. That's
+
+987
+01:15:24,000 --> 01:15:29,000
+another question. We will come to that. Okay. Okay. I think I have to move on because we have
+
+988
+01:15:29,000 --> 01:15:36,000
+something still to finish. Okay. So the loss, corpus y loss of where to exist, as we said,
+
+989
+01:15:36,000 --> 01:15:45,000
+like this is the formula of loss. You sum for all the instances, the losses, which is predicting one
+
+990
+01:15:45,000 --> 01:15:50,000
+for correct and zero for incorrect. So this is a standard thing. You don't have to remember that.
+
+991
+01:15:50,000 --> 01:15:56,000
+The point is, there was one question, like, I know each correct word context, we sample k
+
+992
+01:15:56,000 --> 01:16:01,000
+negative pairs from the others. So the negative are k times larger than d.
+
+993
+01:16:02,000 --> 01:16:06,000
+Right? So somebody asked here, like, how many you were, right? The negative parameter. So the
+
+994
+01:16:06,000 --> 01:16:13,000
+negative things are sampled actually more often because it's a hyper parameter. So it's maybe
+
+995
+01:16:13,000 --> 01:16:18,000
+like five or 20. You have like so many more negative examples for the network to learn than
+
+996
+01:16:18,000 --> 01:16:24,000
+the positive ones. So it's a hyper parameter. Works better. Okay. So this is what the continuous
+
+997
+01:16:24,000 --> 01:16:31,000
+backoff works. Now we can even more relax the context. We can make it even simpler,
+
+998
+01:16:31,000 --> 01:16:36,000
+like even super simple. What do we like? More even simplification of the context. So we have a
+
+999
+01:16:36,000 --> 01:16:41,000
+sum of the context vectors and then the product. Right? Can we do it any more simple?
+
+1000
+01:16:42,000 --> 01:16:45,000
+Any ideas? How can we make it even simpler?
+
+1001
+01:16:48,000 --> 01:16:54,000
+So we have two words before, two words after, take the embeddings and make the sum and then
+
+1002
+01:16:54,000 --> 01:16:59,000
+project the target word. Can we make it even simpler, the context? Something even more stupid?
+
+1003
+01:17:01,000 --> 01:17:08,000
+Just one word. Yes. Welcome to skip gram. This is it. You can even like make it simpler where we
+
+1004
+01:17:09,000 --> 01:17:21,000
+say each of the context word will be its own instance. So I'm just modeling the dot product
+
+1005
+01:17:21,000 --> 01:17:31,000
+between the target word and one context word at a time. You're independent of the others.
+
+1006
+01:17:31,000 --> 01:17:37,000
+I don't care about the others. So I'm just basically saying, does this one single context
+
+1007
+01:17:37,000 --> 01:17:46,000
+word occur in the context of the target word? I'm completely disentangling because before that,
+
+1008
+01:17:46,000 --> 01:17:51,000
+we kind of like sum them together and go just directly like jointly, all of them,
+
+1009
+01:17:51,000 --> 01:17:59,000
+all the context words. I'm just saying here, yes, each word. Yes. I just sample more instances
+
+1010
+01:18:00,000 --> 01:18:08,000
+and just train them, have more data. It's two different models. Exactly. It's just two different
+
+1011
+01:18:08,000 --> 01:18:15,000
+models right now. I'm creating, I'm training. Basically, if I have context K, I'm training K
+
+1012
+01:18:15,000 --> 01:18:22,000
+different models at once or not at once. I'm training K different models, one after each other.
+
+1013
+01:18:22,000 --> 01:18:27,000
+Does it make sense what I'm doing here? So instead of summing all these context words together,
+
+1014
+01:18:27,000 --> 01:18:32,000
+I'm just saying, well, for this target word, first, let's have a look at the context word I minus one.
+
+1015
+01:18:32,000 --> 01:18:39,000
+And what is the dot product? And is it from the correct context, yes or no? Okay. Let's have a
+
+1016
+01:18:39,000 --> 01:18:46,000
+look at the C, the other one, like afterwards. Yeah. Let's do embeddings and project. And is it
+
+1017
+01:18:46,000 --> 01:18:50,000
+from correct context or not? And this is zero one. Your first few seconds.
+
+1018
+01:18:50,000 --> 01:19:00,000
+So you decide you use the word in the context, we take the average of all the output from the model?
+
+1019
+01:19:01,000 --> 01:19:07,000
+No, you just take one word, do the forward pass, back propagation, and update the embeddings,
+
+1020
+01:19:07,000 --> 01:19:11,000
+the parameters. Then you take the next instance, forward pass, back propagation,
+
+1021
+01:19:11,000 --> 01:19:16,000
+and update the embeddings, the parameters. Then you take the next instance, forward pass,
+
+1022
+01:19:16,000 --> 01:19:20,000
+back propagation, or you just, you batch it. You do also like a standard mini batch thing.
+
+1023
+01:19:32,000 --> 01:19:35,000
+I don't think so because, okay, so let's, let, let me do one thing.
+
+1024
+01:19:35,000 --> 01:19:36,000
+Let's forget about this completely.
+
+1025
+01:19:41,000 --> 01:19:47,000
+So this is one training instance, one kind of training thing. So I take a word,
+
+1026
+01:19:47,000 --> 01:19:52,000
+I take the target word, multiply and say, this is from, okay, I shouldn't do this.
+
+1027
+01:19:53,000 --> 01:20:00,000
+Is this from, is this true context or false context? That's it. So I don't see any,
+
+1028
+01:20:00,000 --> 01:20:05,000
+any matrices or concatenation here. There's not such a thing, I'm afraid,
+
+1029
+01:20:06,000 --> 01:20:10,000
+but maybe you want to draw something and talk to me later. Okay, cool. Let's do that.
+
+1030
+01:20:11,000 --> 01:20:15,000
+No worries. Okay, good. Any other questions to Skipgram?
+
+1031
+01:20:18,000 --> 01:20:18,000
+First.
+
+1032
+01:20:18,000 --> 01:20:25,000
+So is it true that inverse predicts that the distance to the other distance in the
+
+1033
+01:20:25,000 --> 01:20:28,000
+tantrums metas and skip frame is random?
+
+1034
+01:20:31,000 --> 01:20:36,000
+No, well, it, it, it matters kind of, but you, you have like very small context. You
+
+1035
+01:20:36,000 --> 01:20:41,000
+have just one word context. You say, okay, I'm target word. I have some words around and
+
+1036
+01:20:41,000 --> 01:20:45,000
+just pick one. And this is my context for this one single instance training.
+
+1037
+01:20:47,000 --> 01:20:50,000
+And I do it for other words, but they are completely independent. I'm just saying,
+
+1038
+01:20:50,000 --> 01:20:54,000
+I don't care, you know, whether these contexts, they belong together or not. I don't care.
+
+1039
+01:20:55,000 --> 01:20:58,000
+I'm just taking one word at a time from the context.
+
+1040
+01:20:59,000 --> 01:21:03,000
+So in retrospect, we had multiple input bias.
+
+1041
+01:21:03,000 --> 01:21:06,000
+Yeah. In the, in the, in this, in this, in this continuous back of words,
+
+1042
+01:21:06,000 --> 01:21:09,000
+we have multiple sum together.
+
+1043
+01:21:11,000 --> 01:21:16,000
+Okay. Then it doesn't make a difference where the word stands in the sentence.
+
+1044
+01:21:16,000 --> 01:21:20,000
+No, no, no, no. They're just completely, yes. So it's like back of word. It's a back of word
+
+1045
+01:21:20,000 --> 01:21:25,000
+kind of switch together. So it doesn't make a distinction whether it's like previous or after
+
+1046
+01:21:25,000 --> 01:21:30,000
+just the context likes the back. Yes, that's correct. And our question you had one. No. Yes.
+
+1047
+01:21:34,000 --> 01:21:40,000
+It's the same model, but you, you just, you create different instances and different contexts.
+
+1048
+01:21:40,000 --> 01:21:44,000
+So to say it's, it's skip gram is part of word2vec by the way, it's just a different algorithm. I
+
+1049
+01:21:44,000 --> 01:21:50,000
+didn't say it clearly. So it's still in word2vec where you can decide where you want to CBOV,
+
+1050
+01:21:50,000 --> 01:21:55,000
+CBOW or skip gram. Okay. Any question? So, yes.
+
+1051
+01:21:56,000 --> 01:22:03,000
+So I do something and I can put a condition and then the state instead of concatenate and then
+
+1052
+01:22:03,000 --> 01:22:08,000
+it's just parallelizing. Yes. Yeah. Yeah. Parallelizing it's yeah. It could be parallelizing
+
+1053
+01:22:08,000 --> 01:22:12,000
+exactly because they're independent. So you can parallelize. Okay. So basically, yeah,
+
+1054
+01:22:12,000 --> 01:22:16,000
+that's what I'm coming to. Like you have choosing the context. So we have two different
+
+1055
+01:22:17,000 --> 01:22:22,000
+things. This is like continuous back of words. So we take the middle word is the target word
+
+1056
+01:22:23,000 --> 01:22:30,000
+and the M words to each side is the context. And we sum them together or the skip gram is you
+
+1057
+01:22:30,000 --> 01:22:35,000
+create basically two M distinct tasks and each is pairing the focus word with a different context
+
+1058
+01:22:35,000 --> 01:22:40,000
+word, right? This is just wrapping up what we are talking about and skip gram actually are to be,
+
+1059
+01:22:40,000 --> 01:22:46,000
+you know, fun to be robust and efficient to train. And both of them are part of word2vec algorithms.
+
+1060
+01:22:47,000 --> 01:22:57,000
+Any question? Okay, good. So let me just finish quickly. So you can go into subword units because
+
+1061
+01:22:57,000 --> 01:23:01,000
+all these things are just on the word level, you know, and if you have like a morphological rich
+
+1062
+01:23:01,000 --> 01:23:06,000
+language, you have, you have troubles with your vocabulary and stuff like that. So you can,
+
+1063
+01:23:09,000 --> 01:23:12,000
+this is the limitation. Let me skip that because this is clear.
+
+1064
+01:23:12,000 --> 01:23:17,000
+But how about we split the word as a back of character and grams. So we go into subwords
+
+1065
+01:23:18,000 --> 01:23:21,000
+and each of these character engrams has their own embeddings.
+
+1066
+01:23:22,000 --> 01:23:26,000
+And we represent the word as a sum of engram embeddings. It sounds weird. I'll show you the
+
+1067
+01:23:26,000 --> 01:23:31,000
+example. It will show much weirder, but it works in practice for highly morphological languages.
+
+1068
+01:23:32,000 --> 01:23:38,000
+So you take a word like eating and you generate, okay, this is a, you add two special symbols,
+
+1069
+01:23:39,000 --> 01:23:44,000
+one for the beginning and one for the end. And you generate all engrams, character engrams
+
+1070
+01:23:44,000 --> 01:23:50,000
+of size three to six. There's going to be this, this, this, this, this, then length four,
+
+1071
+01:23:51,000 --> 01:23:59,000
+length five until length six. So these are all sub engram, sub character engrams.
+
+1072
+01:24:00,000 --> 01:24:08,000
+And each of them will be now in your kind of inventory of words or vocabulary sort of. And
+
+1073
+01:24:08,000 --> 01:24:13,000
+each of them will bear, will have their own embeddings in the matrix E. And then in order
+
+1074
+01:24:13,000 --> 01:24:20,000
+to find the, the embedding of, of the word eating, you just sum up together the words,
+
+1075
+01:24:20,000 --> 01:24:27,000
+the embeddings of the word, sorry, the embeddings of the engram, character engrams constituting the
+
+1076
+01:24:27,000 --> 01:24:37,000
+word. Why is it good? Well, because it's learning, if you have like out of vocabulary words,
+
+1077
+01:24:38,000 --> 01:24:44,000
+you know, for example, one pinuk, beautiful one pinuk is great. So we have one pinuk,
+
+1078
+01:24:46,000 --> 01:24:49,000
+something like that. And you don't know what is that, but there's this pinuk
+
+1079
+01:24:50,000 --> 01:24:53,000
+and it may be, you know, maybe the embeddings on pinuk has been learned on some different
+
+1080
+01:24:53,000 --> 01:25:02,000
+contexts, like, you know, the, the, the other animal, which is compinuk, and it has been,
+
+1081
+01:25:02,000 --> 01:25:06,000
+you know, seen in your training data and the inuk is part of, you know, learn the embeddings. So
+
+1082
+01:25:06,000 --> 01:25:17,000
+it's kind of transfers some of part of the words. Yes. You can learn much more morphologically
+
+1083
+01:25:17,000 --> 01:25:22,000
+or inform embeddings here. So it's really works for morphologically rich languages.
+
+1084
+01:25:23,000 --> 01:25:32,000
+Finnish, super huge morphology and, you know, like Slavic languages, Czech and so on. So
+
+1085
+01:25:32,000 --> 01:25:36,000
+this work, this works well. Yeah. But here, if I have to work, like, for example,
+
+1086
+01:25:36,000 --> 01:25:40,000
+cool and school, which don't have anything to do with each other, it's going to get a very
+
+1087
+01:25:40,000 --> 01:25:46,000
+sure. Yes. Yeah, yeah, sure. You know, but then you still have the cool and okay. School
+
+1088
+01:25:47,000 --> 01:25:51,000
+and then cool. Yeah. There could be, I think so. Okay.
+
+1089
+01:25:51,000 --> 01:26:02,000
+Well, you have CH here, but maybe the cool will be a shared thing. Yes. But just a part of that
+
+1090
+01:26:02,000 --> 01:26:05,000
+will be shared. And the whole thing, the school also will be part of that because it's shorter
+
+1091
+01:26:05,000 --> 01:26:11,000
+than six or six characters. And maybe these embeddings of the, of the word will be more
+
+1092
+01:26:11,000 --> 01:26:16,000
+representative than these, you know, it's trained this Skibrem as well. So maybe it will learn
+
+1093
+01:26:16,000 --> 01:26:19,000
+better embeddings for the whole word. And the sub words will just, you know, be part of it.
+
+1094
+01:26:20,000 --> 01:26:24,000
+It's hard to tell what's in these embeddings, like 300 dimensions or 600 dimensions.
+
+1095
+01:26:24,000 --> 01:26:30,000
+Yeah. That's a fair point. Okay. Any questions? Good. So what is good about embeddings and what
+
+1096
+01:26:30,000 --> 01:26:36,000
+is bad? I need three minutes and I'll finish. Advantages. So how can we use word embeddings?
+
+1097
+01:26:37,000 --> 01:26:42,000
+Obviously we, you know, each word has now lives in a space of, you know, several hundred dimensions.
+
+1098
+01:26:44,000 --> 01:26:49,000
+So we use this as semantic input to any neural network instead of one word encoding.
+
+1099
+01:26:49,000 --> 01:26:55,000
+And this is an instance of transfer learning where you pre-train or self-train on an auxiliary
+
+1100
+01:26:55,000 --> 01:27:00,000
+task. And once you train them, you plug into more complex model. So we can use them. We will use
+
+1101
+01:27:00,000 --> 01:27:05,000
+word embeddings for anything down the road, like a recurrent neural networks and so on.
+
+1102
+01:27:05,000 --> 01:27:10,000
+So for example, we can represent a document as an average of its words embeddings,
+
+1103
+01:27:10,000 --> 01:27:15,000
+average back of words for text classification. It mostly will work better than just one of the
+
+1104
+01:27:15,000 --> 01:27:22,000
+depending on the task. Very cool. And this is also like word2vec was, you know, why the deep
+
+1105
+01:27:22,000 --> 01:27:28,000
+learning revolution in NLP around 2015 took place. So word2vec has been like, you know,
+
+1106
+01:27:28,000 --> 01:27:34,000
+one of the super, super important contributions to the development of deep learning in NLP.
+
+1107
+01:27:35,000 --> 01:27:39,000
+So we can use this for plugging into neural networks. Okay, good. Semantic similarity
+
+1108
+01:27:39,000 --> 01:27:43,000
+and short equivalent similarity and query expansion. Okay. So here in this paper,
+
+1109
+01:27:43,000 --> 01:27:48,000
+they try to use it for query expansion using word embedding. So if you search for something,
+
+1110
+01:27:48,000 --> 01:27:52,000
+you know, a word, then maybe you want to find a synonyms, right? Or something which is similar
+
+1111
+01:27:52,000 --> 01:27:58,000
+because word2vec will learn some synonyms because synonyms live in the same context.
+
+1112
+01:27:58,000 --> 01:28:01,000
+So they will have similar embeddings. And they said like using word2vec,
+
+1113
+01:28:02,000 --> 01:28:06,000
+continuous back of words embedding approach applied over the entire corpus on which searches
+
+1114
+01:28:06,000 --> 01:28:10,000
+perform, we select terms that are semantically related to the query. Oh, this is, this is cool
+
+1115
+01:28:10,000 --> 01:28:15,000
+idea, right? So you have your database of products, your query term, and even though there
+
+1116
+01:28:15,000 --> 01:28:19,000
+is not exact match, you will find, you know, something which is, which is like embeddings
+
+1117
+01:28:19,000 --> 01:28:31,000
+close in this embedding space. Okay. What can go wrong here? Well, so I tried to search, I think
+
+1118
+01:28:31,000 --> 01:28:37,000
+Reva kind of applied word embeddings last year or a couple of years back into search. And I tried to
+
+1119
+01:28:37,000 --> 01:28:45,000
+buy COVID tests and I typed COVID in there and it gave me two Corona beers, like the thing,
+
+1120
+01:28:45,000 --> 01:28:50,000
+because they use some word embeddings train on whatever news. And these word embeddings
+
+1121
+01:28:50,000 --> 01:28:56,000
+learned that COVID and Corona is the same thing. Obviously Reva had no COVID tests in there, but
+
+1122
+01:28:56,000 --> 01:29:02,000
+had, you know, beers of, you know, Corona beers. So if you type here in COVID, it returns Corona.
+
+1123
+01:29:02,000 --> 01:29:07,000
+Yeah. So query expansion with word embeddings might be tricky because it's not like it's,
+
+1124
+01:29:07,000 --> 01:29:10,000
+you know, word embeddings, if you make a comparison and include in distance or
+
+1125
+01:29:10,000 --> 01:29:14,000
+custom similarity, it's just, it's not, it's not directional. It's just, you know, it's a distance.
+
+1126
+01:29:15,000 --> 01:29:20,000
+So yeah, in this case it failed. I can imagine like, yeah, sure. We have word embeddings much
+
+1127
+01:29:20,000 --> 01:29:26,000
+better for search. I'll put it in there. Yes. Awesome example. Okay. I promised you that you
+
+1128
+01:29:26,000 --> 01:29:31,000
+will learn how to mine analogies with Word2Vec at the beginning of this lecture. So Germany to
+
+1129
+01:29:31,000 --> 01:29:37,000
+Berlin is France to Paris. You can take the embedding of Berlin, subtract the embedding
+
+1130
+01:29:37,000 --> 01:29:45,000
+of Germany at the embedding of France, and it will all put a vector X, which is closest to
+
+1131
+01:29:45,000 --> 01:29:52,000
+parties in this embedding space. This is cool. This is really cool. So you learn something about
+
+1132
+01:29:52,000 --> 01:29:59,000
+properties of things, and you can do this vector arithmetic to find analogies using just word
+
+1133
+01:29:59,000 --> 01:30:06,000
+embeddings or this queen. So you take the embedding of king, subtract embedding of men,
+
+1134
+01:30:06,000 --> 01:30:12,000
+and up the embedding of woman. And what you get is the embedding, which is closest to the queen.
+
+1135
+01:30:13,000 --> 01:30:17,000
+This is, this is pretty cool. Actually, this is pretty cool because in order to learn this,
+
+1136
+01:30:17,000 --> 01:30:24,000
+you didn't need anything labeled, anything, any notion of anything. Just learn good word
+
+1137
+01:30:24,000 --> 01:30:28,000
+representation from looking into the context on huge, huge, you know, collection of examples.
+
+1138
+01:30:29,000 --> 01:30:30,000
+Nothing else. Yes.
+
+1139
+01:30:30,000 --> 01:30:34,000
+So just back to my question, so it isn't able to generalize.
+
+1140
+01:30:34,000 --> 01:30:35,000
+Yes.
+
+1141
+01:30:35,000 --> 01:30:40,000
+So like in the dog example, for example, if I had like a dog that's laying a red dog.
+
+1142
+01:30:40,000 --> 01:30:40,000
+Yes.
+
+1143
+01:30:40,000 --> 01:30:42,000
+And now yellow is also...
+
+1144
+01:30:42,000 --> 01:30:42,000
+Exactly.
+
+1145
+01:30:42,000 --> 01:30:44,000
+...the same color.
+
+1146
+01:30:44,000 --> 01:30:48,000
+Exactly. Yeah, it will, it will maybe, it will put the colors somewhere in the space closer to
+
+1147
+01:30:48,000 --> 01:30:52,000
+each other or adjectives or depending on, you know, which context you train on, but it will
+
+1148
+01:30:52,000 --> 01:30:56,000
+generalize. And even more than that, it's able to, you know, look into, look around. If you're
+
+1149
+01:30:57,000 --> 01:31:02,000
+testing embeddings, you know, you can, we, we had a syntax based embeddings two years back.
+
+1150
+01:31:02,000 --> 01:31:06,000
+So you can watch this video. Let me just finish very quickly. Limitations, word embeddings. So
+
+1151
+01:31:07,000 --> 01:31:12,000
+the similarity is completely operational. So words are similar if used in similar context,
+
+1152
+01:31:12,000 --> 01:31:15,000
+that's it. We didn't say anything about, you know, they should be similar or same syntax,
+
+1153
+01:31:15,000 --> 01:31:20,000
+and I'll be whatever. Words opposite to each other, like buy and sell and hot and cold tend
+
+1154
+01:31:20,000 --> 01:31:24,000
+to appear in similar contexts. So, you know, they can be in the same space in the embeddings and
+
+1155
+01:31:24,000 --> 01:31:31,000
+it's not a good thing. So that's bad. We have biases in the data. So they, obviously we learn
+
+1156
+01:31:31,000 --> 01:31:37,000
+from data and these data sets reflect the human biases in the real world. So word embeddings
+
+1157
+01:31:37,000 --> 01:31:42,000
+encode not only stereotypical biases, but also, you know, race or gender simply vertical,
+
+1158
+01:31:43,000 --> 01:31:48,000
+reflecting the status quo distribution of gender with respect to carriers or first names. So
+
+1159
+01:31:48,000 --> 01:31:54,000
+this is very cool science paper where it shows like embeddings encode these biases. Like
+
+1160
+01:31:55,000 --> 01:31:59,000
+if you type nurse, it's closer to women. If you type doctor, it's closer to men.
+
+1161
+01:32:01,000 --> 01:32:06,000
+Why? Well, because it's just the bias inherited from the data, because we talk more about like,
+
+1162
+01:32:06,000 --> 01:32:12,000
+you know, this is, this is how, how the world unfortunately is so far. And this is encoded
+
+1163
+01:32:12,000 --> 01:32:17,000
+in the embeddings as well. So keep that in mind. And the last point is, yes, you have a question.
+
+1164
+01:32:18,000 --> 01:32:26,000
+You always have no matter what you do, whatever you train will always learn from the text that it
+
+1165
+01:32:26,000 --> 01:32:34,000
+trains from. It learns from the text. Yes, exactly. The bias will always take no matter what.
+
+1166
+01:32:34,000 --> 01:32:38,000
+So, okay. Yeah, this is a great question and I will leave it to the, so we will have a guest
+
+1167
+01:32:38,000 --> 01:32:43,000
+lecture at the end of this semester from Thomas Arnold on ethics. And I think he'll look,
+
+1168
+01:32:43,000 --> 01:32:49,000
+he'll talk a lot about biases in the data and ways. And one last point, which is really important
+
+1169
+01:32:49,000 --> 01:32:58,000
+that we have, we model like each word has one, has one embedding, but we have words which are
+
+1170
+01:32:58,000 --> 01:33:03,000
+kind of polysemic. So bank could be a financial institution or the side of the river or star
+
+1171
+01:33:03,000 --> 01:33:11,000
+could be in shape or celebrity or stars in the, in the sky. And if you use a single vector for
+
+1172
+01:33:11,000 --> 01:33:15,000
+all firms, this is fine for a model because we cannot like disambiguate the senses.
+
+1173
+01:33:15,000 --> 01:33:22,000
+So keep that in mind. Recap, word embeddings are cool. Self-supervised training of word embeddings
+
+1174
+01:33:22,000 --> 01:33:27,000
+is really a thing. And we use CBO and skip gram. You have a question. So yes.
+
+1175
+01:33:29,000 --> 01:33:33,000
+I was going to say this, or are there solutions for word embeddings? I'm sorry.
+
+1176
+01:33:33,000 --> 01:33:41,000
+You can have a, you can have a look here. You can do like disambiguation and stuff like that
+
+1177
+01:33:41,000 --> 01:33:45,000
+on embeddings, but we will have better models, which are transformers. They take it into account
+
+1178
+01:33:45,000 --> 01:34:00,000
+the context. All right. Thanks a lot. See you next week.
+
