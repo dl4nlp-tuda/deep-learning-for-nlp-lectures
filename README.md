@@ -53,6 +53,12 @@ May 16, 2023
 
 * [Slides as PDF](/pdf/dl4nlp2023-lecture06.pdf), [YouTube recording](https://www.youtube.com/watch?v=fClxXB8-m8I)
 
+## Lecture 7: Text classification 4: Recurrent neural networks
+
+May 30, 2023
+
+* [Slides as PDF](/pdf/dl4nlp2023-lecture07.pdf)
+
 
 ## Subtitles/Close caption
 
