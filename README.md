@@ -57,7 +57,7 @@ May 16, 2023
 
 May 30, 2023
 
-* [Slides as PDF](/pdf/dl4nlp2023-lecture07.pdf)
+* [Slides as PDF](/pdf/dl4nlp2023-lecture07.pdf), [YouTube recording](https://www.youtube.com/watch?v=sgjKJRoYx4s)
 
 
 ## Subtitles/Close caption
