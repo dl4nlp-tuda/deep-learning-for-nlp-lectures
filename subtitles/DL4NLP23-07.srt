@@ -1,0 +1,5324 @@
+1
+00:00:00,500 --> 00:00:03,500
+Recording now.
+
+2
+00:00:08,500 --> 00:00:11,500
+We're recording and there's this.
+
+3
+00:00:12,500 --> 00:00:14,500
+Yeah, OK, so welcome to.
+
+4
+00:00:16,500 --> 00:00:18,500
+Yeah, it feels like a turn of pictures, it's been two weeks,
+
+5
+00:00:18,500 --> 00:00:21,500
+but somehow continuation broke.
+
+6
+00:00:22,500 --> 00:00:25,500
+And welcome to the next lecture of deep learning for NLP.
+
+7
+00:00:25,500 --> 00:00:27,500
+So this is my last lecture today.
+
+8
+00:00:27,500 --> 00:00:30,500
+Next week, I'm going to hand over to Martin Tutek,
+
+9
+00:00:30,500 --> 00:00:32,500
+who's going to take over the second part of the semester.
+
+10
+00:00:33,500 --> 00:00:36,500
+And then the last lecture, one lecture, maybe,
+
+11
+00:00:36,500 --> 00:00:41,500
+will be a guest talk on the topic of ethics in NLP by Thomas.
+
+12
+00:00:41,500 --> 00:00:44,500
+So where were we last time, by the way?
+
+13
+00:00:44,500 --> 00:00:45,500
+OK, what was it?
+
+14
+00:00:45,500 --> 00:00:47,500
+Word embeddings training, right?
+
+15
+00:00:48,500 --> 00:00:51,500
+Anyone remembers what we did last time?
+
+16
+00:00:51,500 --> 00:00:53,500
+OK, word embeddings.
+
+17
+00:00:53,500 --> 00:00:55,500
+So today we're going to be talking about record neural networks,
+
+18
+00:00:55,500 --> 00:00:59,500
+which is super fancy name for things that are actually quite fancy.
+
+19
+00:00:59,500 --> 00:01:05,500
+So the point is so far, so we are talking about the NLP,
+
+20
+00:01:05,500 --> 00:01:09,500
+so multilayer perceptron and we squeeze some input in there.
+
+21
+00:01:09,500 --> 00:01:14,500
+And for text with different lengths, we just said, let's use continuous back-off words, right?
+
+22
+00:01:14,500 --> 00:01:19,500
+Cram everything into one bag and just use everything and don't care about de-ordering,
+
+23
+00:01:19,500 --> 00:01:19,500
+don't care about it.
+
+24
+00:01:20,500 --> 00:01:24,500
+But actually, yeah, so this is what we did so far.
+
+25
+00:01:25,500 --> 00:01:30,500
+And yeah, so we, as I said, we took as a concatenation of the vectors.
+
+26
+00:01:30,500 --> 00:01:34,500
+So, for example, previous three words when we were talking about language modeling.
+
+27
+00:01:34,500 --> 00:01:36,500
+So predict the next word given the past three words.
+
+28
+00:01:36,500 --> 00:01:38,500
+So we concatenated the word vectors.
+
+29
+00:01:38,500 --> 00:01:38,500
+OK, good.
+
+30
+00:01:39,500 --> 00:01:41,500
+We then, what did we do?
+
+31
+00:01:41,500 --> 00:01:46,500
+We also used the averaging and we also used the Markov property, right?
+
+32
+00:01:46,500 --> 00:01:48,500
+So we said, what is the Markov property again?
+
+33
+00:01:48,500 --> 00:01:54,500
+Like previous two, three words maximum because of the explosion of the parameters
+
+34
+00:01:54,500 --> 00:01:59,500
+or of the impracticality of learning the parameters.
+
+35
+00:02:00,500 --> 00:02:07,500
+What we really want in natural language processing, what we really, really want is working with sequence of inputs.
+
+36
+00:02:08,500 --> 00:02:09,500
+Right.
+
+37
+00:02:10,500 --> 00:02:18,500
+And we want to, for example, so give me a task where we have a variable length input and fixed size output.
+
+38
+00:02:19,500 --> 00:02:21,500
+What could be, Gesundheit, what could be the task?
+
+39
+00:02:22,500 --> 00:02:26,500
+Like variable length inputs and fixed size output.
+
+40
+00:02:27,500 --> 00:02:29,500
+Sentiment classification, for instance, right?
+
+41
+00:02:29,500 --> 00:02:34,500
+Because we have these different movie reviews, if you remember lecture number one, which was back in winter.
+
+42
+00:02:34,500 --> 00:02:35,500
+Feels like that.
+
+43
+00:02:36,500 --> 00:02:41,500
+We had this very short movie reviews like, oh, this is bad movie.
+
+44
+00:02:41,500 --> 00:02:45,500
+And we have this super lengthy, you know, thousand words reviews.
+
+45
+00:02:45,500 --> 00:02:51,500
+And we want to somehow use all of them regardless of their length and predict maybe whether it's positive or negative.
+
+46
+00:02:51,500 --> 00:02:52,500
+So this is one example.
+
+47
+00:02:52,500 --> 00:02:54,500
+What do we really care about in NLP?
+
+48
+00:02:55,500 --> 00:03:00,500
+How we were dealing with that so far was just, yeah, kind of make a simplification and hope like it will work.
+
+49
+00:03:00,500 --> 00:03:03,500
+It works to some extent, but there's better approaches as we will talk today about.
+
+50
+00:03:04,500 --> 00:03:07,500
+So this is a motivation for recurrent neural networks.
+
+51
+00:03:07,500 --> 00:03:10,500
+And we start with a little bit of abstraction.
+
+52
+00:03:10,500 --> 00:03:15,500
+What recurrent neural networks are actually could be what's this like the interface of working with them.
+
+53
+00:03:15,500 --> 00:03:18,500
+And then we talk about particle implementation, implementations of recurrent neural network.
+
+54
+00:03:19,500 --> 00:03:20,500
+So.
+
+55
+00:03:21,500 --> 00:03:24,500
+Let's have a sequence of.
+
+56
+00:03:25,500 --> 00:03:34,500
+And input vectors, OK, so what's coming in is not just words like or elements or items we're putting in vectors.
+
+57
+00:03:34,500 --> 00:03:35,500
+All right.
+
+58
+00:03:35,500 --> 00:03:37,500
+So what these vectors could be.
+
+59
+00:03:38,500 --> 00:03:46,500
+Well, they have same dimensions, so the n dimension of input, each of these vectors and what these vectors could contain.
+
+60
+00:03:46,500 --> 00:03:53,500
+So typically they would be a word embedding the token, but it could be any arbitrary input like one of encoding and so on.
+
+61
+00:03:53,500 --> 00:04:07,500
+So if we have a sentence, the cat said and so on, what we are actually putting into our network is a sequence of vectors.
+
+62
+00:04:09,500 --> 00:04:12,500
+And they have the same dimensionality, the n.
+
+63
+00:04:13,500 --> 00:04:14,500
+Right.
+
+64
+00:04:16,500 --> 00:04:22,500
+So and we have n of them, right, so this is times n, any arbitrary length.
+
+65
+00:04:22,500 --> 00:04:26,500
+And we want our model to work for any n of what we choose.
+
+66
+00:04:26,500 --> 00:04:29,500
+So nothing fixed, but some like depending on the inputs.
+
+67
+00:04:29,500 --> 00:04:30,500
+OK.
+
+68
+00:04:31,500 --> 00:04:40,500
+And what is in here, as I said, could be a yeah, typically we're using word embeddings, which are somehow pre-trained on as what was that one word2vec for instance, right.
+
+69
+00:04:42,500 --> 00:04:43,500
+OK.
+
+70
+00:04:44,500 --> 00:04:46,500
+Any questions so far?
+
+71
+00:04:47,500 --> 00:04:49,500
+Very straightforward, we're putting in vectors.
+
+72
+00:04:50,500 --> 00:04:51,500
+What is the output of that?
+
+73
+00:04:52,500 --> 00:04:54,500
+Is some vector as well.
+
+74
+00:04:54,500 --> 00:04:56,500
+So of dimension d out.
+
+75
+00:04:58,500 --> 00:05:07,500
+And well, we're now pretending we're plugging out like we're kind of transforming the sequence of inputs into one output, as we will see later, it's much more powerful than that.
+
+76
+00:05:08,500 --> 00:05:16,500
+Then basically our RNN, so Recurrent Neural Network, is just a function from the input, a sequence of vectors to one vector to the output.
+
+77
+00:05:17,500 --> 00:05:19,500
+Spread, it can't be any simpler, actually.
+
+78
+00:05:20,500 --> 00:05:30,500
+Right, so it's just sequence of embeddings or sequence of vectors in and vector out.
+
+79
+00:05:30,500 --> 00:05:32,500
+OK, any questions?
+
+80
+00:05:32,500 --> 00:05:36,500
+So this is like the main interface to RNN is this.
+
+81
+00:05:38,500 --> 00:05:39,500
+OK, all good.
+
+82
+00:05:39,500 --> 00:05:40,500
+So.
+
+83
+00:05:42,500 --> 00:05:45,500
+If you think about it, like what is the end, what does it mean?
+
+84
+00:05:45,500 --> 00:05:53,500
+Well, actually, these RNNs, this kind of simple interface is actually returning not only one output, but it's returning a sequence of outputs.
+
+85
+00:05:55,500 --> 00:06:03,500
+Because, for instance, if we have like n is equals to three, so our input sequence is x1, x2, x3, so three vectors.
+
+86
+00:06:03,500 --> 00:06:04,500
+Right.
+
+87
+00:06:04,500 --> 00:06:05,500
+And we're returning here.
+
+88
+00:06:05,500 --> 00:06:06,500
+It's a typo.
+
+89
+00:06:06,500 --> 00:06:08,500
+It should be y3.
+
+90
+00:06:08,500 --> 00:06:12,500
+It's returning, you know, RNN of these three inputs.
+
+91
+00:06:12,500 --> 00:06:17,500
+OK, but actually the sequence also contains the subsequence x1, x2.
+
+92
+00:06:17,500 --> 00:06:18,500
+Right.
+
+93
+00:06:19,500 --> 00:06:23,500
+So this is also, so this is three again, I'm sorry.
+
+94
+00:06:24,500 --> 00:06:30,500
+So this RNN function, it takes a subsequence of x1 and x2 and also should return y2.
+
+95
+00:06:31,500 --> 00:06:34,500
+OK, because this is subsequence is part of this larger sequence.
+
+96
+00:06:35,500 --> 00:06:44,500
+And if you take it to the extreme, then y1 would be RNN of x1.
+
+97
+00:06:45,500 --> 00:06:48,500
+Yeah, because we're just, this is length one.
+
+98
+00:06:48,500 --> 00:06:48,500
+Right.
+
+99
+00:06:48,500 --> 00:06:50,500
+I mean, we're putting just one vector in and one vector out.
+
+100
+00:06:50,500 --> 00:06:55,500
+So this is what we're getting for free, basically, by our definition.
+
+101
+00:06:57,500 --> 00:07:04,500
+So this means that at each of the steps, one, two or three, the RNN is outputting a vector yi.
+
+102
+00:07:05,500 --> 00:07:06,500
+Right.
+
+103
+00:07:07,500 --> 00:07:08,500
+Everybody's with me.
+
+104
+00:07:08,500 --> 00:07:08,500
+Why is it so?
+
+105
+00:07:08,500 --> 00:07:11,500
+Because we define it in a way, basically.
+
+106
+00:07:11,500 --> 00:07:15,500
+And we said like, yeah, take everything in up until sequence of n.
+
+107
+00:07:15,500 --> 00:07:18,500
+And then at the end step, you know, spit something out.
+
+108
+00:07:19,500 --> 00:07:22,500
+And obviously we have n sequence, you know, we have different subsequences.
+
+109
+00:07:22,500 --> 00:07:24,500
+So basically at each step it's spitting something out.
+
+110
+00:07:24,500 --> 00:07:25,500
+Right.
+
+111
+00:07:26,500 --> 00:07:26,500
+Any question?
+
+112
+00:07:30,500 --> 00:07:31,500
+You might be asking why?
+
+113
+00:07:32,500 --> 00:07:34,500
+Like it's kind of weird.
+
+114
+00:07:34,500 --> 00:07:34,500
+Yeah.
+
+115
+00:07:35,500 --> 00:07:37,500
+It's a way of defining things.
+
+116
+00:07:37,500 --> 00:07:42,500
+So there might be advantages of this definition.
+
+117
+00:07:42,500 --> 00:07:45,500
+So let's call the sequence outputting function RNN star.
+
+118
+00:07:45,500 --> 00:07:46,500
+Right.
+
+119
+00:07:46,500 --> 00:07:57,500
+So we kind of, you know, we distinguish between something, the function which takes a sequence of vectors and spitting out a vector and sequence of vectors in and sequence of vectors out.
+
+120
+00:07:57,500 --> 00:07:57,500
+Right.
+
+121
+00:07:57,500 --> 00:08:04,500
+So the only thing which is important here is that it takes n vector in and spits out n vectors out.
+
+122
+00:08:04,500 --> 00:08:07,500
+So the numbers, the n is the same.
+
+123
+00:08:07,500 --> 00:08:15,500
+So we cannot, with this definition of RNN, we cannot do sequence of length n in and sequence of length n out.
+
+124
+00:08:15,500 --> 00:08:16,500
+That's not what we're doing.
+
+125
+00:08:16,500 --> 00:08:19,500
+Basically we say for each input, there could be one output.
+
+126
+00:08:19,500 --> 00:08:19,500
+Because in that.
+
+127
+00:08:22,500 --> 00:08:22,500
+Okay.
+
+128
+00:08:22,500 --> 00:08:22,500
+So recap.
+
+129
+00:08:22,500 --> 00:08:23,500
+Okay.
+
+130
+00:08:23,500 --> 00:08:30,500
+So for a sequence of input vectors, x1 to i, we have this output vector for the whole sequence.
+
+131
+00:08:30,500 --> 00:08:37,500
+And we have this vector of, we have this sequence of vectors output for the same input.
+
+132
+00:08:38,500 --> 00:08:38,500
+So.
+
+133
+00:08:41,500 --> 00:08:45,500
+So without knowing what the, so the question is like, yeah, what is this function actually?
+
+134
+00:08:45,500 --> 00:08:47,500
+Like, you know, what is in there?
+
+135
+00:08:47,500 --> 00:08:51,500
+Well, before actually going deeper, what is RNN function should be implementing?
+
+136
+00:08:51,500 --> 00:08:54,500
+What, what could be the advantage of such a function?
+
+137
+00:08:54,500 --> 00:08:58,500
+So it takes one to n and output something.
+
+138
+00:08:58,500 --> 00:09:00,500
+What is the advantage?
+
+139
+00:09:02,500 --> 00:09:04,500
+You know, what's, is it, is it any good?
+
+140
+00:09:04,500 --> 00:09:08,500
+Like what, what could be, what could be in, for example, yes.
+
+141
+00:09:08,500 --> 00:09:09,500
+Yeah.
+
+142
+00:09:09,500 --> 00:09:09,500
+Okay.
+
+143
+00:09:09,500 --> 00:09:23,500
+It does capture the context exactly, but remember the language models we had before, like Ngram language model, it captures the context as well.
+
+144
+00:09:23,500 --> 00:09:23,500
+Right.
+
+145
+00:09:24,500 --> 00:09:28,500
+So this is not the only advantage, but there's, sorry, I think you were first.
+
+146
+00:09:30,500 --> 00:09:31,500
+It can remember something.
+
+147
+00:09:31,500 --> 00:09:32,500
+Yeah.
+
+148
+00:09:32,500 --> 00:09:34,500
+And gram language model remembers something as well.
+
+149
+00:09:34,500 --> 00:09:34,500
+So.
+
+150
+00:09:35,500 --> 00:09:36,500
+But you're right.
+
+151
+00:09:36,500 --> 00:09:36,500
+You're on, you're on track.
+
+152
+00:09:36,500 --> 00:09:37,500
+Yes.
+
+153
+00:09:40,500 --> 00:09:43,500
+It remember variable length context because we're changing n.
+
+154
+00:09:43,500 --> 00:09:43,500
+Yes.
+
+155
+00:09:44,500 --> 00:09:46,500
+If we change n in Ngrams, it can also, but yeah.
+
+156
+00:09:46,500 --> 00:09:46,500
+Okay.
+
+157
+00:09:46,500 --> 00:09:47,500
+I got you.
+
+158
+00:09:47,500 --> 00:09:48,500
+Something substantial.
+
+159
+00:09:50,500 --> 00:09:50,500
+Yes.
+
+160
+00:09:57,500 --> 00:09:59,500
+Oh, let's have documents.
+
+161
+00:09:59,500 --> 00:10:06,500
+Let's have the cat set and bed movie.
+
+162
+00:10:06,500 --> 00:10:08,500
+So these are two documents, right?
+
+163
+00:10:08,500 --> 00:10:12,500
+So here we have n equals three and here we have n equals two.
+
+164
+00:10:12,500 --> 00:10:23,500
+And then basically if we plot, we can plug either of those things into this function RNN and it will spit either one vector or your three vectors or your two vectors.
+
+165
+00:10:24,500 --> 00:10:26,500
+Does it answer your question or not?
+
+166
+00:10:26,500 --> 00:10:29,500
+Or is it something where I just made a typo here?
+
+167
+00:10:29,500 --> 00:10:30,500
+Well, basically yes.
+
+168
+00:10:30,500 --> 00:10:34,500
+For each position, it outputs one, one, one.
+
+169
+00:10:35,500 --> 00:10:35,500
+Yeah.
+
+170
+00:10:35,500 --> 00:10:47,500
+So, so at the end, we have, we have all three wise or we have, or is it like, yeah, the last one, basically this one, the last one, this one is the last one of those sequence.
+
+171
+00:10:47,500 --> 00:10:48,500
+I can, let me just, okay.
+
+172
+00:10:48,500 --> 00:10:51,500
+I didn't want to draw any pictures here, but let me just write a picture.
+
+173
+00:10:51,500 --> 00:10:53,500
+Maybe it will, you know, I have much cooler pictures later on.
+
+174
+00:10:54,500 --> 00:10:58,500
+So X one X two X three.
+
+175
+00:10:59,500 --> 00:11:04,500
+And we say, let's plug it into something here.
+
+176
+00:11:05,500 --> 00:11:06,500
+I don't want to spoil here to something.
+
+177
+00:11:06,500 --> 00:11:15,500
+So let's, let's make it like something here and it will spit Y one Y two Y three.
+
+178
+00:11:17,500 --> 00:11:18,500
+It's a very abstract, right?
+
+179
+00:11:18,500 --> 00:11:22,500
+Because this is something, this is going, this is going to be different and more complicated.
+
+180
+00:11:23,500 --> 00:11:23,500
+Okay.
+
+181
+00:11:25,500 --> 00:11:25,500
+Okay.
+
+182
+00:11:25,500 --> 00:11:27,500
+So the advantages of the RNN.
+
+183
+00:11:27,500 --> 00:11:27,500
+Yeah.
+
+184
+00:11:27,500 --> 00:11:33,500
+So we are in context and we have different lengths, so this is good, but we have something.
+
+185
+00:11:33,500 --> 00:11:38,500
+Maybe, you know, if, if you compare it with angrily, which models, so angry
+
+186
+00:11:38,500 --> 00:11:44,500
+on which model we had sort of a simplification, it even had a name.
+
+187
+00:11:45,500 --> 00:11:52,500
+The simplification in angrily, which models we kind of, you know, get, got
+
+188
+00:11:52,500 --> 00:11:57,500
+rid of it in a, in bird embeddings, but still we had some limits.
+
+189
+00:11:57,500 --> 00:12:01,500
+So, okay.
+
+190
+00:12:01,500 --> 00:12:02,500
+Maybe I'm asking wrong way.
+
+191
+00:12:03,500 --> 00:12:04,500
+It takes the whole input.
+
+192
+00:12:05,500 --> 00:12:05,500
+It takes it whole.
+
+193
+00:12:05,500 --> 00:12:07,500
+We have the Markov property.
+
+194
+00:12:07,500 --> 00:12:12,500
+So the name was Markov property because we are limiting to like K equals to three, like
+
+195
+00:12:12,500 --> 00:12:15,500
+K previous words or the window and so on.
+
+196
+00:12:15,500 --> 00:12:20,500
+But now this, this thing takes the whole input sequence and produces,
+
+197
+00:12:20,500 --> 00:12:21,500
+you know, whatever is coming out.
+
+198
+00:12:21,500 --> 00:12:23,500
+So basically it's conditioning on the whole input.
+
+199
+00:12:24,500 --> 00:12:27,500
+So we are actually overcoming the Markov property.
+
+200
+00:12:27,500 --> 00:12:28,500
+We don't have to limit the context.
+
+201
+00:12:29,500 --> 00:12:29,500
+Okay.
+
+202
+00:12:31,500 --> 00:12:32,500
+Sounds great.
+
+203
+00:12:33,500 --> 00:12:39,500
+So, so each output takes the entire history one to this position
+
+204
+00:12:39,500 --> 00:12:41,500
+I without the Markov property.
+
+205
+00:12:42,500 --> 00:12:44,500
+So the question is like, what, what are we going to do with this, with this?
+
+206
+00:12:44,500 --> 00:12:45,500
+Why?
+
+207
+00:12:45,500 --> 00:12:47,500
+So there's a vector coming out of the sequence.
+
+208
+00:12:47,500 --> 00:12:49,500
+So what can we do with that?
+
+209
+00:12:50,500 --> 00:12:54,500
+And typically we use it for, as we were talking before for some further predictions.
+
+210
+00:12:54,500 --> 00:12:59,500
+So for example, we can, we can plug it into softmax for, you know, for a
+
+211
+00:12:59,500 --> 00:13:01,500
+classification, multi-class classification.
+
+212
+00:13:01,500 --> 00:13:06,500
+We could plug it into through some, some MLP, some multi-layer perceptron,
+
+213
+00:13:06,500 --> 00:13:11,500
+maybe one extra layer, some projection into whatever two, two dimensional
+
+214
+00:13:11,500 --> 00:13:14,500
+vector or one dimension and put a sigmoid out of it if we do on top of it,
+
+215
+00:13:14,500 --> 00:13:17,500
+if we do binary predictions and stuff like that.
+
+216
+00:13:17,500 --> 00:13:18,500
+Okay.
+
+217
+00:13:18,500 --> 00:13:22,500
+So it's basically taking an input, making a transformation of arbitrary
+
+218
+00:13:22,500 --> 00:13:27,500
+length input into either one vector or a sequence of vectors of the same length.
+
+219
+00:13:28,500 --> 00:13:29,500
+Okay.
+
+220
+00:13:30,500 --> 00:13:32,500
+So how, how does this work?
+
+221
+00:13:32,500 --> 00:13:35,500
+Like, how can this actually work?
+
+222
+00:13:35,500 --> 00:13:39,500
+Like take any sequence of inputs and producing any sequence of outputs.
+
+223
+00:13:40,500 --> 00:13:42,500
+So what, what could, what could be in there?
+
+224
+00:13:42,500 --> 00:13:45,500
+Like there must be something happening because how can you design such a
+
+225
+00:13:45,500 --> 00:13:49,500
+function that no matter how long the input you pass in, it will, you know,
+
+226
+00:13:49,500 --> 00:13:50,500
+it will kind of adapt to that.
+
+227
+00:13:51,500 --> 00:13:58,500
+So there is one underlying mechanism here and the backbone idea, and it's called states.
+
+228
+00:13:59,500 --> 00:14:03,500
+Because we need to pass the information between these, like discrete
+
+229
+00:14:03,500 --> 00:14:05,500
+states and time as you wish.
+
+230
+00:14:05,500 --> 00:14:08,500
+So from one time point to another time point and so on.
+
+231
+00:14:08,500 --> 00:14:11,500
+So we're passing information from one position to the next.
+
+232
+00:14:12,500 --> 00:14:22,500
+So from the, let's say we're at position Y and let's, the cat and we're at position.
+
+233
+00:14:22,500 --> 00:14:23,500
+So this is one, this is two.
+
+234
+00:14:24,500 --> 00:14:28,500
+And here we have this, our tiny RNN thing.
+
+235
+00:14:29,500 --> 00:14:31,500
+And here we have also RNN thing.
+
+236
+00:14:32,500 --> 00:14:35,500
+And from coming to, to the next step.
+
+237
+00:14:35,500 --> 00:14:39,500
+So you're outputting Y one, you're outputting Y two.
+
+238
+00:14:39,500 --> 00:14:44,500
+And we're basically saving some sort of state, which we're
+
+239
+00:14:44,500 --> 00:14:46,500
+passing to, to the next state here.
+
+240
+00:14:47,500 --> 00:14:49,500
+So we're, we're doing something in here.
+
+241
+00:14:50,500 --> 00:14:56,500
+Save it into some state, which we, you know, this S S I, and we're passing
+
+242
+00:14:56,500 --> 00:14:58,500
+it to the next, next state in time.
+
+243
+00:14:59,500 --> 00:15:03,500
+So this is how we're keeping the information for arbitrary length input.
+
+244
+00:15:03,500 --> 00:15:08,500
+So we're saying, well, something will be stored somewhere and we just pass it by.
+
+245
+00:15:08,500 --> 00:15:10,500
+What is in this state?
+
+246
+00:15:10,500 --> 00:15:11,500
+It's an open question.
+
+247
+00:15:11,500 --> 00:15:13,500
+Like this is a part of these architectures.
+
+248
+00:15:13,500 --> 00:15:14,500
+Okay.
+
+249
+00:15:14,500 --> 00:15:20,500
+But we are using a state vector to store something about the, you know, the
+
+250
+00:15:20,500 --> 00:15:23,500
+history, about the context from the very beginning.
+
+251
+00:15:23,500 --> 00:15:23,500
+Okay.
+
+252
+00:15:24,500 --> 00:15:24,500
+Any question?
+
+253
+00:15:38,500 --> 00:15:43,500
+So we can then recursively define these RNNs, which means that at each step
+
+254
+00:15:43,500 --> 00:15:47,500
+Y, what we have, we have the current input vector.
+
+255
+00:15:47,500 --> 00:15:50,500
+So this is maybe the word embedding coming in and we have the
+
+256
+00:15:50,500 --> 00:15:51,500
+vector of the previous state.
+
+257
+00:15:52,500 --> 00:15:54,500
+So S I minus one.
+
+258
+00:15:55,500 --> 00:15:57,500
+Now you might be asking if we're at the very beginning.
+
+259
+00:15:57,500 --> 00:16:03,500
+So we have X one, the, and it's going into our tiny little thing here.
+
+260
+00:16:04,500 --> 00:16:07,500
+What is the previous, you know, what is S what is S zero?
+
+261
+00:16:07,500 --> 00:16:09,500
+What is the previous one?
+
+262
+00:16:09,500 --> 00:16:09,500
+Right.
+
+263
+00:16:09,500 --> 00:16:10,500
+Because we always need a previous one.
+
+264
+00:16:11,500 --> 00:16:15,500
+So this is the initial initial state vector.
+
+265
+00:16:15,500 --> 00:16:18,500
+And typically, I mean, it's often omitted in the definitions and typically
+
+266
+00:16:18,500 --> 00:16:21,500
+it could be fill in zeros, maybe.
+
+267
+00:16:21,500 --> 00:16:25,500
+There could be some special architectures where you need to initialize with maybe
+
+268
+00:16:25,500 --> 00:16:28,500
+old ones or some random initialization, but typically it would be zero.
+
+269
+00:16:28,500 --> 00:16:28,500
+Okay.
+
+270
+00:16:30,500 --> 00:16:35,500
+So at each step, we take the previous state and the current inputs and
+
+271
+00:16:35,500 --> 00:16:39,500
+compute the current state as I.
+
+272
+00:16:41,500 --> 00:16:42,500
+And how are we going to compute it?
+
+273
+00:16:42,500 --> 00:16:45,500
+It's this beautiful function R as recurrent.
+
+274
+00:16:46,500 --> 00:16:49,500
+And this is just basically an interface, right?
+
+275
+00:16:49,500 --> 00:16:51,500
+So we're not saying what are we actually computing in there?
+
+276
+00:16:51,500 --> 00:16:52,500
+We'll be, we'll do something.
+
+277
+00:16:52,500 --> 00:16:55,500
+And it really depends on the implementation on the actual
+
+278
+00:16:55,500 --> 00:16:56,500
+architecture of this RNNs.
+
+279
+00:16:57,500 --> 00:17:01,500
+So we're specified at R later, but conceptually we're just taking current
+
+280
+00:17:01,500 --> 00:17:04,500
+word and the previous state and produce the next state and go on.
+
+281
+00:17:05,500 --> 00:17:05,500
+Okay.
+
+282
+00:17:06,500 --> 00:17:07,500
+Everybody's with me.
+
+283
+00:17:08,500 --> 00:17:09,500
+Sounds great.
+
+284
+00:17:11,500 --> 00:17:15,500
+Also, so we have, we have the next state, but there's still something missing
+
+285
+00:17:15,500 --> 00:17:16,500
+because we want to output something here, right?
+
+286
+00:17:16,500 --> 00:17:18,500
+So this is the output of each step.
+
+287
+00:17:18,500 --> 00:17:24,500
+So to compute the current outputs, again, we have, what do we have again?
+
+288
+00:17:24,500 --> 00:17:25,500
+Each step we have the XI.
+
+289
+00:17:25,500 --> 00:17:26,500
+So this is the inputs word.
+
+290
+00:17:27,500 --> 00:17:29,500
+We have the previous state as I minus one.
+
+291
+00:17:29,500 --> 00:17:31,500
+So this is the same as in the previous slide.
+
+292
+00:17:32,500 --> 00:17:35,500
+We already computed the next stage.
+
+293
+00:17:36,500 --> 00:17:43,500
+Oh, and now the output will be basically taking the next state and running
+
+294
+00:17:43,500 --> 00:17:45,500
+some functional on the, on, on top of that.
+
+295
+00:17:45,500 --> 00:17:52,500
+So again, here we have say X one it's the, Oh, this is the word.
+
+296
+00:17:53,500 --> 00:17:54,500
+Oh, this is a bad example.
+
+297
+00:17:54,500 --> 00:17:54,500
+I'm sorry.
+
+298
+00:17:55,500 --> 00:17:57,500
+Let's make it generic.
+
+299
+00:17:57,500 --> 00:18:03,500
+So we have XI it's coming into our RNN thing here.
+
+300
+00:18:04,500 --> 00:18:12,500
+We have the previous state as I minus one, and this is spitting out as I, and
+
+301
+00:18:12,500 --> 00:18:17,500
+what we're saying here, we're taking this, this new hidden state and run it
+
+302
+00:18:17,500 --> 00:18:23,500
+through the old function to compute the, the outputs.
+
+303
+00:18:23,500 --> 00:18:23,500
+Okay.
+
+304
+00:18:25,500 --> 00:18:26,500
+Some, some sort of transformation here.
+
+305
+00:18:26,500 --> 00:18:30,500
+What exactly all could be with the final layer as well as with the R function.
+
+306
+00:18:30,500 --> 00:18:31,500
+So we have two functions.
+
+307
+00:18:31,500 --> 00:18:36,500
+One is taking the previous state and input and code computes the output
+
+308
+00:18:36,500 --> 00:18:41,500
+or the next state, and the second function is taking the current state
+
+309
+00:18:41,500 --> 00:18:42,500
+and producing some output value.
+
+310
+00:18:43,500 --> 00:18:44,500
+Okay.
+
+311
+00:18:44,500 --> 00:18:47,500
+So two functions, any questions?
+
+312
+00:18:52,500 --> 00:18:53,500
+Good.
+
+313
+00:18:53,500 --> 00:18:58,500
+So to sum up at each step of these, of the sequence of the inputs, we have
+
+314
+00:18:58,500 --> 00:19:03,500
+the current input XI and the previous state, and we compute two things.
+
+315
+00:19:03,500 --> 00:19:08,500
+So this is the current state using this R function, which takes into account
+
+316
+00:19:08,500 --> 00:19:11,500
+the previous state and the input and the output.
+
+317
+00:19:12,500 --> 00:19:18,500
+What is important here that these functions are an O they can have
+
+318
+00:19:18,500 --> 00:19:19,500
+different parameters as well.
+
+319
+00:19:19,500 --> 00:19:21,500
+Obviously they will be parameters of the same value.
+
+320
+00:19:21,500 --> 00:19:24,500
+And these parameters and the functions will be the same for each of the
+
+321
+00:19:24,500 --> 00:19:27,500
+positions, because for each of the position, we will, we will have the
+
+322
+00:19:27,500 --> 00:19:32,500
+same function R and same function O taking our input and previous
+
+323
+00:19:32,500 --> 00:19:33,500
+state and spitting out something.
+
+324
+00:19:35,500 --> 00:19:37,500
+And these things have parameters.
+
+325
+00:19:37,500 --> 00:19:40,500
+The parameters will remain the same all over the whole sequence.
+
+326
+00:19:41,500 --> 00:19:42,500
+So they will be like shared parameters.
+
+327
+00:19:44,500 --> 00:19:46,500
+So here's the summary of that RNN thing.
+
+328
+00:19:46,500 --> 00:19:50,500
+So yeah, basically repeating was written here, but this is a simple
+
+329
+00:19:50,500 --> 00:19:52,500
+kind of recurrent definition of RNN.
+
+330
+00:19:53,500 --> 00:20:00,500
+I think it's time for some visualization of this abstract RNN, which is, yeah,
+
+331
+00:20:00,500 --> 00:20:03,500
+you find in the literature basically most of the time.
+
+332
+00:20:03,500 --> 00:20:06,500
+So again, this is the input we have at point Y.
+
+333
+00:20:07,500 --> 00:20:08,500
+This is the previous.
+
+334
+00:20:08,500 --> 00:20:10,500
+So this is a, this is a constant.
+
+335
+00:20:11,500 --> 00:20:13,500
+We have the previous state.
+
+336
+00:20:13,500 --> 00:20:14,500
+So this is some sort of vector, right?
+
+337
+00:20:14,500 --> 00:20:17,500
+Because the states is a, is a vector.
+
+338
+00:20:19,500 --> 00:20:24,500
+And there are two functions, R and O, which are producing SI and YI.
+
+339
+00:20:24,500 --> 00:20:26,500
+So the output and the SI's, right?
+
+340
+00:20:27,500 --> 00:20:32,500
+And what is important here that if there's any parameters here, which we
+
+341
+00:20:32,500 --> 00:20:37,500
+denote by this very fancy word theta, sorry, letter theta, the parameters
+
+342
+00:20:37,500 --> 00:20:40,500
+will be shared for all, all steps.
+
+343
+00:20:40,500 --> 00:20:42,500
+So at each step, the parameter parameters will be the same.
+
+344
+00:20:44,500 --> 00:20:45,500
+What is this thing?
+
+345
+00:20:46,500 --> 00:20:48,500
+Why is, why is there this an arrow?
+
+346
+00:20:55,500 --> 00:20:56,500
+Yeah, because the recursion, exactly.
+
+347
+00:20:56,500 --> 00:20:59,500
+Because the next step will be, I mean, this step will be previous
+
+348
+00:20:59,500 --> 00:21:00,500
+step of the next one.
+
+349
+00:21:00,500 --> 00:21:01,500
+Okay.
+
+350
+00:21:01,500 --> 00:21:01,500
+Yeah.
+
+351
+00:21:01,500 --> 00:21:02,500
+That's not surprising.
+
+352
+00:21:02,500 --> 00:21:06,500
+So this is the, this is the, this is the, this is the, this is the
+
+353
+00:21:06,500 --> 00:21:07,500
+that's not surprise.
+
+354
+00:21:07,500 --> 00:21:08,500
+Yes.
+
+355
+00:21:08,500 --> 00:21:14,500
+But why do we, why do we need the Y, YI?
+
+356
+00:21:14,500 --> 00:21:17,500
+Because we want to, we want to predict something.
+
+357
+00:21:17,500 --> 00:21:20,500
+We want to transform the state.
+
+358
+00:21:20,500 --> 00:21:23,500
+So maybe the state could be the same as the output, right?
+
+359
+00:21:23,500 --> 00:21:26,500
+So this could be same as this, but maybe not.
+
+360
+00:21:26,500 --> 00:21:30,500
+Maybe you want to keep some information, but output something else.
+
+361
+00:21:31,500 --> 00:21:34,500
+We will see later, we will see that later because you maybe want to keep
+
+362
+00:21:34,500 --> 00:21:37,500
+like a large memory, but just output like a vector for predictions.
+
+363
+00:21:38,500 --> 00:21:39,500
+And they will be different.
+
+364
+00:21:40,500 --> 00:21:41,500
+Sometimes they're the same.
+
+365
+00:21:41,500 --> 00:21:42,500
+That's yeah.
+
+366
+00:21:42,500 --> 00:21:42,500
+That's a great point.
+
+367
+00:21:44,500 --> 00:21:45,500
+Any other question?
+
+368
+00:21:47,500 --> 00:21:47,500
+Yeah.
+
+369
+00:21:47,500 --> 00:21:51,500
+So this, this is like, you know, there's this loop and it's kind of ugly.
+
+370
+00:21:52,500 --> 00:21:56,500
+If you want to implement the thing, how, how do you, how do you implement this
+
+371
+00:21:56,500 --> 00:21:57,500
+thing?
+
+372
+00:21:57,500 --> 00:22:02,500
+Because we're, we're talking about, so what is our big one idea of doing NLP,
+
+373
+00:22:02,500 --> 00:22:04,500
+doing deep learning and NLP?
+
+374
+00:22:04,500 --> 00:22:06,500
+What, what, what is it?
+
+375
+00:22:06,500 --> 00:22:10,500
+We have one core idea of doing deep neural networks where we compute all this
+
+376
+00:22:10,500 --> 00:22:12,500
+bloody thing, gradients and stuff like that.
+
+377
+00:22:13,500 --> 00:22:13,500
+What is that?
+
+378
+00:22:14,500 --> 00:22:14,500
+What was that?
+
+379
+00:22:15,500 --> 00:22:18,500
+One abstraction, like the most powerful abstraction we're actually
+
+380
+00:22:18,500 --> 00:22:20,500
+working all the time with, underlying.
+
+381
+00:22:23,500 --> 00:22:25,500
+The perceptron is an architecture sort of.
+
+382
+00:22:25,500 --> 00:22:25,500
+Yeah.
+
+383
+00:22:25,500 --> 00:22:29,500
+I mean, it's a network, you have layers, but even like deeper, like the
+
+384
+00:22:29,500 --> 00:22:32,500
+mathematical kind of concept there, or it's not even mathematical, it's
+
+385
+00:22:32,500 --> 00:22:33,500
+computer science.
+
+386
+00:22:33,500 --> 00:22:33,500
+Yes.
+
+387
+00:22:34,500 --> 00:22:36,500
+You were first, I guess.
+
+388
+00:22:36,500 --> 00:22:36,500
+I don't know.
+
+389
+00:22:38,500 --> 00:22:38,500
+Yeah.
+
+390
+00:22:38,500 --> 00:22:40,500
+And vector propagation running on something.
+
+391
+00:22:40,500 --> 00:22:42,500
+So there is some underlying structure.
+
+392
+00:22:43,500 --> 00:22:44,500
+That's the computational graph.
+
+393
+00:22:44,500 --> 00:22:47,500
+The computational graph is where you run your forward propagation,
+
+394
+00:22:47,500 --> 00:22:49,500
+deprecation and stuff like that.
+
+395
+00:22:49,500 --> 00:22:52,500
+And everything, everything should be competition graph, but here.
+
+396
+00:22:53,500 --> 00:22:54,500
+Like I'm using the same color.
+
+397
+00:22:54,500 --> 00:22:55,500
+So over and over.
+
+398
+00:22:55,500 --> 00:22:59,500
+So these are trainable parameters or trainable weights, like the green
+
+399
+00:22:59,500 --> 00:22:59,500
+lights, right?
+
+400
+00:22:59,500 --> 00:23:01,500
+The green, green things are trainable.
+
+401
+00:23:02,500 --> 00:23:03,500
+This is constant.
+
+402
+00:23:05,500 --> 00:23:09,500
+And yeah, I'm using this as a sort of like intermediate gray things.
+
+403
+00:23:10,500 --> 00:23:13,500
+Like this is a differential function.
+
+404
+00:23:17,500 --> 00:23:18,500
+Yeah.
+
+405
+00:23:18,500 --> 00:23:18,500
+Right.
+
+406
+00:23:18,500 --> 00:23:21,500
+So computational graph, there is computational graph under
+
+407
+00:23:21,500 --> 00:23:22,500
+everything we're talking about.
+
+408
+00:23:23,500 --> 00:23:26,500
+How do you compute this kind of loop in computational graph?
+
+409
+00:23:30,500 --> 00:23:30,500
+Yes.
+
+410
+00:23:43,500 --> 00:23:43,500
+Oh, okay.
+
+411
+00:23:43,500 --> 00:23:47,500
+So you would say you would, you wouldn't have a loop in your computational graph.
+
+412
+00:23:47,500 --> 00:23:50,500
+So you would, you wouldn't wire it as a loop because how can you
+
+413
+00:23:50,500 --> 00:23:51,500
+do back propagation on a loop?
+
+414
+00:23:52,500 --> 00:23:52,500
+Yeah.
+
+415
+00:23:52,500 --> 00:23:54,500
+You can't obviously.
+
+416
+00:23:54,500 --> 00:23:58,500
+So you would say let's have for each step, I'm going to say, let's
+
+417
+00:23:58,500 --> 00:24:00,500
+have for each step, one of those.
+
+418
+00:24:01,500 --> 00:24:02,500
+Okay.
+
+419
+00:24:02,500 --> 00:24:02,500
+Yeah.
+
+420
+00:24:02,500 --> 00:24:03,500
+That's a great idea.
+
+421
+00:24:03,500 --> 00:24:04,500
+It's actually how are we doing them?
+
+422
+00:24:04,500 --> 00:24:04,500
+Exactly.
+
+423
+00:24:05,500 --> 00:24:06,500
+We're calling it unrolling.
+
+424
+00:24:07,500 --> 00:24:12,500
+So we take this, we take this abstract thing and then for each
+
+425
+00:24:12,500 --> 00:24:14,500
+position, one, two, three, or four.
+
+426
+00:24:14,500 --> 00:24:17,500
+So here I have N equals to four.
+
+427
+00:24:17,500 --> 00:24:23,500
+I'm basically making sure that for each input, there is this kind of the same
+
+428
+00:24:23,500 --> 00:24:27,500
+thing and the same function, R and O, R and O, R and O, R and O, right?
+
+429
+00:24:27,500 --> 00:24:32,500
+So we're coming from this one with the loop and unrolling without a loop.
+
+430
+00:24:32,500 --> 00:24:33,500
+This is a computational graph.
+
+431
+00:24:33,500 --> 00:24:35,500
+I could run the propagation on.
+
+432
+00:24:36,500 --> 00:24:36,500
+Right.
+
+433
+00:24:36,500 --> 00:24:41,500
+Because yeah, as usual, you go from, you know, the forward pass and somewhere
+
+434
+00:24:41,500 --> 00:24:44,500
+here, you get back with the losses and gradients and all good.
+
+435
+00:24:44,500 --> 00:24:45,500
+You can do that.
+
+436
+00:24:47,500 --> 00:24:48,500
+Here's the interesting part.
+
+437
+00:24:48,500 --> 00:24:49,500
+I mean, I really want to highlight that.
+
+438
+00:24:50,500 --> 00:24:56,500
+That the parameters of these R and O function, if there's any, they are
+
+439
+00:24:56,500 --> 00:24:58,500
+shared and are the same for all the positions.
+
+440
+00:24:59,500 --> 00:24:59,500
+So this is important.
+
+441
+00:24:59,500 --> 00:25:02,500
+We're sharing parameters, right?
+
+442
+00:25:02,500 --> 00:25:03,500
+We're sharing parameters.
+
+443
+00:25:03,500 --> 00:25:07,500
+So each of these units or how you want to call it, like a recursive
+
+444
+00:25:07,500 --> 00:25:09,500
+kind of functions are the same.
+
+445
+00:25:10,500 --> 00:25:11,500
+If we train them.
+
+446
+00:25:11,500 --> 00:25:15,500
+So if you, can you train this with, you know, having paid off
+
+447
+00:25:15,500 --> 00:25:16,500
+like to all these things?
+
+448
+00:25:16,500 --> 00:25:17,500
+Can you train that?
+
+449
+00:25:19,500 --> 00:25:22,500
+Could you, could you train this network or do you need some special hacks?
+
+450
+00:25:23,500 --> 00:25:30,500
+Yeah, I think we need some methods to combine the training
+
+451
+00:25:30,500 --> 00:25:34,500
+that we take for all the steps.
+
+452
+00:25:35,500 --> 00:25:35,500
+Okay.
+
+453
+00:25:35,500 --> 00:25:37,500
+What, what could, what could that be?
+
+454
+00:25:39,500 --> 00:25:41,500
+I think there's even fancy name for that.
+
+455
+00:25:42,500 --> 00:25:44,500
+And I think we had it before.
+
+456
+00:25:44,500 --> 00:25:49,500
+Even I, even I can even claim like we can do it right away with what we, what we know.
+
+457
+00:25:50,500 --> 00:25:56,500
+So this is going to be a multivariate chain rule because you're going to
+
+458
+00:25:56,500 --> 00:25:58,500
+sum up all the gradients here.
+
+459
+00:25:58,500 --> 00:26:01,500
+And we had it already in a, you know, we had the share parameters in work
+
+460
+00:26:01,500 --> 00:26:05,500
+to back or in, in word embeddings where he had just one, a matrix, which was
+
+461
+00:26:05,500 --> 00:26:08,500
+large and kind of each of the embeddings was pointing there.
+
+462
+00:26:08,500 --> 00:26:09,500
+We run it the same way.
+
+463
+00:26:09,500 --> 00:26:11,500
+This there's no different basically.
+
+464
+00:26:11,500 --> 00:26:11,500
+Right.
+
+465
+00:26:11,500 --> 00:26:11,500
+Yeah.
+
+466
+00:26:11,500 --> 00:26:12,500
+I mean, you were right.
+
+467
+00:26:12,500 --> 00:26:16,500
+So we would, we might need to tackle it differently, but we don't have to,
+
+468
+00:26:16,500 --> 00:26:18,500
+because this is a graph we can work with.
+
+469
+00:26:18,500 --> 00:26:20,500
+We can absolutely run stochastic gradient.
+
+470
+00:26:20,500 --> 00:26:24,500
+And also, sorry, we can absolutely run a back propagation on this graph and it
+
+471
+00:26:24,500 --> 00:26:28,500
+will work because we have, you know, chain of rule chain for multivariables
+
+472
+00:26:28,500 --> 00:26:30,500
+and plus and stuff like that from calculus.
+
+473
+00:26:31,500 --> 00:26:32,500
+So this is easy to train.
+
+474
+00:26:32,500 --> 00:26:37,500
+I mean, basically once you, yeah, this is hard to work with the recursion, but
+
+475
+00:26:37,500 --> 00:26:44,500
+once you unroll it, you can just run your whatever back propagation on that and
+
+476
+00:26:44,500 --> 00:26:47,500
+train all the parameters you want to train, because there is nothing special about it.
+
+477
+00:26:47,500 --> 00:26:52,500
+So the input still didn't have, for example, any role on the Y1?
+
+478
+00:26:52,500 --> 00:26:52,500
+No.
+
+479
+00:26:52,500 --> 00:26:52,500
+No.
+
+480
+00:26:52,500 --> 00:26:52,500
+Okay.
+
+481
+00:26:52,500 --> 00:26:53,500
+That's a great point.
+
+482
+00:26:53,500 --> 00:27:05,500
+So the question was that the X2 has no role in the Y1.
+
+483
+00:27:05,500 --> 00:27:07,500
+So we're doing left to right.
+
+484
+00:27:07,500 --> 00:27:09,500
+And maybe it's not a good thing.
+
+485
+00:27:09,500 --> 00:27:10,500
+Maybe it's a good thing.
+
+486
+00:27:10,500 --> 00:27:15,500
+So what is the advantage of doing left to right for systing in language?
+
+487
+00:27:16,500 --> 00:27:17,500
+We're left to right.
+
+488
+00:27:17,500 --> 00:27:18,500
+Maybe we think left to right.
+
+489
+00:27:18,500 --> 00:27:20,500
+Time flies left to right.
+
+490
+00:27:20,500 --> 00:27:22,500
+We're thinking we're using the past for creating the future.
+
+491
+00:27:22,500 --> 00:27:24,500
+Maybe this is good.
+
+492
+00:27:24,500 --> 00:27:26,500
+What is the disadvantage?
+
+493
+00:27:26,500 --> 00:27:31,500
+You don't capture the whole context because there could be interest, because
+
+494
+00:27:31,500 --> 00:27:36,500
+for this prediction, maybe if you're running, I don't know, thing, thinking
+
+495
+00:27:36,500 --> 00:27:39,500
+of a task, like part of speech tech or entity recognition, okay.
+
+496
+00:27:39,500 --> 00:27:41,500
+So you don't capture the whole context.
+
+497
+00:27:41,500 --> 00:27:44,500
+I don't know, thinking of a task, like part of speech tech or entity
+
+498
+00:27:44,500 --> 00:27:45,500
+recognition, okay.
+
+499
+00:27:45,500 --> 00:27:47,500
+Maybe entity recognition.
+
+500
+00:27:47,500 --> 00:27:51,500
+And here you still don't know all the information from the rest of the
+
+501
+00:27:51,500 --> 00:27:55,500
+sentence because there's some long-range dependency.
+
+502
+00:27:55,500 --> 00:28:01,500
+And maybe this, maybe recognition is the best example, but maybe parsing.
+
+503
+00:28:01,500 --> 00:28:04,500
+I mean, something very, you know, syntax, something very strange where
+
+504
+00:28:04,500 --> 00:28:06,500
+you need a full sentence.
+
+505
+00:28:07,500 --> 00:28:12,500
+So yeah, then you may think like, oh, maybe I can do something more
+
+506
+00:28:12,500 --> 00:28:13,500
+fancier.
+
+507
+00:28:13,500 --> 00:28:14,500
+And we'll do that.
+
+508
+00:28:14,500 --> 00:28:16,500
+I'll come to that.
+
+509
+00:28:16,500 --> 00:28:20,500
+This is the simplest left to right, but we might have something more
+
+510
+00:28:20,500 --> 00:28:21,500
+complicated.
+
+511
+00:28:21,500 --> 00:28:22,500
+Okay.
+
+512
+00:28:22,500 --> 00:28:25,500
+Any other questions?
+
+513
+00:28:25,500 --> 00:28:26,500
+Okay, great.
+
+514
+00:28:26,500 --> 00:28:28,500
+So this is our computational graph.
+
+515
+00:28:28,500 --> 00:28:31,500
+We can run left to right, find a frequent thing, and we can train
+
+516
+00:28:31,500 --> 00:28:32,500
+parameters.
+
+517
+00:28:32,500 --> 00:28:34,500
+We still don't know what is in R and O.
+
+518
+00:28:34,500 --> 00:28:35,500
+So we'll come to that.
+
+519
+00:28:35,500 --> 00:28:38,500
+So what can we actually do with such a network?
+
+520
+00:28:38,500 --> 00:28:39,500
+Right?
+
+521
+00:28:39,500 --> 00:28:41,500
+So what could be the task?
+
+522
+00:28:41,500 --> 00:28:44,500
+So we have conceptually two things we can do.
+
+523
+00:28:44,500 --> 00:28:49,500
+And the first one is that we have this RNN as an acceptor on
+
+524
+00:28:49,500 --> 00:28:50,500
+encoder.
+
+525
+00:28:50,500 --> 00:28:53,500
+So basically here we have our graph again.
+
+526
+00:28:53,500 --> 00:28:57,500
+And we run all these inputs and, you know, have this final output
+
+527
+00:28:57,500 --> 00:28:58,500
+here.
+
+528
+00:28:58,500 --> 00:29:01,500
+So at the last step, we have this output.
+
+529
+00:29:01,500 --> 00:29:06,500
+Which we plug into either softmax, if this has number of classes,
+
+530
+00:29:06,500 --> 00:29:10,500
+is why for the output vectors have number of classes.
+
+531
+00:29:10,500 --> 00:29:14,500
+We might run softmax on top of that to get probability distribution
+
+532
+00:29:14,500 --> 00:29:18,500
+and then maybe predict a thing if this is multiclass classification.
+
+533
+00:29:18,500 --> 00:29:19,500
+Right?
+
+534
+00:29:19,500 --> 00:29:23,500
+Or we can run it through much deeper whatever we want.
+
+535
+00:29:23,500 --> 00:29:27,500
+Like plug it into maybe another network or some other parts, MLP,
+
+536
+00:29:27,500 --> 00:29:28,500
+whatever.
+
+537
+00:29:28,500 --> 00:29:33,500
+The point is that the loss for all these, well, all these parameters,
+
+538
+00:29:33,500 --> 00:29:37,500
+but basically the loss which gets back propagated through all the
+
+539
+00:29:37,500 --> 00:29:41,500
+gradients back to the beginning comes for only from the last output
+
+540
+00:29:41,500 --> 00:29:42,500
+here.
+
+541
+00:29:42,500 --> 00:29:44,500
+So this is what matters.
+
+542
+00:29:44,500 --> 00:29:48,500
+I mean, this kind of representation, what's coming out of here,
+
+543
+00:29:48,500 --> 00:29:51,500
+takes them, you know, has any value basically.
+
+544
+00:29:51,500 --> 00:29:54,500
+And all these outputs are actually ignored.
+
+545
+00:29:55,500 --> 00:29:58,500
+We don't care what's coming out of here.
+
+546
+00:29:58,500 --> 00:30:02,500
+Because we only care about, for example, here, encoding a sentence
+
+547
+00:30:02,500 --> 00:30:06,500
+into a vector which carries the full sentiment of the sentence,
+
+548
+00:30:06,500 --> 00:30:10,500
+which we can use for sentiment, basically binary prediction of
+
+549
+00:30:10,500 --> 00:30:11,500
+sentiment.
+
+550
+00:30:11,500 --> 00:30:12,500
+Right?
+
+551
+00:30:12,500 --> 00:30:16,500
+So we want to encode the whole sequence into one vector.
+
+552
+00:30:16,500 --> 00:30:19,500
+And then run something on the vector.
+
+553
+00:30:19,500 --> 00:30:22,500
+It's not different from continuous back of words.
+
+554
+00:30:23,500 --> 00:30:27,500
+But for that, we kind of, you know, took each word's embeddings and
+
+555
+00:30:27,500 --> 00:30:28,500
+made an average.
+
+556
+00:30:28,500 --> 00:30:30,500
+And that was our representation.
+
+557
+00:30:30,500 --> 00:30:35,500
+Here, it can go much simpler because there is an ordering of these
+
+558
+00:30:35,500 --> 00:30:36,500
+things.
+
+559
+00:30:36,500 --> 00:30:37,500
+Right?
+
+560
+00:30:37,500 --> 00:30:41,500
+It matters which word comes first and which comes second.
+
+561
+00:30:41,500 --> 00:30:43,500
+But the output will be the same.
+
+562
+00:30:43,500 --> 00:30:47,500
+We have the vector representation of the whole input, and we can
+
+563
+00:30:47,500 --> 00:30:49,500
+run it for some task.
+
+564
+00:30:49,500 --> 00:30:54,500
+And the last year will be back proclaimed through the last point,
+
+565
+00:30:54,500 --> 00:30:56,500
+through the whole network.
+
+566
+00:30:56,500 --> 00:30:57,500
+Okay?
+
+567
+00:30:57,500 --> 00:31:02,500
+Any questions?
+
+568
+00:31:02,500 --> 00:31:04,500
+Great.
+
+569
+00:31:04,500 --> 00:31:06,500
+So this is one example.
+
+570
+00:31:06,500 --> 00:31:11,500
+The other, we can run RMMs as a so-called transducer, which is
+
+571
+00:31:11,500 --> 00:31:16,500
+super fancy for, I don't know, what's like, where it's coming from,
+
+572
+00:31:16,500 --> 00:31:19,500
+finite state machines, maybe, finite state automata?
+
+573
+00:31:19,500 --> 00:31:21,500
+I don't know.
+
+574
+00:31:21,500 --> 00:31:23,500
+But anyway, the idea is very simple.
+
+575
+00:31:23,500 --> 00:31:27,500
+So in the previous case, we had the full input going through the
+
+576
+00:31:27,500 --> 00:31:31,500
+network, and we had the last output, where we had a loss.
+
+577
+00:31:31,500 --> 00:31:36,500
+But now, we're actually doing something called a sequence tagging,
+
+578
+00:31:36,500 --> 00:31:38,500
+or this is a task.
+
+579
+00:31:38,500 --> 00:31:42,500
+Typically, sequence tagging is done by this sort of architectures
+
+580
+00:31:42,500 --> 00:31:47,500
+where we, at each of the positions, we're spreading out vector,
+
+581
+00:31:47,500 --> 00:31:49,500
+right?
+
+582
+00:31:49,500 --> 00:31:53,500
+And then, we have a supervised signal for each of these position
+
+583
+00:31:53,500 --> 00:31:55,500
+vectors.
+
+584
+00:31:55,500 --> 00:32:03,500
+So what could be a task that we can model with this architecture?
+
+585
+00:32:03,500 --> 00:32:07,500
+What can you model with such an architecture, where on each input
+
+586
+00:32:07,500 --> 00:32:09,500
+position, you have some output?
+
+587
+00:32:09,500 --> 00:32:11,500
+What could such a task be?
+
+588
+00:32:11,500 --> 00:32:14,500
+I think we had actually one in the very beginning, in the first
+
+589
+00:32:14,500 --> 00:32:16,500
+lecture, yes.
+
+590
+00:32:16,500 --> 00:32:20,500
+It could be part of speech tagging, exactly, because then for each
+
+591
+00:32:20,500 --> 00:32:30,500
+word here, like the cat said on and so on, we have the labels.
+
+592
+00:32:30,500 --> 00:32:33,500
+So here, it could be determiner.
+
+593
+00:32:33,500 --> 00:32:35,500
+This could be noun.
+
+594
+00:32:35,500 --> 00:32:37,500
+This could be verb.
+
+595
+00:32:37,500 --> 00:32:40,500
+And this could be so on, right?
+
+596
+00:32:40,500 --> 00:32:44,500
+So we would basically, for each word, we would spit maybe one of the
+
+597
+00:32:44,500 --> 00:32:46,500
+classes, right?
+
+598
+00:32:46,500 --> 00:32:48,500
+Part of speech tagging.
+
+599
+00:32:48,500 --> 00:32:51,500
+We didn't talk about part of speech tagging, to be honest, because
+
+600
+00:32:51,500 --> 00:32:53,500
+it's just too low level.
+
+601
+00:32:53,500 --> 00:32:56,500
+But we had something else where we had a sequence tagging problem.
+
+602
+00:32:56,500 --> 00:32:58,500
+What was that?
+
+603
+00:32:58,500 --> 00:33:03,500
+Where you spit out one of several classes for each token.
+
+604
+00:33:03,500 --> 00:33:06,500
+Anyone remembers that?
+
+605
+00:33:06,500 --> 00:33:11,500
+It also had a fancy name.
+
+606
+00:33:11,500 --> 00:33:13,500
+Exactly.
+
+607
+00:33:13,500 --> 00:33:15,500
+Name and recognition.
+
+608
+00:33:15,500 --> 00:33:18,500
+So for each word, we would have, okay, so the cat said there are some
+
+609
+00:33:18,500 --> 00:33:24,500
+entities, but maybe...
+
+610
+00:33:24,500 --> 00:33:31,500
+John Snow was killed?
+
+611
+00:33:31,500 --> 00:33:33,500
+Was it legal?
+
+612
+00:33:33,500 --> 00:33:35,500
+I don't know.
+
+613
+00:33:35,500 --> 00:33:37,500
+I don't know.
+
+614
+00:33:37,500 --> 00:33:39,500
+That's a good question.
+
+615
+00:33:39,500 --> 00:33:41,500
+Okay, something, right?
+
+616
+00:33:41,500 --> 00:33:44,500
+And here, the labels would be, sorry, the labels could be depending on
+
+617
+00:33:44,500 --> 00:33:48,500
+your text set, how you define it, but I would say this is beginning of
+
+618
+00:33:48,500 --> 00:33:53,500
+person, this is inside of person, and this is O, and this is maybe also
+
+619
+00:33:53,500 --> 00:33:55,500
+O, right?
+
+620
+00:33:55,500 --> 00:33:59,500
+So we're spitting a tag for each of the token sequences.
+
+621
+00:33:59,500 --> 00:34:03,500
+And this is exactly what you're going to model with record neural
+
+622
+00:34:03,500 --> 00:34:06,500
+networks, as a transducer where you output or you have a loss on each
+
+623
+00:34:06,500 --> 00:34:08,500
+of that.
+
+624
+00:34:08,500 --> 00:34:10,500
+So what is the loss here?
+
+625
+00:34:10,500 --> 00:34:15,500
+Yes, I mean, this is a one-hot encoding label.
+
+626
+00:34:15,500 --> 00:34:17,500
+And this is a vector.
+
+627
+00:34:17,500 --> 00:34:20,500
+And you have, for example, okay, so what is a loss?
+
+628
+00:34:20,500 --> 00:34:22,500
+Typical loss.
+
+629
+00:34:22,500 --> 00:34:28,500
+I mean, the only loss you should remember from declaring for an LP.
+
+630
+00:34:28,500 --> 00:34:30,500
+Crossentropilos.
+
+631
+00:34:30,500 --> 00:34:32,500
+Thank you.
+
+632
+00:34:33,500 --> 00:34:35,500
+Crossentropilos.
+
+633
+00:34:35,500 --> 00:34:39,500
+And the question is, okay, so if we don't have this sum over here, so we
+
+634
+00:34:39,500 --> 00:34:45,500
+have a function, computational graph, with multiple outputs, but we
+
+635
+00:34:45,500 --> 00:34:50,500
+cannot run minimizing a function on multiple outputs, right?
+
+636
+00:34:50,500 --> 00:34:54,500
+So we need to have one output only, which we want to minimize, the loss.
+
+637
+00:34:54,500 --> 00:34:57,500
+There's only single loss we want to minimize.
+
+638
+00:34:57,500 --> 00:35:02,500
+So that's why we typically take all these local sort of losses and plug
+
+639
+00:35:02,500 --> 00:35:04,500
+into a sum.
+
+640
+00:35:04,500 --> 00:35:08,500
+So this is the final loss.
+
+641
+00:35:08,500 --> 00:35:13,500
+So it's sum of these crossentropils for each of the position.
+
+642
+00:35:13,500 --> 00:35:16,500
+Does that make any sense?
+
+643
+00:35:16,500 --> 00:35:18,500
+Why are we doing this?
+
+644
+00:35:18,500 --> 00:35:23,500
+Because we can only minimize function with one output, right?
+
+645
+00:35:23,500 --> 00:35:28,500
+We have billions, gazillions, dimensions, but we only minimize one value.
+
+646
+00:35:28,500 --> 00:35:32,500
+Because I know how to make a compare two values and say which one is
+
+647
+00:35:32,500 --> 00:35:34,500
+smaller than the other.
+
+648
+00:35:34,500 --> 00:35:36,500
+I can't do it with two values, right?
+
+649
+00:35:36,500 --> 00:35:38,500
+So we just need one.
+
+650
+00:35:38,500 --> 00:35:40,500
+Okay?
+
+651
+00:35:40,500 --> 00:35:44,500
+Any questions?
+
+652
+00:35:44,500 --> 00:35:46,500
+Great.
+
+653
+00:35:46,500 --> 00:35:48,500
+Okay.
+
+654
+00:35:48,500 --> 00:35:50,500
+So we have this.
+
+655
+00:35:50,500 --> 00:35:53,500
+So we can do this either taking last state and then running classifier on
+
+656
+00:35:53,500 --> 00:35:57,500
+top of that or doing something very fancy or taking each input, sorry,
+
+657
+00:35:57,500 --> 00:36:00,500
+each position and running something fancy on top of it and just summing
+
+658
+00:36:00,500 --> 00:36:02,500
+up for the loss.
+
+659
+00:36:02,500 --> 00:36:04,500
+We can train this as well.
+
+660
+00:36:04,500 --> 00:36:06,500
+Yes, you have a question?
+
+661
+00:36:07,500 --> 00:36:09,500
+So what do you think?
+
+662
+00:36:09,500 --> 00:36:11,500
+I mean, how can you start backpropagating in the middle?
+
+663
+00:36:11,500 --> 00:36:13,500
+So what do you need to compute for the backpropagation?
+
+664
+00:36:13,500 --> 00:36:16,500
+What you're interested in?
+
+665
+00:36:16,500 --> 00:36:18,500
+Right.
+
+666
+00:36:18,500 --> 00:36:25,500
+So this would be your, let's call it E as an error.
+
+667
+00:36:25,500 --> 00:36:29,500
+And what you're interested in is a partial derivative of your error or
+
+668
+00:36:30,500 --> 00:36:34,500
+your loss with respect to all these parameters.
+
+669
+00:36:34,500 --> 00:36:36,500
+And so on.
+
+670
+00:36:36,500 --> 00:36:38,500
+Right?
+
+671
+00:36:38,500 --> 00:36:40,500
+This is what you want.
+
+672
+00:36:40,500 --> 00:36:42,500
+You're updating the parameters here.
+
+673
+00:36:42,500 --> 00:36:44,500
+And this is your final value.
+
+674
+00:36:44,500 --> 00:36:46,500
+This is like your output of the loss and you want to minimize this
+
+675
+00:36:46,500 --> 00:36:48,500
+function.
+
+676
+00:36:48,500 --> 00:36:50,500
+So you have to start from here.
+
+677
+00:36:50,500 --> 00:36:52,500
+I mean, well, you start from here.
+
+678
+00:36:52,500 --> 00:36:54,500
+You have to start from here.
+
+679
+00:36:54,500 --> 00:36:56,500
+So you have to start from here.
+
+680
+00:36:56,500 --> 00:36:58,500
+I mean, well, you're starting like the forward pass, you're starting
+
+681
+00:36:58,500 --> 00:37:00,500
+from the input values.
+
+682
+00:37:00,500 --> 00:37:02,500
+You kind of compute all these intermediate values.
+
+683
+00:37:02,500 --> 00:37:04,500
+And then you say, okay, this is my output.
+
+684
+00:37:04,500 --> 00:37:06,500
+And I'm starting with this part.
+
+685
+00:37:06,500 --> 00:37:08,500
+Partial derivative of E to E equals to 1.
+
+686
+00:37:08,500 --> 00:37:12,500
+And then I'm going to the children of this node and doing this local
+
+687
+00:37:12,500 --> 00:37:14,500
+derivative and so on.
+
+688
+00:37:14,500 --> 00:37:16,500
+Basically the very same stuff we did in the second lecture.
+
+689
+00:37:16,500 --> 00:37:20,500
+But you start from this single loss, like this error of E.
+
+690
+00:37:20,500 --> 00:37:22,500
+And then you start from here.
+
+691
+00:37:22,500 --> 00:37:24,500
+And then you start from here.
+
+692
+00:37:24,500 --> 00:37:26,500
+Basically the very same stuff we did in the second lecture.
+
+693
+00:37:26,500 --> 00:37:28,500
+But you start from this single loss, like this error of loss or how you
+
+694
+00:37:28,500 --> 00:37:30,500
+call it.
+
+695
+00:37:30,500 --> 00:37:32,500
+So you go from the beginning to the top and then here you're
+
+696
+00:37:32,500 --> 00:37:34,500
+appropriating.
+
+697
+00:37:34,500 --> 00:37:36,500
+Of course, I mean, the topology here of this network is kind of
+
+698
+00:37:36,500 --> 00:37:38,500
+complicated because, well, it's not.
+
+699
+00:37:38,500 --> 00:37:40,500
+It's only deep.
+
+700
+00:37:40,500 --> 00:37:42,500
+Basically it's a deep network.
+
+701
+00:37:42,500 --> 00:37:44,500
+But you can't do anything wrong.
+
+702
+00:37:44,500 --> 00:37:46,500
+I mean, if you apply the rules of, you know, computing from the last
+
+703
+00:37:46,500 --> 00:37:48,500
+node to the children and then back to the children and to the children
+
+704
+00:37:48,500 --> 00:37:50,500
+and to the children, you will finish with the full loop.
+
+705
+00:37:50,500 --> 00:37:52,500
+And if you apply the rules of computing from the last node to the
+
+706
+00:37:52,500 --> 00:37:54,500
+children, you will finish with the full gradient.
+
+707
+00:37:54,500 --> 00:37:56,500
+Does that make sense?
+
+708
+00:37:56,500 --> 00:37:58,500
+Okay, cool.
+
+709
+00:37:58,500 --> 00:38:00,500
+Any other questions?
+
+710
+00:38:00,500 --> 00:38:02,500
+So I'm coming back to your question actually here.
+
+711
+00:38:02,500 --> 00:38:06,500
+How to make it, you know, can we look into the future and use the
+
+712
+00:38:06,500 --> 00:38:08,500
+future for some current predictions?
+
+713
+00:38:08,500 --> 00:38:10,500
+Right?
+
+714
+00:38:10,500 --> 00:38:14,500
+So how would you, for example, what would it be like, so now you
+
+715
+00:38:14,500 --> 00:38:16,500
+know this network.
+
+716
+00:38:16,500 --> 00:38:18,500
+What would be like the most simple solution for this problem?
+
+717
+00:38:18,500 --> 00:38:22,500
+Where you say, yeah, for representing the sentence, I want to take
+
+718
+00:38:22,500 --> 00:38:24,500
+like left to right and right to left.
+
+719
+00:38:24,500 --> 00:38:26,500
+What could be like the most simple solution you could use?
+
+720
+00:38:26,500 --> 00:38:30,500
+You want to have a vector representing the whole sentence and this
+
+721
+00:38:30,500 --> 00:38:34,500
+vector should have the representation which is learned left to right
+
+722
+00:38:34,500 --> 00:38:36,500
+and right to left.
+
+723
+00:38:36,500 --> 00:38:38,500
+How could you solve it?
+
+724
+00:38:38,500 --> 00:38:40,500
+Running twice.
+
+725
+00:38:40,500 --> 00:38:42,500
+And then?
+
+726
+00:38:42,500 --> 00:38:44,500
+And then up.
+
+727
+00:38:44,500 --> 00:38:46,500
+Okay.
+
+728
+00:38:46,500 --> 00:38:48,500
+So you would like sum them up or something else?
+
+729
+00:38:48,500 --> 00:38:50,500
+Maybe the average.
+
+730
+00:38:50,500 --> 00:38:52,500
+Okay.
+
+731
+00:38:52,500 --> 00:38:54,500
+Yeah.
+
+732
+00:38:54,500 --> 00:38:56,500
+That's not really far away from what we would do.
+
+733
+00:38:56,500 --> 00:38:58,500
+So we say run one RNN from left to right.
+
+734
+00:38:58,500 --> 00:39:00,500
+We call this a forward.
+
+735
+00:39:00,500 --> 00:39:02,500
+And one, another RNN from right to left.
+
+736
+00:39:02,500 --> 00:39:04,500
+We call it a backward.
+
+737
+00:39:04,500 --> 00:39:06,500
+So this doesn't have to do anything with forward.
+
+738
+00:39:06,500 --> 00:39:08,500
+It's just a forward.
+
+739
+00:39:09,500 --> 00:39:11,500
+So we say run one RNN from left to right.
+
+740
+00:39:11,500 --> 00:39:13,500
+We call it a backward.
+
+741
+00:39:13,500 --> 00:39:15,500
+This doesn't have to do anything with forward propagation and backward
+
+742
+00:39:15,500 --> 00:39:17,500
+propagation.
+
+743
+00:39:17,500 --> 00:39:19,500
+Nothing at all.
+
+744
+00:39:19,500 --> 00:39:21,500
+It's just left to right and right to left.
+
+745
+00:39:21,500 --> 00:39:23,500
+These are false friends.
+
+746
+00:39:23,500 --> 00:39:25,500
+And then?
+
+747
+00:39:25,500 --> 00:39:27,500
+We take one vector from one direction and concatenate the vector from
+
+748
+00:39:27,500 --> 00:39:29,500
+the other direction.
+
+749
+00:39:29,500 --> 00:39:31,500
+So what does it mean?
+
+750
+00:39:31,500 --> 00:39:35,500
+If I have the set, I'm running one RNN like that.
+
+751
+00:39:36,500 --> 00:39:38,500
+And here comes one vector.
+
+752
+00:39:38,500 --> 00:39:48,500
+And then I'm running, let's say, one RNN from the right-hand side.
+
+753
+00:39:48,500 --> 00:39:50,500
+It's really hard to draw from the right-hand side.
+
+754
+00:39:50,500 --> 00:39:52,500
+And I'm getting another vector.
+
+755
+00:39:52,500 --> 00:39:56,500
+So let's call it YF like forward and YB as backward.
+
+756
+00:39:56,500 --> 00:40:02,500
+Then I'm going to take these two vectors and just concatenate.
+
+757
+00:40:02,500 --> 00:40:04,500
+That's it.
+
+758
+00:40:05,500 --> 00:40:07,500
+How can I create a loss?
+
+759
+00:40:07,500 --> 00:40:09,500
+Yeah, and the loss will be the same.
+
+760
+00:40:09,500 --> 00:40:11,500
+Basically, I would sum up the losses from one side and the other.
+
+761
+00:40:11,500 --> 00:40:13,500
+No, I don't have to sum up the losses.
+
+762
+00:40:13,500 --> 00:40:17,500
+Then I will run my classification on this node.
+
+763
+00:40:17,500 --> 00:40:20,500
+And everything will work out because it's just a computational graph.
+
+764
+00:40:20,500 --> 00:40:23,500
+So there will be nothing very special about this case.
+
+765
+00:40:23,500 --> 00:40:26,500
+Does that make sense?
+
+766
+00:40:26,500 --> 00:40:28,500
+Okay.
+
+767
+00:40:28,500 --> 00:40:30,500
+So basically we're saying we can look into the future for predicting
+
+768
+00:40:30,500 --> 00:40:32,500
+the prediction.
+
+769
+00:40:32,500 --> 00:40:34,500
+We can look into the future for predicting the present.
+
+770
+00:40:34,500 --> 00:40:36,500
+Yeah, fair enough.
+
+771
+00:40:36,500 --> 00:40:38,500
+We can do that.
+
+772
+00:40:38,500 --> 00:40:40,500
+We did it already with Word2Vec.
+
+773
+00:40:40,500 --> 00:40:42,500
+Okay.
+
+774
+00:40:42,500 --> 00:40:44,500
+So the big question now remains, what is happening inside this
+
+775
+00:40:44,500 --> 00:40:46,500
+RNN?
+
+776
+00:40:46,500 --> 00:40:48,500
+What are these functions doing that it could work like that?
+
+777
+00:40:48,500 --> 00:40:50,500
+Theoretically, we talk about the interface.
+
+778
+00:40:50,500 --> 00:40:52,500
+At each point, input in, previous state and some output and
+
+779
+00:40:52,500 --> 00:40:54,500
+something very fancy and next state.
+
+780
+00:40:54,500 --> 00:40:56,500
+Okay.
+
+781
+00:40:56,500 --> 00:40:58,500
+What is in there?
+
+782
+00:40:58,500 --> 00:41:02,500
+What could be the simplest network architecture?
+
+783
+00:41:02,500 --> 00:41:04,500
+We call it simple RNN.
+
+784
+00:41:04,500 --> 00:41:06,500
+I think it comes from the 1990s.
+
+785
+00:41:06,500 --> 00:41:16,500
+Is that here, excuse me, we have a, so for computing the next
+
+786
+00:41:16,500 --> 00:41:20,500
+state, SI from the previous state, SI minus one, and the current
+
+787
+00:41:20,500 --> 00:41:24,500
+input, we just say, okay, let's take the previous state and
+
+788
+00:41:24,500 --> 00:41:26,500
+multiply by some weights, some linear projection.
+
+789
+00:41:26,500 --> 00:41:30,500
+Take the input, also do some linear projection, add some, what
+
+790
+00:41:30,500 --> 00:41:32,500
+is this?
+
+791
+00:41:32,500 --> 00:41:34,500
+Bias.
+
+792
+00:41:34,500 --> 00:41:36,500
+We add some bias.
+
+793
+00:41:36,500 --> 00:41:40,500
+So this is just linear mapping from the previous state and the
+
+794
+00:41:40,500 --> 00:41:42,500
+current state.
+
+795
+00:41:42,500 --> 00:41:44,500
+And this is some nonlinear function.
+
+796
+00:41:44,500 --> 00:41:46,500
+Nothing more.
+
+797
+00:41:46,500 --> 00:41:50,500
+So just basically linear transformation and some nonlinear
+
+798
+00:41:50,500 --> 00:41:52,500
+transformation on top of that.
+
+799
+00:41:52,500 --> 00:41:54,500
+Okay.
+
+800
+00:41:54,500 --> 00:41:56,500
+Any questions?
+
+801
+00:41:56,500 --> 00:42:02,500
+So we're saying take the previous state, apply some linear
+
+802
+00:42:02,500 --> 00:42:06,500
+projection, take the current state, apply some linear projection
+
+803
+00:42:06,500 --> 00:42:10,500
+and sum them up and run it through some nonlinearity because
+
+804
+00:42:10,500 --> 00:42:14,500
+it's better to have nonlinearities because if everything is
+
+805
+00:42:14,500 --> 00:42:16,500
+linear, the rest is linear.
+
+806
+00:42:16,500 --> 00:42:18,500
+So the whole thing is linear.
+
+807
+00:42:18,500 --> 00:42:22,500
+So there's some typical nonlinearities like ReLU or TomH.
+
+808
+00:42:22,500 --> 00:42:26,500
+Then for the outputs, we're just basically saying, well, this is
+
+809
+00:42:26,500 --> 00:42:28,500
+the state.
+
+810
+00:42:28,500 --> 00:42:30,500
+So there's no fancy function.
+
+811
+00:42:30,500 --> 00:42:32,500
+We just say this is SI.
+
+812
+00:42:32,500 --> 00:42:34,500
+You were asking before why we need this.
+
+813
+00:42:34,500 --> 00:42:36,500
+Yeah.
+
+814
+00:42:36,500 --> 00:42:40,500
+So in the simplest case, we're just spitting out the state and
+
+815
+00:42:40,500 --> 00:42:42,500
+it's fine enough.
+
+816
+00:42:42,500 --> 00:42:44,500
+Okay.
+
+817
+00:42:44,500 --> 00:42:46,500
+So this is very simple.
+
+818
+00:42:46,500 --> 00:42:50,500
+These three matrices, I mean, two matrices and the bias are
+
+819
+00:42:50,500 --> 00:42:52,500
+obviously learnable.
+
+820
+00:42:52,500 --> 00:42:54,500
+So this is what you learn during backpropagation.
+
+821
+00:42:54,500 --> 00:42:58,500
+But given this is a computational graph, you can learn it
+
+822
+00:42:58,500 --> 00:43:00,500
+basically by backpropagation in a very nice way.
+
+823
+00:43:00,500 --> 00:43:02,500
+So here are some dimensions.
+
+824
+00:43:02,500 --> 00:43:04,500
+I'm not going to go through the details right now, but everything
+
+825
+00:43:04,500 --> 00:43:06,500
+has to kind of work out in terms of multiplying vector and
+
+826
+00:43:06,500 --> 00:43:08,500
+matrix.
+
+827
+00:43:08,500 --> 00:43:10,500
+This is still the same.
+
+828
+00:43:10,500 --> 00:43:14,500
+So you have to pay attention to the dimensions of those things.
+
+829
+00:43:14,500 --> 00:43:16,500
+And then you can just do the 10HRO.
+
+830
+00:43:16,500 --> 00:43:18,500
+Great.
+
+831
+00:43:18,500 --> 00:43:22,500
+The problem here with this kind of approach, the simple
+
+832
+00:43:22,500 --> 00:43:26,500
+recurrent neural networks, is so-called vanishing gradient.
+
+833
+00:43:26,500 --> 00:43:32,500
+Because this is in fact like a very deep network and you're
+
+834
+00:43:32,500 --> 00:43:34,500
+multiplying with the matrix W over and over.
+
+835
+00:43:34,500 --> 00:43:40,500
+So if you're running from here and the network is really deep,
+
+836
+00:43:40,500 --> 00:43:46,500
+so here you're multiplying lots of gradients and they become
+
+837
+00:43:46,500 --> 00:43:48,500
+extremely close to zero.
+
+838
+00:43:48,500 --> 00:43:50,500
+So it's called vanishing.
+
+839
+00:43:50,500 --> 00:43:52,500
+So they vanish, they come to zero.
+
+840
+00:43:52,500 --> 00:43:56,500
+And the point is if you have zero gradient, what happens?
+
+841
+00:43:56,500 --> 00:43:58,500
+You don't update anything.
+
+842
+00:43:58,500 --> 00:44:02,500
+So updating information from the beginning of the network gets
+
+843
+00:44:02,500 --> 00:44:04,500
+harder because the signal is just far away.
+
+844
+00:44:04,500 --> 00:44:06,500
+So the signal is at the end of the network.
+
+845
+00:44:06,500 --> 00:44:08,500
+You have lots of some meaningful gradient.
+
+846
+00:44:08,500 --> 00:44:12,500
+But when you're multiplying over and over, small numbers, small,
+
+847
+00:44:12,500 --> 00:44:14,500
+small numbers, and then you end up with zero.
+
+848
+00:44:14,500 --> 00:44:18,500
+And that makes it hard for RNNs to train basically and to capture
+
+849
+00:44:18,500 --> 00:44:20,500
+long-range dependencies.
+
+850
+00:44:20,500 --> 00:44:24,500
+So this is nice and simple, but a vanishing gradient is an issue.
+
+851
+00:44:24,500 --> 00:44:28,500
+Because you want to keep information from the very beginning for
+
+852
+00:44:28,500 --> 00:44:30,500
+the whole sequence.
+
+853
+00:44:30,500 --> 00:44:34,500
+The problem is if you have a vanishing gradient, you want to
+
+854
+00:44:34,500 --> 00:44:38,500
+capture, the problem is if you have long-range dependencies problems,
+
+855
+00:44:38,500 --> 00:44:42,500
+you have to have a solution which can solve long-range dependencies.
+
+856
+00:44:42,500 --> 00:44:44,500
+And the simple RNNs, they can't do that.
+
+857
+00:44:44,500 --> 00:44:46,500
+So you need something much better.
+
+858
+00:44:46,500 --> 00:44:50,500
+So vanishing gradient, we call this vanilla RNN as well.
+
+859
+00:44:50,500 --> 00:44:52,500
+Vanilla RNN.
+
+860
+00:44:52,500 --> 00:44:56,500
+So simple RNN, vanilla RNN, just nothing fancy.
+
+861
+00:44:56,500 --> 00:44:58,500
+Just these two functions basically.
+
+862
+00:44:58,500 --> 00:45:00,500
+Linear projection and nonlinear rectangular.
+
+863
+00:45:00,500 --> 00:45:02,500
+Linear projection and nonlinear rectangular.
+
+864
+00:45:02,500 --> 00:45:04,500
+So we need to do something better.
+
+865
+00:45:04,500 --> 00:45:06,500
+And now we come to this so-called gated arc.
+
+866
+00:45:06,500 --> 00:45:08,500
+Any questions on that?
+
+867
+00:45:08,500 --> 00:45:10,500
+Vanishing gradient.
+
+868
+00:45:10,500 --> 00:45:12,500
+Yes.
+
+869
+00:45:12,500 --> 00:45:14,500
+Why the gradient vanishes?
+
+870
+00:45:14,500 --> 00:45:18,500
+Because the network is, well, because of the depth of the network.
+
+871
+00:45:18,500 --> 00:45:22,500
+Like in the deep networks, you have the issue of propagating the
+
+872
+00:45:22,500 --> 00:45:26,500
+gradients from the, so the signal comes from the deep network.
+
+873
+00:45:26,500 --> 00:45:32,500
+The gradients from the, so the signal comes from your output node.
+
+874
+00:45:32,500 --> 00:45:36,500
+And then you're multiplying by this local derivatives and so on.
+
+875
+00:45:36,500 --> 00:45:44,500
+And the more multiplications you have, the closer in some cases to zero it can go.
+
+876
+00:45:44,500 --> 00:45:48,500
+And then you have basically very, very few updates in there.
+
+877
+00:45:48,500 --> 00:45:50,500
+So what you would typically do is maybe training.
+
+878
+00:45:50,500 --> 00:45:54,500
+So it was like back in the days of early training of RNNs,
+
+879
+00:45:54,500 --> 00:45:58,500
+sorry, of deep nets was freezing layers and training like half of the network.
+
+880
+00:45:58,500 --> 00:46:02,500
+And then training second half of the network and so on to overcome this.
+
+881
+00:46:02,500 --> 00:46:06,500
+And in RNN is an example of this deep network.
+
+882
+00:46:06,500 --> 00:46:08,500
+So this is an issue.
+
+883
+00:46:08,500 --> 00:46:10,500
+Yes.
+
+884
+00:46:10,500 --> 00:46:24,500
+The point is, yeah, you can exactly, you can have both.
+
+885
+00:46:24,500 --> 00:46:26,500
+I mean, this is the thing.
+
+886
+00:46:26,500 --> 00:46:28,500
+You have 10H, right?
+
+887
+00:46:28,500 --> 00:46:34,500
+So in 10H, your gradient goes to zero on both parts.
+
+888
+00:46:34,500 --> 00:46:36,500
+Right?
+
+889
+00:46:36,500 --> 00:46:38,500
+You have something in the middle.
+
+890
+00:46:38,500 --> 00:46:40,500
+There is a nice signal you're having in 10H.
+
+891
+00:46:40,500 --> 00:46:44,500
+Let me just draw 10H.
+
+892
+00:46:44,500 --> 00:46:46,500
+So roughly.
+
+893
+00:46:46,500 --> 00:46:50,500
+So 10H is not a function we're using, which is great.
+
+894
+00:46:50,500 --> 00:46:54,500
+So between minus one and one.
+
+895
+00:46:54,500 --> 00:46:58,500
+But here, roughly, and from here, the gradient of the 10H is coming to zero.
+
+896
+00:46:58,500 --> 00:47:02,500
+And then you have this issue of multiplying by something very small.
+
+897
+00:47:02,500 --> 00:47:04,500
+If you have ReLU, yeah, this is great.
+
+898
+00:47:04,500 --> 00:47:06,500
+In ReLU, you can have exploding gradients.
+
+899
+00:47:06,500 --> 00:47:08,500
+Yeah.
+
+900
+00:47:08,500 --> 00:47:12,500
+I mean, exploding gradients are easy to handle because you can just clip the norm, maybe, or something like that.
+
+901
+00:47:12,500 --> 00:47:16,500
+But vanishing gradient is an issue here.
+
+902
+00:47:16,500 --> 00:47:20,500
+And ReLU actually wasn't invented before, I guess.
+
+903
+00:47:20,500 --> 00:47:22,500
+ReLU is kind of new conceptually.
+
+904
+00:47:22,500 --> 00:47:26,500
+So previously, deep networks were sigmoids or 10H.
+
+905
+00:47:26,500 --> 00:47:30,500
+And then you get this issue of vanishing gradient.
+
+906
+00:47:30,500 --> 00:47:32,500
+Because the gradient is small in these normalities.
+
+907
+00:47:32,500 --> 00:47:36,500
+So does it clarify that enough?
+
+908
+00:47:36,500 --> 00:47:38,500
+Good.
+
+909
+00:47:38,500 --> 00:47:42,500
+So we can use the gated architecture.
+
+910
+00:47:42,500 --> 00:47:44,500
+And what does it mean?
+
+911
+00:47:44,500 --> 00:47:48,500
+So if you look at RMAN, it's just as a general-purpose computing device.
+
+912
+00:47:48,500 --> 00:47:52,500
+Yeah, it's a very brave statement.
+
+913
+00:47:52,500 --> 00:47:54,500
+But anyway.
+
+914
+00:47:54,500 --> 00:47:58,500
+So the state, SI, which is the vector, it's basically memory.
+
+915
+00:47:58,500 --> 00:48:02,500
+Because you're passing this state from one step to another.
+
+916
+00:48:02,500 --> 00:48:06,500
+So it's sort of a memory of the previous states.
+
+917
+00:48:06,500 --> 00:48:16,500
+And here's just for recall, we give the function for a simple RNN, where you have the state multiplied by some weights.
+
+918
+00:48:16,500 --> 00:48:20,500
+And you have the input multiplied by some weights and adding some bias.
+
+919
+00:48:20,500 --> 00:48:22,500
+And running through some normality.
+
+920
+00:48:22,500 --> 00:48:24,500
+But this is important part.
+
+921
+00:48:24,500 --> 00:48:34,500
+Because each application of this function R, basically it reads the current memory, SI minus 1.
+
+922
+00:48:34,500 --> 00:48:38,500
+It reads sort of the inputs, XY.
+
+923
+00:48:38,500 --> 00:48:44,500
+Operates on them in some way, basically this addition and multiplication.
+
+924
+00:48:44,500 --> 00:48:50,500
+And it writes the result to the new state, SI.
+
+925
+00:48:50,500 --> 00:48:54,500
+So we're reading the previous state, we're reading the input and writing to SI.
+
+926
+00:48:54,500 --> 00:48:56,500
+Right?
+
+927
+00:48:56,500 --> 00:48:58,500
+Like in a very abstract way.
+
+928
+00:48:58,500 --> 00:49:04,500
+We take the memory, we take the input, do some operation and write again to the memory.
+
+929
+00:49:04,500 --> 00:49:06,500
+Everybody's with me on that?
+
+930
+00:49:06,500 --> 00:49:08,500
+Yes. Okay.
+
+931
+00:49:08,500 --> 00:49:10,500
+So we're accessing the memory.
+
+932
+00:49:10,500 --> 00:49:12,500
+And the access is not controlled.
+
+933
+00:49:12,500 --> 00:49:18,500
+Because at each step, the entire memory state is read and entire memory state is written.
+
+934
+00:49:18,500 --> 00:49:24,500
+So we're taking previous state, the memory, we take the input, do something very fancy and save the whole memory again.
+
+935
+00:49:24,500 --> 00:49:30,500
+Like we're overwriting the whole memory with the result of the computation of the previous memory and the current memory.
+
+936
+00:49:30,500 --> 00:49:32,500
+So we're rewriting the whole memory.
+
+937
+00:49:32,500 --> 00:49:37,500
+It might be a good thing, might be a bad thing, but it turns out it's not what we want.
+
+938
+00:49:37,500 --> 00:49:42,500
+We want maybe something where we can control the access to the memory.
+
+939
+00:49:42,500 --> 00:49:45,500
+So how can we provide control memory access?
+
+940
+00:49:45,500 --> 00:49:47,500
+Let's have the memory.
+
+941
+00:49:47,500 --> 00:49:52,500
+So we call it now just memory vector S in some dimensions and the input vector X in some dimensions.
+
+942
+00:49:52,500 --> 00:49:54,500
+Right?
+
+943
+00:49:54,500 --> 00:49:56,500
+Now just abstraction.
+
+944
+00:49:56,500 --> 00:49:58,500
+So we have two vectors.
+
+945
+00:49:58,500 --> 00:50:00,500
+This is the memory and this is the input.
+
+946
+00:50:00,500 --> 00:50:06,500
+And let's have a binary vector which we call the gate, which is just zeros and ones of the same dimension.
+
+947
+00:50:06,500 --> 00:50:08,500
+Okay?
+
+948
+00:50:08,500 --> 00:50:10,500
+So we have now three vectors.
+
+949
+00:50:10,500 --> 00:50:12,500
+Memory, the current input, and we have something which is called a gate.
+
+950
+00:50:12,500 --> 00:50:14,500
+And this is just zeros and ones.
+
+951
+00:50:14,500 --> 00:50:25,500
+So here's a very fancy thing, which is the element-wise multiplication called Hadamard product.
+
+952
+00:50:25,500 --> 00:50:29,500
+I don't think you have to remember, but maybe you can remember this.
+
+953
+00:50:29,500 --> 00:50:33,500
+It's just a very fancy name for element-wise multiplication of two vectors.
+
+954
+00:50:33,500 --> 00:50:40,500
+So you take each vector, each position at one vector, multiply each position in the other vector, and this is the result.
+
+955
+00:50:40,500 --> 00:50:44,500
+And I'm using this kind of circle and dot for that.
+
+956
+00:50:44,500 --> 00:50:46,500
+Okay?
+
+957
+00:50:46,500 --> 00:50:51,500
+So Hadamard product basically multiplies element-wise multiplication of two vectors.
+
+958
+00:50:51,500 --> 00:51:00,500
+Now, anyway, if I have this memory vector and the input, and we have a gate, which is just zeros and ones,
+
+959
+00:51:00,500 --> 00:51:06,500
+then I'm going to use this sort of operation to control the access to the memory.
+
+960
+00:51:06,500 --> 00:51:09,500
+So what does it mean?
+
+961
+00:51:09,500 --> 00:51:17,500
+So I'm going to take the entries in X corresponding to ones in G, right?
+
+962
+00:51:17,500 --> 00:51:24,500
+Because if I multiply something with, you know, so the G is zero and ones, and X is just real numbers.
+
+963
+00:51:24,500 --> 00:51:32,500
+So I'm going to, what I end up here is just taking the values in X for which the G is set to one.
+
+964
+00:51:32,500 --> 00:51:34,500
+Right?
+
+965
+00:51:34,500 --> 00:51:36,500
+It's basically like masking.
+
+966
+00:51:36,500 --> 00:51:42,500
+So if G is zeros, this output will be zero for this particular choice.
+
+967
+00:51:42,500 --> 00:51:48,500
+So I'm reading the entries of X corresponding to ones in the gate, and I'm going to write them to the memory.
+
+968
+00:51:48,500 --> 00:52:01,500
+And in the next part, so this will be, so one plus G in binary means I'm flipping the bits in the gate.
+
+969
+00:52:01,500 --> 00:52:13,500
+And now I'm taking the rest, you know, the remaining parts of the gate and reading from the previous state and saving to the memory.
+
+970
+00:52:13,500 --> 00:52:16,500
+So if it looks very weird, let's work on an example here.
+
+971
+00:52:16,500 --> 00:52:18,500
+So I have an example in the next slide.
+
+972
+00:52:18,500 --> 00:52:20,500
+It will be much clearer.
+
+973
+00:52:20,500 --> 00:52:21,500
+Okay.
+
+974
+00:52:21,500 --> 00:52:23,500
+So here's our formula again.
+
+975
+00:52:23,500 --> 00:52:25,500
+And I have, so this is, okay, what do we have here?
+
+976
+00:52:25,500 --> 00:52:29,500
+So this is vector X, and this is the state.
+
+977
+00:52:29,500 --> 00:52:31,500
+So the previous state, and this is our gate.
+
+978
+00:52:31,500 --> 00:52:32,500
+So the gate is given.
+
+979
+00:52:32,500 --> 00:52:33,500
+I just made it up here.
+
+980
+00:52:33,500 --> 00:52:35,500
+So our gate is zero, one, and zero.
+
+981
+00:52:35,500 --> 00:52:38,500
+So this is our gate, G.
+
+982
+00:52:38,500 --> 00:52:43,500
+And this is the input, and this is from the previous state, so the memory.
+
+983
+00:52:43,500 --> 00:52:50,500
+So what I'm doing here first is I'm just multiplying this element box.
+
+984
+00:52:50,500 --> 00:52:55,500
+So basically saying this will be what?
+
+985
+00:52:55,500 --> 00:52:59,500
+Zero, because zero times 10 is zero, one times 11.
+
+986
+00:52:59,500 --> 00:53:03,500
+I'm basically masking the second vector with the gate.
+
+987
+00:53:03,500 --> 00:53:04,500
+Right?
+
+988
+00:53:04,500 --> 00:53:06,500
+Everybody with me on this operation?
+
+989
+00:53:06,500 --> 00:53:10,500
+So I'm multiplying these vector element by, basically, it's masking by this mask.
+
+990
+00:53:10,500 --> 00:53:12,500
+Okay?
+
+991
+00:53:12,500 --> 00:53:13,500
+Good.
+
+992
+00:53:13,500 --> 00:53:21,500
+So here, one plus G, it's going to, this is the flip of this.
+
+993
+00:53:21,500 --> 00:53:23,500
+Right?
+
+994
+00:53:23,500 --> 00:53:29,500
+Because in binary, I'm just making from zeros ones and from ones zeros.
+
+995
+00:53:29,500 --> 00:53:32,500
+And here, oops, excuse me.
+
+996
+00:53:32,500 --> 00:53:36,500
+And here again, I'm just masking the memory vector.
+
+997
+00:53:36,500 --> 00:53:40,500
+So what's coming out of here is eight.
+
+998
+00:53:40,500 --> 00:53:45,500
+Here it's coming zero, because it's zero in the mask, and here it's coming three.
+
+999
+00:53:45,500 --> 00:53:46,500
+Okay?
+
+1000
+00:53:46,500 --> 00:53:53,500
+So here I basically mask the input, and here I negated the gate and masked the memory.
+
+1001
+00:53:53,500 --> 00:54:02,500
+And because they are in different position zeros, adding them together will keep me the new input from the current state,
+
+1002
+00:54:02,500 --> 00:54:08,500
+and from the rest will be kind of stored from the previous memory.
+
+1003
+00:54:08,500 --> 00:54:09,500
+Okay?
+
+1004
+00:54:09,500 --> 00:54:10,500
+Does it make sense?
+
+1005
+00:54:10,500 --> 00:54:15,500
+Why this product, why this masking works like, you know, control access to the memory?
+
+1006
+00:54:15,500 --> 00:54:20,500
+Basically, masking one vector and using the negation of the mask to mask another vector,
+
+1007
+00:54:20,500 --> 00:54:28,500
+and just sum them together to get kind of, this gate controls what gets new, basically, to the memory.
+
+1008
+00:54:28,500 --> 00:54:29,500
+Okay?
+
+1009
+00:54:29,500 --> 00:54:31,500
+Any questions?
+
+1010
+00:54:39,500 --> 00:54:41,500
+Yes?
+
+1011
+00:54:45,500 --> 00:54:52,500
+We are not at all in matrices, or sorry, in embedding the weight matrices, nothing.
+
+1012
+00:54:52,500 --> 00:54:58,500
+I mean, we are just, this is just completely out now of deep learning or whatever.
+
+1013
+00:54:58,500 --> 00:55:04,500
+This is just how you, if you have a vector of memory, if you have a vector of inputs, and you have a gate,
+
+1014
+00:55:04,500 --> 00:55:10,500
+how you can combine them together to save something from the input and keep the rest of the memory.
+
+1015
+00:55:10,500 --> 00:55:11,500
+This is like a sidestep.
+
+1016
+00:55:11,500 --> 00:55:12,500
+Okay?
+
+1017
+00:55:12,500 --> 00:55:15,500
+But you might be asking, why the heck are we doing this?
+
+1018
+00:55:15,500 --> 00:55:16,500
+Why?
+
+1019
+00:55:16,500 --> 00:55:19,500
+Why is it important for deep learning?
+
+1020
+00:55:19,500 --> 00:55:28,500
+So, we can use these gates for R and N, because we want to control access to our state over time.
+
+1021
+00:55:28,500 --> 00:55:31,500
+But here the gates are, yeah, the gates here are not learnable.
+
+1022
+00:55:31,500 --> 00:55:33,500
+We are kind of given this or made up.
+
+1023
+00:55:33,500 --> 00:55:37,500
+And these gates are not really differentiable.
+
+1024
+00:55:37,500 --> 00:55:43,500
+Hard gates, like 0s and 1s, yeah, this is, 0s and 1s are bad for differentiation.
+
+1025
+00:55:43,500 --> 00:55:45,500
+So, this is not good.
+
+1026
+00:55:45,500 --> 00:55:50,500
+So, we are going to replace them with so-called soft gates.
+
+1027
+00:55:50,500 --> 00:55:53,500
+So, how can you, okay, one brainstorming.
+
+1028
+00:55:53,500 --> 00:56:02,500
+So, can you replace this with something which will give you something differentiable and close to 0 and 1s?
+
+1029
+00:56:02,500 --> 00:56:11,500
+We have a function which gives you something almost 0 or 1 and is differentiable.
+
+1030
+00:56:11,500 --> 00:56:17,500
+We have a function which, whatever it comes in, gives you either 0 or 1 almost.
+
+1031
+00:56:17,500 --> 00:56:19,500
+Sigmoid.
+
+1032
+00:56:19,500 --> 00:56:20,500
+Sigmoid is differentiable?
+
+1033
+00:56:20,500 --> 00:56:21,500
+Yes.
+
+1034
+00:56:21,500 --> 00:56:27,500
+So, maybe we'll use somewhere in Sigmoid to get something which is almost 0 and 1, and it will be used for gates, maybe.
+
+1035
+00:56:27,500 --> 00:56:28,500
+Okay? Yes.
+
+1036
+00:56:28,500 --> 00:56:37,500
+So, we're coming to one very famous and very interesting implementation, not implementation, architecture of RNNs.
+
+1037
+00:56:37,500 --> 00:56:41,500
+It's called the long short-term memory, LSTM.
+
+1038
+00:56:41,500 --> 00:56:43,500
+So, it fixes two things at once.
+
+1039
+00:56:43,500 --> 00:56:45,500
+I mean, not fixes two things at once.
+
+1040
+00:56:45,500 --> 00:56:52,500
+It fixes the vanishing gradient problem, and it's also the first one which introduces gating mechanism into RNNs.
+
+1041
+00:56:52,500 --> 00:56:59,500
+Okay, so now LSTM splits the state vector exactly in two halves, right?
+
+1042
+00:56:59,500 --> 00:57:07,500
+So, we take one half of this state vector as a memory cells, and the second will be something like we'll call working memory or something like that.
+
+1043
+00:57:07,500 --> 00:57:14,500
+And this is all the answer to you, like, well, we can spit out the state as output, but here the state will be more complicated.
+
+1044
+00:57:14,500 --> 00:57:19,500
+We have two vectors in the state, and they have special meaning and special role, and they don't interact that much.
+
+1045
+00:57:19,500 --> 00:57:20,500
+Okay?
+
+1046
+00:57:20,500 --> 00:57:31,500
+So, the memory cells are, yeah, they are designed to preserve the memory and the error degradients over time, and we have this differential gating component.
+
+1047
+00:57:31,500 --> 00:57:43,500
+So, we will have some gates, and which works as almost as we had with these binary gates, but they will be completely differentiable, which makes them learnable in a way.
+
+1048
+00:57:43,500 --> 00:57:46,500
+So, they will simulate logical gates, right?
+
+1049
+00:57:46,500 --> 00:57:52,500
+So, that's why I think it's important to understand how these gates kind of work before you see the Hadamard product in LSTM, and just like, why?
+
+1050
+00:57:52,500 --> 00:57:54,500
+What is this?
+
+1051
+00:57:54,500 --> 00:57:56,500
+Maybe it's like, why?
+
+1052
+00:57:56,500 --> 00:57:57,500
+What is this?
+
+1053
+00:57:57,500 --> 00:58:00,500
+It's complicated, but anyway, I hope we'll get through that.
+
+1054
+00:58:00,500 --> 00:58:02,500
+Okay, so LSTM.
+
+1055
+00:58:02,500 --> 00:58:08,500
+So, as I said, like, the state, I'm switching now indices from i to j, okay?
+
+1056
+00:58:08,500 --> 00:58:15,500
+So, this is, it might be confusing, but there will be something with an index i, which will have a different meaning.
+
+1057
+00:58:15,500 --> 00:58:19,500
+So, now we have, you know, our input is 1, 2, and j.
+
+1058
+00:58:19,500 --> 00:58:21,500
+1, 2, and j, okay?
+
+1059
+00:58:21,500 --> 00:58:23,500
+So, this is the position in the input.
+
+1060
+00:58:23,500 --> 00:58:25,500
+It's not i anymore.
+
+1061
+00:58:25,500 --> 00:58:36,500
+So, the state is now two parts of the memory components, which is a vector, and another, the hidden state, so-called component, position j, it's also a vector.
+
+1062
+00:58:36,500 --> 00:58:39,500
+And they have the same size, these two things, okay?
+
+1063
+00:58:39,500 --> 00:58:42,500
+So, this is just, we're setting up a scene now.
+
+1064
+00:58:42,500 --> 00:58:56,500
+And at each input state j, the gate decides how much of the new information should be written to the memory, and how much of the current content of the memory should be forgotten.
+
+1065
+00:58:56,500 --> 00:58:58,500
+Yeah, this is similar to what we had before.
+
+1066
+00:58:58,500 --> 00:59:07,500
+We had, like, yeah, you know, use the gate for keeping some information from the memory, and use a gate for adding new inputs to the memory.
+
+1067
+00:59:07,500 --> 00:59:09,500
+So, here it will be more complicated.
+
+1068
+00:59:09,500 --> 00:59:12,500
+We have to, like, we will have multiple gates, but their function is the same.
+
+1069
+00:59:12,500 --> 00:59:24,500
+Basically, selecting, like, 0 and 1s, almost, zeroing out information which should be ignored in this step, and keeping 1s for the information that should be kind of important in this step.
+
+1070
+00:59:24,500 --> 00:59:27,500
+So, there are three gates in LSTM.
+
+1071
+00:59:27,500 --> 00:59:30,500
+The input gate, the forget gate, and the output gate.
+
+1072
+00:59:30,500 --> 00:59:33,500
+We'll come to that exactly right now.
+
+1073
+00:59:33,500 --> 00:59:38,500
+So, let's work out through the LSTM architecture.
+
+1074
+00:59:38,500 --> 00:59:48,500
+So, what we have here again, we have this memory cell from the state before, and we have this working memory state from before.
+
+1075
+00:59:48,500 --> 00:59:53,500
+Okay, so this is, these two things together is the sj-1.
+
+1076
+00:59:53,500 --> 00:59:55,500
+So, this is the state.
+
+1077
+00:59:55,500 --> 00:59:57,500
+Okay, and here we have the input.
+
+1078
+00:59:57,500 --> 01:00:02,500
+Any questions?
+
+1079
+01:00:02,500 --> 01:00:03,500
+Good, this is great.
+
+1080
+01:00:03,500 --> 01:00:11,500
+I mean, we have, you know, there's no surprise here, just to understand we're on the same page, because it might get complicated a little bit, but we have to go, like, you know, step by step.
+
+1081
+01:00:11,500 --> 01:00:14,500
+All right, so we're going to do one thing.
+
+1082
+01:00:14,500 --> 01:00:26,500
+We're going to take the previous hidden state, and we're going to take the input and create something which we call the update candidate.
+
+1083
+01:00:26,500 --> 01:00:34,500
+So, we're going to take these two parts, and again, we're, yeah, we're multiplying the input by some matrix.
+
+1084
+01:00:34,500 --> 01:00:36,500
+So, this is some linear projection.
+
+1085
+01:00:36,500 --> 01:00:45,500
+We're multiplying the previous hidden state by another matrix, and going through some non-linear function, which is 10H here.
+
+1086
+01:00:45,500 --> 01:00:47,500
+Okay, why are we doing this?
+
+1087
+01:00:47,500 --> 01:00:50,500
+I mean, this is basically the same as a simple RNN.
+
+1088
+01:00:50,500 --> 01:00:58,500
+We take the input, projection, previous state projection, and adding them up, and using some non-linearity function in there.
+
+1089
+01:00:58,500 --> 01:01:01,500
+Okay, everybody's with me?
+
+1090
+01:01:01,500 --> 01:01:06,500
+There is nothing substantial new, you know, as opposed to the simple RNNs.
+
+1091
+01:01:06,500 --> 01:01:09,500
+Okay, good, so this is our update candidate.
+
+1092
+01:01:09,500 --> 01:01:10,500
+Great.
+
+1093
+01:01:10,500 --> 01:01:15,500
+We're going to do one more thing, which will be almost the same as this one.
+
+1094
+01:01:15,500 --> 01:01:30,500
+So, we're going to take, again, the previous hidden state, and the input as well, and again, we're going to compute, you know, multiply by some weight matrix, and add the previous, also multiplied by some weight matrix.
+
+1095
+01:01:30,500 --> 01:01:33,500
+So, what's the substantial difference here?
+
+1096
+01:01:33,500 --> 01:01:35,500
+What is the substantial difference?
+
+1097
+01:01:35,500 --> 01:01:37,500
+Can you spot a substantial difference here?
+
+1098
+01:01:37,500 --> 01:01:39,500
+There's two differences.
+
+1099
+01:01:39,500 --> 01:01:44,500
+Okay, here we use sigma 8, and we use 10 here.
+
+1100
+01:01:44,500 --> 01:01:46,500
+Okay, another difference.
+
+1101
+01:01:46,500 --> 01:01:51,500
+We have different parameters, exactly.
+
+1102
+01:01:51,500 --> 01:01:57,500
+So, we have these, this one is indexed by HF and XF.
+
+1103
+01:01:58,500 --> 01:02:08,500
+So, basically, it means like I'm multiplying X by the matrix for X, and the F means this will be the Fergat gate.
+
+1104
+01:02:08,500 --> 01:02:10,500
+Ah, okay, this is it.
+
+1105
+01:02:10,500 --> 01:02:11,500
+Fergat gate.
+
+1106
+01:02:11,500 --> 01:02:13,500
+Nice.
+
+1107
+01:02:13,500 --> 01:02:17,500
+So, these are different matrices than these, right?
+
+1108
+01:02:17,500 --> 01:02:19,500
+They will be different.
+
+1109
+01:02:19,500 --> 01:02:21,500
+They will learn something else.
+
+1110
+01:02:21,500 --> 01:02:23,500
+And why is it the gate now?
+
+1111
+01:02:23,500 --> 01:02:31,500
+Because what we saw before, the ones and zeros, and we know what sigma 8 is doing, we know what's coming out of here, right?
+
+1112
+01:02:31,500 --> 01:02:45,500
+From this thing, it's coming some sort of, some sort of, something between 0 and 1, and mostly will be 0.
+
+1113
+01:02:45,500 --> 01:02:52,500
+We want it to have almost 0 or almost 1, for things that should be forgotten and for things that should be not forgotten.
+
+1114
+01:02:52,500 --> 01:02:54,500
+This is why it's called Fergat gate.
+
+1115
+01:02:54,500 --> 01:02:56,500
+This is why it goes through the sigmoid.
+
+1116
+01:02:56,500 --> 01:02:58,500
+Okay?
+
+1117
+01:02:58,500 --> 01:03:02,500
+Everybody's with me still?
+
+1118
+01:03:02,500 --> 01:03:04,500
+Good.
+
+1119
+01:03:04,500 --> 01:03:09,500
+Now, we're going to do something else, and the same.
+
+1120
+01:03:09,500 --> 01:03:12,500
+We take the previous hidden state.
+
+1121
+01:03:12,500 --> 01:03:18,500
+We take the input, and again, multiply by some weight matrix.
+
+1122
+01:03:18,500 --> 01:03:25,500
+This weight matrix is different from this and different from this, because it's called Xi.
+
+1123
+01:03:25,500 --> 01:03:30,500
+This will be the input gate.
+
+1124
+01:03:30,500 --> 01:03:41,500
+And we're running this again through sigmoid, so it will be again mostly 0s and 1s, but it's differentiable, so it's like hard, kind of hard binarization.
+
+1125
+01:03:41,500 --> 01:03:42,500
+Okay?
+
+1126
+01:03:42,500 --> 01:03:44,500
+And we're running that.
+
+1127
+01:03:44,500 --> 01:03:45,500
+So there's input gate.
+
+1128
+01:03:45,500 --> 01:03:46,500
+Okay?
+
+1129
+01:03:46,500 --> 01:03:48,500
+And again, we have this update candidate.
+
+1130
+01:03:48,500 --> 01:03:50,500
+Yeah, why is here 10h?
+
+1131
+01:03:50,500 --> 01:03:52,500
+I don't know, maybe like popular choice.
+
+1132
+01:03:52,500 --> 01:03:56,500
+I think it could be ReLU in theory, but in LSTM, it's 10h.
+
+1133
+01:03:56,500 --> 01:04:00,500
+But here, the sigmoid is important, because the sigmoid is saying, well, it's a gate.
+
+1134
+01:04:00,500 --> 01:04:11,500
+It should be either 0 or 1, mostly, but we cannot do it hard, so we have a differential diversion, so we use this kind of binarization through sigmoid.
+
+1135
+01:04:11,500 --> 01:04:13,500
+So we have two gates, Fergat gate and input gate.
+
+1136
+01:04:13,500 --> 01:04:15,500
+What are they doing?
+
+1137
+01:04:15,500 --> 01:04:16,500
+We don't know yet.
+
+1138
+01:04:16,500 --> 01:04:18,500
+We're not there yet, but we have something with different parameters.
+
+1139
+01:04:18,500 --> 01:04:20,500
+So they will learn something different.
+
+1140
+01:04:20,500 --> 01:04:22,500
+They should learn something different.
+
+1141
+01:04:22,500 --> 01:04:23,500
+Everybody's with me?
+
+1142
+01:04:23,500 --> 01:04:29,500
+Any questions?
+
+1143
+01:04:29,500 --> 01:04:34,500
+Good.
+
+1144
+01:04:35,500 --> 01:04:39,500
+So now, if you recall from the previous slide, let me just come back a little bit.
+
+1145
+01:04:39,500 --> 01:04:55,500
+If you recall this thing, like this formula, roughly, where you multiply, take a gate and multiply by input, and take another gate, sort of, and multiply by the memory, right?
+
+1146
+01:04:55,500 --> 01:04:58,500
+So this is what we did here to update the memory.
+
+1147
+01:04:58,500 --> 01:05:01,500
+We're not going to do something much different from that now.
+
+1148
+01:05:02,500 --> 01:05:12,500
+So we're going to take the previous memory cell and multiply by the Fergat gate, right?
+
+1149
+01:05:12,500 --> 01:05:19,500
+So we're going to kind of Fergat something from the previous memory.
+
+1150
+01:05:19,500 --> 01:05:35,500
+And we take the input gate, and here this is our input candidate or update candidate, and we're going to again multiply by the gate and sum together and save it to the next memory.
+
+1151
+01:05:35,500 --> 01:05:36,500
+Okay?
+
+1152
+01:05:36,500 --> 01:05:43,500
+So it's basically very similar to what we did before, but here we kind of learned these gates.
+
+1153
+01:05:43,500 --> 01:05:45,500
+So we learned this.
+
+1154
+01:05:45,500 --> 01:05:46,500
+We learned this.
+
+1155
+01:05:46,500 --> 01:05:55,500
+This is coming from these previous kind of transformations, and this is the previous step.
+
+1156
+01:05:55,500 --> 01:06:01,500
+And this is our input, but the input was transformed through some, again, some transformation, some projection.
+
+1157
+01:06:01,500 --> 01:06:02,500
+Yes?
+
+1158
+01:06:02,500 --> 01:06:08,500
+I'm just going to make the product of i and z, but they both come from xj.
+
+1159
+01:06:08,500 --> 01:06:13,500
+Why do I first do separate i and z and then put them together?
+
+1160
+01:06:13,500 --> 01:06:20,500
+Why you do, why you go from x to z, and why you go from x to y?
+
+1161
+01:06:20,500 --> 01:06:24,500
+I mean, x to i is clear because you need to make it a gate.
+
+1162
+01:06:24,500 --> 01:06:28,500
+Why you go from xj and not like that?
+
+1163
+01:06:28,500 --> 01:06:29,500
+Yeah.
+
+1164
+01:06:29,500 --> 01:06:30,500
+Yeah.
+
+1165
+01:06:30,500 --> 01:06:43,500
+Because maybe your representation of your input should also take into account the working memory from the previous state.
+
+1166
+01:06:43,500 --> 01:06:47,500
+Because you want to learn something from the past to represent the input.
+
+1167
+01:06:47,500 --> 01:06:50,500
+I mean, it's implicitly here as well, right?
+
+1168
+01:06:50,500 --> 01:06:57,500
+So you could theoretically do that, but also I think you can learn some interesting mapping here.
+
+1169
+01:06:57,500 --> 01:07:02,500
+I mean, I don't have an answer like why is it so, and would it work with like plugging directly the input?
+
+1170
+01:07:02,500 --> 01:07:04,500
+Maybe it will work.
+
+1171
+01:07:04,500 --> 01:07:10,500
+If you pay attention, I mean, xj has to be the same dimensions as the i's, obviously.
+
+1172
+01:07:10,500 --> 01:07:12,500
+But theoretically it could work, yes.
+
+1173
+01:07:12,500 --> 01:07:21,500
+But here, like just an extra bunch of parameters to learn this thing and projecting and taking into account here for this kind of learning, also the previous one.
+
+1174
+01:07:21,500 --> 01:07:23,500
+That's how they designed the LSTM.
+
+1175
+01:07:23,500 --> 01:07:26,500
+I think it, I'm not sure, I have to check.
+
+1176
+01:07:26,500 --> 01:07:33,500
+I mean, there's this gated recurrent unit, GRU, which is simpler than LSTM and there's some simplifications with the gates.
+
+1177
+01:07:33,500 --> 01:07:34,500
+So there's not so many gates.
+
+1178
+01:07:34,500 --> 01:07:37,500
+And so maybe they're doing something like that, but I don't know by heart.
+
+1179
+01:07:37,500 --> 01:07:38,500
+Yeah.
+
+1180
+01:07:38,500 --> 01:07:39,500
+Yeah.
+
+1181
+01:07:39,500 --> 01:07:40,500
+Fair point.
+
+1182
+01:07:40,500 --> 01:07:44,500
+Any other question?
+
+1183
+01:07:44,500 --> 01:07:45,500
+Okay, good.
+
+1184
+01:07:45,500 --> 01:07:50,500
+So what we did so far, we have an input, previous memory, and we create a current memory.
+
+1185
+01:07:50,500 --> 01:07:51,500
+This is great.
+
+1186
+01:07:51,500 --> 01:07:52,500
+Yeah.
+
+1187
+01:07:52,500 --> 01:07:53,500
+So what is missing still there?
+
+1188
+01:07:53,500 --> 01:07:54,500
+What is missing still there?
+
+1189
+01:07:54,500 --> 01:07:59,500
+We need still, what do we need to do?
+
+1190
+01:07:59,500 --> 01:08:04,500
+We need to calculate hj and we need to calculate?
+
+1191
+01:08:04,500 --> 01:08:06,500
+And the output, why exactly?
+
+1192
+01:08:06,500 --> 01:08:07,500
+So two things.
+
+1193
+01:08:07,500 --> 01:08:10,500
+Let's start with the output.
+
+1194
+01:08:10,500 --> 01:08:20,500
+So we're going to introduce another gate, which is called the output gate.
+
+1195
+01:08:20,500 --> 01:08:22,500
+And here we're doing again the same thing over and over.
+
+1196
+01:08:22,500 --> 01:08:33,500
+So we are multiplying by the input by the weight matrix, multiply the previous hidden state by the weight matrix and squishing through the sigmoid.
+
+1197
+01:08:33,500 --> 01:08:34,500
+Okay.
+
+1198
+01:08:34,500 --> 01:08:40,500
+So this is again another gate and there's different bunch of parameters, but conceptually it's another gate.
+
+1199
+01:08:40,500 --> 01:08:43,500
+So we have three gates, forget gate, input gate, and output gate.
+
+1200
+01:08:44,500 --> 01:08:45,500
+And the output gate is going to control what?
+
+1201
+01:08:45,500 --> 01:08:50,500
+It's going to control what we are going to output to the next hidden state.
+
+1202
+01:08:50,500 --> 01:08:59,500
+So now we're taking this gate, we're taking the current memory, which we run through 10h.
+
+1203
+01:08:59,500 --> 01:09:01,500
+Don't ask me why, I don't really know.
+
+1204
+01:09:01,500 --> 01:09:11,500
+But basically we're running through 10h and multiply by this output gate, this Hadamard product, and this will be our next hidden state.
+
+1205
+01:09:11,500 --> 01:09:23,500
+So basically there will be this sort of recurrence from these two states and these two cells, or cells like the vectors.
+
+1206
+01:09:23,500 --> 01:09:27,500
+And the last part, what is missing is to compute the output.
+
+1207
+01:09:27,500 --> 01:09:29,500
+And the output is very simple.
+
+1208
+01:09:29,500 --> 01:09:32,500
+It's just the hidden vector.
+
+1209
+01:09:32,500 --> 01:09:34,500
+So this is what we're outputting here.
+
+1210
+01:09:34,500 --> 01:09:44,500
+We're not outputting the full state, we're not outputting the full kind of memory and the hidden state, we're just outputting the hidden state.
+
+1211
+01:09:44,500 --> 01:09:51,500
+So this is the full LSTM, which looks kind of complicated, but there's three gates and the gates have a meaning.
+
+1212
+01:09:51,500 --> 01:09:56,500
+So what they're doing, they're learning something about how much to forget, I mean, what to forget and whatnot.
+
+1213
+01:09:56,500 --> 01:09:59,500
+And there's a couple of weird choices.
+
+1214
+01:09:59,500 --> 01:10:03,500
+To be honest, I have to check why there is 10h, I don't know.
+
+1215
+01:10:04,500 --> 01:10:10,500
+And everything is differentiable and everything kind of you can train in computational graph.
+
+1216
+01:10:10,500 --> 01:10:12,500
+But it looks complicated.
+
+1217
+01:10:12,500 --> 01:10:14,500
+So that's why there's newer versions of GRUs.
+
+1218
+01:10:14,500 --> 01:10:15,500
+Yes?
+
+1219
+01:10:15,500 --> 01:10:18,500
+How is the state vector split?
+
+1220
+01:10:18,500 --> 01:10:22,500
+The state vector is half and half.
+
+1221
+01:10:22,500 --> 01:10:24,500
+Well, you would treat it as two vectors, basically.
+
+1222
+01:10:24,500 --> 01:10:30,500
+You would treat this as, let me see, I'm coming to that in the next slide, okay?
+
+1223
+01:10:30,500 --> 01:10:37,500
+So you would have CJ and HJ have the same hidden dimension.
+
+1224
+01:10:37,500 --> 01:10:41,500
+So this DH is dimensionally of the LSTM, like the hidden layer size.
+
+1225
+01:10:41,500 --> 01:10:49,500
+And all of these, so this vector and this vector have the same size, which means the output vector has the same size and all the gates have the same size, obviously.
+
+1226
+01:10:49,500 --> 01:10:58,500
+And the candidate vector also has the same size, which is the size of the hidden layer, like the parameter of the LSTM.
+
+1227
+01:10:58,500 --> 01:11:10,500
+And why there is this transformation also means that the dimensionality of the inputs could be something else than the internal workings of the LSTM.
+
+1228
+01:11:10,500 --> 01:11:16,500
+Yes, you have a question?
+
+1229
+01:11:16,500 --> 01:11:24,500
+Because you're keeping things here in the cell memory.
+
+1230
+01:11:24,500 --> 01:11:28,500
+And basically, they call it memory highway.
+
+1231
+01:11:28,500 --> 01:11:35,500
+Basically, it keeps the information stored over a longer kind of input.
+
+1232
+01:11:35,500 --> 01:11:37,500
+How exactly to work?
+
+1233
+01:11:37,500 --> 01:11:38,500
+I mean, I can't do the math right now.
+
+1234
+01:11:38,500 --> 01:11:39,500
+I don't know.
+
+1235
+01:11:40,500 --> 01:11:51,500
+There are definitely proofs saying, yeah, if you have this memory, which is kept and updated, just because you update only the information you need at a point and not overwriting the full memory.
+
+1236
+01:11:51,500 --> 01:11:53,500
+So maybe that's why.
+
+1237
+01:11:53,500 --> 01:11:57,500
+But to be honest, I don't really know how exactly, why exactly that works as it is.
+
+1238
+01:11:57,500 --> 01:11:59,500
+Yes, you have a question?
+
+1239
+01:11:59,500 --> 01:12:06,500
+If you use the same parameters for every part, wouldn't you never update the memory?
+
+1240
+01:12:06,500 --> 01:12:14,500
+Like, that one at the beginning, and then it's never overwritten because the gate never allowed it to be overwritten at any later point?
+
+1241
+01:12:14,500 --> 01:12:16,500
+I don't understand.
+
+1242
+01:12:16,500 --> 01:12:33,500
+Like, if you, for example, if you have a gate or a vector that's like 001, and the first two are like the memory that gets overwritten by the working memory by the next state, then whatever you set at the beginning of the memory will just never get overwritten.
+
+1243
+01:12:33,500 --> 01:12:41,500
+Because every time it gets to that, it's like, yes, we get to the next vector 00, so we don't write anything to memory.
+
+1244
+01:12:41,500 --> 01:12:46,500
+We just write our last part to working memory, and then we get to the next part, and then it happens again.
+
+1245
+01:12:46,500 --> 01:12:49,500
+So the memory is just never changed at all.
+
+1246
+01:12:49,500 --> 01:12:54,500
+Sure, but in general, it should be learnable through, I mean, you're penalized that.
+
+1247
+01:12:54,500 --> 01:12:58,500
+I mean, if it doesn't learn anything, you penalize it by a huge loss.
+
+1248
+01:12:59,500 --> 01:13:02,500
+I feel like that's inherent with the gate mechanism.
+
+1249
+01:13:02,500 --> 01:13:09,500
+If you have a memory that's like, if you have a memory gate, that's the same for every single...
+
+1250
+01:13:09,500 --> 01:13:13,500
+Yeah, but it's parametrized by the, so look at this.
+
+1251
+01:13:13,500 --> 01:13:16,500
+I mean, the memory gate is parametrized by the current input.
+
+1252
+01:13:16,500 --> 01:13:18,500
+It's a point.
+
+1253
+01:13:18,500 --> 01:13:22,500
+So whatever comes in, it will change the gate.
+
+1254
+01:13:22,500 --> 01:13:31,500
+So if you have different, I mean, and you have different words, like different inputs at each position, so the gate will be different based on the word coming in.
+
+1255
+01:13:31,500 --> 01:13:33,500
+So it won't be the same.
+
+1256
+01:13:33,500 --> 01:13:34,500
+I mean, you don't have a static gate.
+
+1257
+01:13:34,500 --> 01:13:40,500
+You have a learnable gate, and the learnable is conditioned on the input and the previous hidden state.
+
+1258
+01:13:40,500 --> 01:13:41,500
+That's the trick.
+
+1259
+01:13:41,500 --> 01:13:43,500
+Like, you're taking the full context.
+
+1260
+01:13:43,500 --> 01:13:49,500
+So here, you have the full context of the previous things, because it gets to here.
+
+1261
+01:13:49,500 --> 01:13:51,500
+So this is the recurrent part.
+
+1262
+01:13:51,500 --> 01:13:52,500
+So you're running this over and over.
+
+1263
+01:13:52,500 --> 01:13:54,500
+You keep something in the working memory.
+
+1264
+01:13:54,500 --> 01:13:55,500
+You keep something here as well.
+
+1265
+01:13:55,500 --> 01:14:06,500
+But OK, for the gates, you're taking the previous, all the information from previous steps, which, by the way, depends also recursively on everything, right?
+
+1266
+01:14:06,500 --> 01:14:13,500
+Because the hj takes the whole thing here, like the long-term memory and the working memory.
+
+1267
+01:14:13,500 --> 01:14:16,500
+So you're conditioned on that and conditioned on the input.
+
+1268
+01:14:16,500 --> 01:14:19,500
+And you will output different gates for that.
+
+1269
+01:14:19,500 --> 01:14:20,500
+Yeah.
+
+1270
+01:14:20,500 --> 01:14:23,500
+Sorry, where are we?
+
+1271
+01:14:23,500 --> 01:14:24,500
+Yes.
+
+1272
+01:14:24,500 --> 01:14:25,500
+One more question.
+
+1273
+01:14:25,500 --> 01:14:29,500
+Do we have a round-covered gate with 0 and 1?
+
+1274
+01:14:29,500 --> 01:14:30,500
+No.
+
+1275
+01:14:30,500 --> 01:14:31,500
+No, no, no.
+
+1276
+01:14:31,500 --> 01:14:33,500
+It's a you don't.
+
+1277
+01:14:33,500 --> 01:14:38,500
+I mean, you want them to learn that they are very close to 0, very close to 1.
+
+1278
+01:14:38,500 --> 01:14:39,500
+Yeah.
+
+1279
+01:14:39,500 --> 01:14:43,500
+And if you think about the sigmoid, you will end up there.
+
+1280
+01:14:43,500 --> 01:14:47,500
+So it will be like very soft, but mostly 0 and mostly 1.
+
+1281
+01:14:47,500 --> 01:14:53,500
+So you just accept that our safe operation takes away the bit of the...
+
+1282
+01:14:53,500 --> 01:14:54,500
+Exactly, yes, yes, exactly.
+
+1283
+01:14:54,500 --> 01:14:55,500
+It's soft.
+
+1284
+01:14:55,500 --> 01:15:00,500
+So you have something, you know, you have very little addition from everything.
+
+1285
+01:15:00,500 --> 01:15:03,500
+But you prefer those which are kind of very close to 1.
+
+1286
+01:15:03,500 --> 01:15:09,500
+I mean, they're got, you know, yeah, they're weighted by basically by these 0s and 1s.
+
+1287
+01:15:09,500 --> 01:15:14,500
+OK, another question?
+
+1288
+01:15:14,500 --> 01:15:19,500
+So, OK, here, basically, as a layer, so this is, again, the abstraction we had before.
+
+1289
+01:15:19,500 --> 01:15:21,500
+So the recurrent abstraction.
+
+1290
+01:15:21,500 --> 01:15:29,500
+So we split the split the state vector into two parts, which could be concatenated here.
+
+1291
+01:15:29,500 --> 01:15:34,500
+But there are different two different vectors basically running through the state, through
+
+1292
+01:15:34,500 --> 01:15:36,500
+the, sorry, through the LSTM layer.
+
+1293
+01:15:36,500 --> 01:15:42,500
+And you have the input and basically the all the parameterization are all these different matrices.
+
+1294
+01:15:42,500 --> 01:15:52,500
+So for each of the gates, for output gates, input gate, forget gate.
+
+1295
+01:15:52,500 --> 01:15:54,500
+And this is the update candidate.
+
+1296
+01:15:54,500 --> 01:16:00,500
+We also didn't add the bias term, but you can have, theoretically, you can have in all of those,
+
+1297
+01:16:00,500 --> 01:16:07,500
+you can have a bias term here, plus bias term, plus bias term, plus bias term.
+
+1298
+01:16:07,500 --> 01:16:10,500
+So you have more parameters if you really want.
+
+1299
+01:16:10,500 --> 01:16:15,500
+I didn't put them there, but, you know, just ignore them for clarity.
+
+1300
+01:16:15,500 --> 01:16:21,500
+And this is it. Basically, you have this R. These were R, you know, R and O functions, but in a very fancy way.
+
+1301
+01:16:21,500 --> 01:16:26,500
+So we have gates and we have all these products and stuff like that, very many parameters.
+
+1302
+01:16:26,500 --> 01:16:27,500
+But they're there.
+
+1303
+01:16:27,500 --> 01:16:28,500
+Yes.
+
+1304
+01:16:28,500 --> 01:16:30,500
+So you're basically learning the gates?
+
+1305
+01:16:30,500 --> 01:16:31,500
+Yes.
+
+1306
+01:16:31,500 --> 01:16:32,500
+As we go?
+
+1307
+01:16:32,500 --> 01:16:35,500
+Yes. You learn the gates as you go.
+
+1308
+01:16:35,500 --> 01:16:39,500
+Because the gates are just the gates are vectors.
+
+1309
+01:16:39,500 --> 01:16:44,500
+So you learn the projections based on based on your input and previous, the input and previous state.
+
+1310
+01:16:44,500 --> 01:16:48,500
+You're learning gates. You learn what to remember and learn what to forget.
+
+1311
+01:16:48,500 --> 01:16:51,500
+This is the, this is the power of these LSTMs.
+
+1312
+01:16:51,500 --> 01:16:54,500
+Any other question?
+
+1313
+01:16:54,500 --> 01:16:58,500
+Good. So.
+
+1314
+01:16:58,500 --> 01:17:03,500
+It was fast. I think I had some questions for you, but I forgot all of them because I mean, it's complicated.
+
+1315
+01:17:03,500 --> 01:17:06,500
+So the question is, like, should I remember all of these?
+
+1316
+01:17:06,500 --> 01:17:09,500
+I don't know. You should.
+
+1317
+01:17:09,500 --> 01:17:16,500
+I don't remember it either by heart, like all these tiny details, but you should remember there are these gates and what they're doing.
+
+1318
+01:17:16,500 --> 01:17:18,500
+Why are there?
+
+1319
+01:17:18,500 --> 01:17:23,500
+And conceptually, how it works.
+
+1320
+01:17:23,500 --> 01:17:30,500
+The point is, so recap, we have RNNs for arbitrarily long input.
+
+1321
+01:17:30,500 --> 01:17:32,500
+So this is the big advantage of them.
+
+1322
+01:17:32,500 --> 01:17:39,500
+And they can encode the entire sequence and basically each step of that, as we saw before.
+
+1323
+01:17:39,500 --> 01:17:45,500
+We have the bidirectional RNNs, so we can model from left to right, right to left and combine together, which is great.
+
+1324
+01:17:45,500 --> 01:17:50,500
+And we have the gating mechanism to effectively work with the memory cells.
+
+1325
+01:17:50,500 --> 01:17:55,500
+And LSTM is a particle-powerful RNN. You might want to look up GRUs.
+
+1326
+01:17:55,500 --> 01:17:59,500
+So this is from, I guess, 2012, 2013, maybe.
+
+1327
+01:17:59,500 --> 01:18:06,500
+And it's, it's quite simpler than LSTM, but LSTM is nice because it shows the gating mechanism, you know, in its full power.
+
+1328
+01:18:06,500 --> 01:18:08,500
+Why is it important?
+
+1329
+01:18:08,500 --> 01:18:12,500
+And we're really fast today, so I don't know.
+
+1330
+01:18:12,500 --> 01:18:22,500
+Anyway, so thanks a lot. And I'll, next week, actually, I'll be here as well with Martin, but Martin will take over and we'll be talking about generation with RNNs.
+
+1331
+01:18:22,500 --> 01:18:24,500
+So thanks a lot.
+
