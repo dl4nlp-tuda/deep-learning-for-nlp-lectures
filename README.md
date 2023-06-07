@@ -59,6 +59,12 @@ May 30, 2023
 
 * [Slides as PDF](/pdf/dl4nlp2023-lecture07.pdf), [YouTube recording](https://www.youtube.com/watch?v=sgjKJRoYx4s)
 
+## Lecture 8: Text generation 2: Autoregressive encoder-decoder with RNNs and attention
+
+June 6, 2023
+
+* [Slides as PDF](/pdf/dl4nlp2023-lecture08.pdf), [YouTube recording](https://www.youtube.com/watch?v=tOmYTC3XaEo)
+
 
 ## Subtitles/Close caption
 
