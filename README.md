@@ -71,7 +71,7 @@ June 13, 2023
 
 * [Slides as PDF](/pdf/dl4nlp2023-lecture09.pdf), [YouTube recording](https://youtu.be/yg5QrKOe0V4)
 
-## Lecture 9: Text classification 4: self-attention and BERT
+## Lecture 10: Text classification 4: self-attention and BERT
 
 June 20, 2023
 
