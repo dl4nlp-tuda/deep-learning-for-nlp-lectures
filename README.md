@@ -65,6 +65,11 @@ June 6, 2023
 
 * [Slides as PDF](/pdf/dl4nlp2023-lecture08.pdf), [YouTube recording](https://www.youtube.com/watch?v=tOmYTC3XaEo)
 
+## Lecture 9: Text generation 3: Transformers
+
+June 13, 2023
+
+* [Slides as PDF](/pdf/dl4nlp2023-lecture09.pdf), [YouTube recording](https://youtu.be/yg5QrKOe0V4)
 
 ## Subtitles/Close caption
 
