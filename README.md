@@ -71,6 +71,12 @@ June 13, 2023
 
 * [Slides as PDF](/pdf/dl4nlp2023-lecture09.pdf), [YouTube recording](https://youtu.be/yg5QrKOe0V4)
 
+## Lecture 9: Text classification 4: self-attention and BERT
+
+June 20, 2023
+
+* [Slides as PDF](/pdf/dl4nlp2023-lecture10.pdf)
+  
 ## Subtitles/Close caption
 
 Thanks to Jan Kühnemund for generating the close caption for YouTube with Open Whisper. We track the subtitles here under `subtitles`, so if you spot an error there (there are many, such as "tanh" -> "10h"), just open a bug or PR.
