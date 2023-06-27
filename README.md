@@ -76,6 +76,12 @@ June 13, 2023
 June 20, 2023
 
 * [Slides as PDF](/pdf/dl4nlp2023-lecture10.pdf), [YouTube recording](https://youtu.be/NOD9irGv9Xg)
+
+## Lecture 11: Text generation 4: Decoder-only Models and GPT
+
+June 27, 2023
+
+* [Slides as PDF](/pdf/dl4nlp2023-lecture11.pdf)
   
 ## Subtitles/Close caption
 
