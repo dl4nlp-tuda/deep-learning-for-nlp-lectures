@@ -81,7 +81,7 @@ June 20, 2023
 
 June 27, 2023
 
-* [Slides as PDF](/pdf/dl4nlp2023-lecture11.pdf)
+* [Slides as PDF](/pdf/dl4nlp2023-lecture11.pdf), [YouTube recording](https://youtu.be/t3J534JyE-E)
   
 ## Subtitles/Close caption
 
