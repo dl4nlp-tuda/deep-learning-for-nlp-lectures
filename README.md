@@ -82,6 +82,12 @@ June 20, 2023
 June 27, 2023
 
 * [Slides as PDF](/pdf/dl4nlp2023-lecture11.pdf), [YouTube recording](https://youtu.be/t3J534JyE-E)
+
+## Lecture 12: Contemporary LLMs: Prompting and in-context learning
+
+July 4, 2023
+
+* [Recap slides as PDF](/pdf/dl4nlp2023-lecture12-recap.pdf), [PPTX lecture slides](/pdf/DL4NLP%20Lecture%2012_%20Contemporary%20LLMs.pptx)
   
 ## Subtitles/Close caption
 
