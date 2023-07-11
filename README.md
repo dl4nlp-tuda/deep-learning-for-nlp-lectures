@@ -88,6 +88,12 @@ June 27, 2023
 July 4, 2023
 
 * [Recap slides as PDF](/pdf/dl4nlp2023-lecture12-recap.pdf), [PPTX lecture slides](/pdf/DL4NLP%20Lecture%2012_%20Contemporary%20LLMs.pptx)
+
+## Lecture 13: Ethics of Generative AI (guest lecture by Thomas Arnold)
+
+July 4, 2023
+
+* [Slides as PDF](/pdf/dl4nlp2023-lecture13.pdf), [PPTX lecture slides](/pdf/dl4nlp2023-lecture13.pptx)
   
 ## Subtitles/Close caption
 
