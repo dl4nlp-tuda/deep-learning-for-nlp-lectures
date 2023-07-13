@@ -93,9 +93,9 @@ July 4, 2023
 
 July 11, 2023
 
-* [Slides as PDF](/pdf/dl4nlp2023-lecture13)
+* [Slides as PDF](/pdf/dl4nlp2023-lecture13.pdf), [PPTX lecture slides](/pdf/dl4nlp2023-lecture13.pptx)
 
-  
+ 
 ## Subtitles/Close caption
 
 Thanks to Jan Kühnemund for generating the close caption for YouTube with Open Whisper. We track the subtitles here under `subtitles`, so if you spot an error there (there are many, such as "tanh" -> "10h"), just open a bug or PR.
