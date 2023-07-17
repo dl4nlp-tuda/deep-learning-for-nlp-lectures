@@ -1099,7 +1099,7 @@ Maximize the log-likelihood of the data $D \cup \bar{D}$
 $$
 \mathcal{L}(\Theta; D, \bar{D}) =
 \sum_{(w, c) \in D} \log \Pr (D = 1 | w, c) +
-\sum_{(w', c) \in D} \log \Pr (D = 0 | w', c)
+\sum_{(w', c) \in \bar{D}} \log \Pr (D = 0 | w', c)
 $$
 
 \bigskip
