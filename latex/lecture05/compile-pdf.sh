@@ -27,3 +27,6 @@ lualatex --jobname=${lecture_filename}-handout --output-directory=pdf ${lecture_
 biber pdf/${lecture_filename}-handout.bcf
 lualatex --jobname=${lecture_filename}-handout --output-directory=pdf ${lecture_filename}.tex
 lualatex --jobname=${lecture_filename}-handout --output-directory=pdf ${lecture_filename}.tex
+
+# Cleaning up temporary latex files
+rm -f pdf/*.dvi pdf/*.idx pdf/*.aux pdf/*.toc pdf/*.log pdf/*.bbl pdf/*.blg pdf/*.lof pdf/*.out pdf/*.bcf pdf/*.synctex.gz pdf/*.run.xml pdf/*.nav pdf/*.snm pdf/*.vrb pdf/*.rubbercache
