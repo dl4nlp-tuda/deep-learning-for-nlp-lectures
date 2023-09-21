@@ -132,8 +132,8 @@ $ wget https://github.com/mozilla/Fira/archive/refs/tags/4.106.zip -O 4.106.zip 
 Compile each lecture's slides using ``lualatex``
 
 ```plain
-$ lualatex dl4nlp2021-lecture*.tex && biber dl4nlp2021-lecture*.bcf && \
-lualatex dl4nlp2021-lecture*.tex && lualatex dl4nlp2021-lecture*.tex
+$ lualatex dl4nlp2023-lecture*.tex && biber dl4nlp2023-lecture*.bcf && \
+lualatex dl4nlp2023-lecture*.tex && lualatex dl4nlp2023-lecture*.tex
 ```
 
 ### Compiling slides using Docker
@@ -171,8 +171,8 @@ And compile
 
 ```plain
 # cd /mnt/dl4nlp/latex/lecture01
-# lualatex dl4nlp2021-lecture*.tex && biber dl4nlp2021-lecture*.bcf && \
-lualatex dl4nlp2021-lecture*.tex && lualatex dl4nlp2021-lecture*.tex
+# lualatex dl4nlp2023-lecture*.tex && biber dl4nlp2023-lecture*.bcf && \
+lualatex dl4nlp2023-lecture*.tex && lualatex dl4nlp2023-lecture*.tex
 ```
 
 which generates the PDF in your local folder (e.g, `/tmp/slides`).
