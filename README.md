@@ -8,7 +8,7 @@ The slides are available as PDF as well as LaTeX source code (we've used Beamer 
 
 ![Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/CC_BY-SA_icon.svg/88px-CC_BY-SA_icon.svg.png)
 
-The content is licenced under [Creative Commons CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) which means that you can re-use, adapt, modify, or publish it further, provided you keep the license and give proper credits.
+The content is licensed under [Creative Commons CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) which means that you can re-use, adapt, modify, or publish it further, provided you keep the license and give proper credits.
 
 **Note:** The following content is continuously updated as the summer term progresses. If you're interested in the full previous 2022 content, checkout the latest [2022 Git commit](https://github.com/dl4nlp-tuda/deep-learning-for-nlp-lectures/tree/a59910534ac600a6e8c22fbcde6ae8223a87cda9).
 
@@ -113,7 +113,7 @@ Thanks to Jan Kühnemund for generating the close caption for YouTube with Open 
 
 ## Compiling slides to PDF
 
-If you run a linux distribution (e.g, Ubuntu 20.04 and newer), all packages are provided as part of `texlive`. Install the following packages
+If you run a linux distribution (e.g., Ubuntu 20.04 and newer), all packages are provided as part of `texlive`. Install the following packages
 
 ```plain
 $ sudo apt-get install texlive-latex-recommended texlive-pictures texlive-latex-extra \
@@ -132,8 +132,8 @@ $ wget https://github.com/mozilla/Fira/archive/refs/tags/4.106.zip -O 4.106.zip 
 Compile each lecture's slides using ``lualatex``
 
 ```plain
-$ lualatex dl4nlp2021-lecture*.tex && biber dl4nlp2021-lecture*.bcf && \
-lualatex dl4nlp2021-lecture*.tex && lualatex dl4nlp2021-lecture*.tex
+$ lualatex dl4nlp2023-lecture*.tex && biber dl4nlp2023-lecture*.bcf && \
+lualatex dl4nlp2023-lecture*.tex && lualatex dl4nlp2023-lecture*.tex
 ```
 
 ### Compiling slides using Docker
@@ -171,8 +171,8 @@ And compile
 
 ```plain
 # cd /mnt/dl4nlp/latex/lecture01
-# lualatex dl4nlp2021-lecture*.tex && biber dl4nlp2021-lecture*.bcf && \
-lualatex dl4nlp2021-lecture*.tex && lualatex dl4nlp2021-lecture*.tex
+# lualatex dl4nlp2023-lecture*.tex && biber dl4nlp2023-lecture*.bcf && \
+lualatex dl4nlp2023-lecture*.tex && lualatex dl4nlp2023-lecture*.tex
 ```
 
 which generates the PDF in your local folder (e.g, `/tmp/slides`).

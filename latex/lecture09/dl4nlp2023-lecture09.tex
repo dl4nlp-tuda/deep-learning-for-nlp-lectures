@@ -672,7 +672,7 @@ Where $ \{ \bm{Q}, \bm{K}, \bm{V} \}^h_{j=1} $ are different \textit{heads}.
 	\begin{block}{Byte-pair encodings}
 		Start at \textbf{character} level. 
 		
-		Merge the two \textbf{most frequently co-occuring} characters into a \textbf{new character}. 
+		Merge the two \textbf{most frequently co-occurring} characters into a \textbf{new character}. 
 		
 		Continue until you reach desired vocabulary size.
 		\textbf{Each word} will always be represented.
@@ -688,7 +688,7 @@ Where $ \{ \bm{Q}, \bm{K}, \bm{V} \}^h_{j=1} $ are different \textit{heads}.
 	The differences are in the \textbf{merging criterion}:
 	\pause
 	\begin{itemize}
-		\item \cite{Sennrich.et.al.2016.ACL} use \textbf{frequency} of co-occurence;
+		\item \cite{Sennrich.et.al.2016.ACL} use \textbf{frequency} of co-occurrence;
 		\item \cite{kudo2018subword} trains a \textbf{unigram language model}.
 	\end{itemize}
 
