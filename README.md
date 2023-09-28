@@ -93,7 +93,7 @@ July 4, 2023
 
 July 11, 2023
 
-* [Slides as PDF](/pdf/dl4nlp2023-lecture13.pdf), [PPTX lecture slides](/pdf/dl4nlp2023-lecture13.pptx)
+* [Slides as PDF](/pdf/dl4nlp2023-lecture13.pdf), [PPTX lecture slides](/pdf/dl4nlp2023-lecture13.pptx), [YouTube recording](https://www.youtube.com/watch?v=lO2-W5l2y40)
 
  
 ## Subtitles/Close caption
