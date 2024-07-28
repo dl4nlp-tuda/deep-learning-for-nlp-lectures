@@ -530,13 +530,13 @@ $$
 	$$
 
 	\pause
-	Each matrix $\bm{Q}, \bm{K}, \bm{V} \in R^{n \times d_m}$, where $d_m$ is the \textit{model dimension}.
+	Each matrix $\bm{Q}, \bm{K}, \bm{V} \in \mathbb{R}^{n \times d_m}$, where $d_m$ is the \textit{model dimension}.
 
 	\pause
 	\textbf{Split} each query/key/value into $h$ \textbf{heads} (aspects) by \textit{reshaping}. 
 
 	$$
-		\bm{Q}, \bm{K}, \bm{V} \in R^{n \times d_m} \to \bm{Q}, \bm{K}, \bm{V} \in {R^{n \times h \times d_m/h}}
+		\bm{Q}, \bm{K}, \bm{V} \in \mathbb{R}^{n \times d_m} \to \bm{Q}, \bm{K}, \bm{V} \in \mathbb{R}^{n \times h \times d_m/h}
 	$$
 	\pause
 	\begin{itemize}

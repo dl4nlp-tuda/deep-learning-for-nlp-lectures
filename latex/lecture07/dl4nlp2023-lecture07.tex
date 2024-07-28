@@ -782,7 +782,7 @@ Fancy name for element-wise multiplication
 $\bm{z_{[i]}} = \bm{u_{[i]}} \cdot \bm{v_{[i]}}$
 \end{block}
 $
-\bm{s'} \gets \bm{g} \odot \bm{x} + (\bm{1} + \bm{g}) \odot \bm{s}
+\bm{s'} \gets \bm{g} \odot \bm{x} + (\bm{1} - \bm{g}) \odot \bm{s}
 $
 \begin{itemize}
 	\item \pause Reads the entries in $\bm{x}$ corresponding to ones in the gate, writes them to the memory
@@ -816,7 +816,7 @@ $$
 8 \\ 9 \\ 3
 \end{pmatrix}
 \\
-\bm{s'} &\gets &\bm{g} &\odot &\bm{x} &+ &(\bm{1} + \bm{g}) &\odot &\bm{s} \\
+\bm{s'} &\gets &\bm{g} &\odot &\bm{x} &+ &(\bm{1} - \bm{g}) &\odot &\bm{s} \\
 \end{aligned}
 $$
 \pause

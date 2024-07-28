@@ -127,7 +127,7 @@ Technical University of Darmstadt \hfill \texttt{www.trusthlt.org} }
 
 \begin{frame}{Motivation}
 
-I give you a large corpus or plain text data
+I give you a large corpus of plain text data
 
 Can you build a model that will answer any of the `word analogy' tasks?
 
@@ -616,7 +616,7 @@ Potential obstacles
 
 \begin{itemize}
 	\item Data sparsity --- some entries in the matrix $\bm{M}$ may be incorrect because we did not observe enough data points
-	\item The explicit word vectors are of a very high dimensions (depending on the definition of context, the number of possible contexts can be in the hundreds of thousands, or even millions)
+	\item The explicit word vectors are of a very high dimension (depending on the definition of context, the number of possible contexts can be in the hundreds of thousands, or even millions)
 \end{itemize}
 
 $\to$ Dimensionality reduction techniques, e.g., singular value decomposition (SVD) for low-rank representation (we won't tackle that)
@@ -675,7 +675,7 @@ $\to$ Dimensionality reduction techniques, e.g., singular value decomposition (S
 \end{figure}
 \end{block}
 
-The rows of the embeddings matrix $\bm{E}$ learn suitable word representation in context (colums of $\bm{W^2}$ too)
+The rows of the embeddings matrix $\bm{E}$ learn suitable word representation in context (columns of $\bm{W^2}$ too)
 
 \end{frame}
 
@@ -748,7 +748,7 @@ What if we don't need probability distribution but just want to learn word embed
 	\end{tikzpicture}
 \end{figure}	
 
-For example, insted of modeling $\Pr(w_3 | w_1, w_2, \boxdot)$, we model $\Pr(w_2 | w_1,  \boxdot, w_3)$
+For example, instead of modeling $\Pr(w_3 | w_1, w_2, \boxdot)$, we model $\Pr(w_2 | w_1,  \boxdot, w_3)$
 
 \end{frame}
 
@@ -1014,7 +1014,7 @@ word2vec simplifies the neural LM by removing the hidden layer (so turning it in
 \end{figure}
 
 
-%- we have obtained the best performance on the taskintroduced in the next section by building a log-linear classifier with four future and four history words at the input, where the training criterion is to correctly classify the current (middle) word.
+%- we have obtained the best performance on the task introduced in the next section by building a log-linear classifier with four future and four history words at the input, where the training criterion is to correctly classify the current (middle) word.
 
 Variant 1: Continuous bag of words (CBOW)
 $\bm{c} = \sum_{i = 1}^{k} v(c_i)$
@@ -1091,7 +1091,7 @@ Create a set $D$ of correct word-context pairs and set $\bar{D}$ of incorrect wo
 
 The goal of the algorithm is to estimate the probability $\Pr(D = 1 | w, c)$ that the word-context pair $w, c$ comes from the correct set $D$
 
-This should be high ($1$) for for pairs from $D$ and low ($0$) for pairs from $\bar{D}$
+This should be high ($1$) for pairs from $D$ and low ($0$) for pairs from $\bar{D}$
 \end{frame}
 
 \begin{frame}{The corpus-wide loss of word2vec}
@@ -1200,7 +1200,7 @@ Popular word embedding models ignore the morphology of words, by assigning a dis
 $\to$ Model each word as a bag of character $n$-grams
 \begin{itemize}
 \item Each character $n$-gram has own embedding
-\item Word is represented as a sum of $n$-gram emeddings	
+\item Word is represented as a sum of $n$-gram embeddings	
 \end{itemize}
 
 
@@ -1338,7 +1338,7 @@ The corpora reflect human biases in the real world (cultural or otherwise)
 \begin{block}{Polysemy, context independent representation}
 Some words have obvious multiple senses
 
-A \emph{bank} may refer to a financial institution or to the side of a river, a \emph{star} may an abstract shape, a celebrity, an astronomical entity
+A \emph{bank} may refer to a financial institution or to the side of a river, a \emph{star} may be an abstract shape, a celebrity, an astronomical entity
 
 Using a single vector for all forms	is problematic
 \end{block}
