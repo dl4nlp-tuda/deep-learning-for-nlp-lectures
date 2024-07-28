@@ -430,7 +430,7 @@ We \emph{factorize} the joint probability into a product
 	\item One factorization is very useful: left-to-right
 \end{itemize}
 $$
-\Pr(w_{1:n}) = \Pr(w_1 | \text{<s>}) \Pr (w_2 | \text{<s>}, w_1) \Pr(w_3 | \text{<s>}, w_1, w_2) \cdots \Pr(w_k | \text{<s>}, w_1, w_2, \ldots, w_{n-1})
+\Pr(w_{1:n}) = \Pr(w_1 | \text{<s>}) \Pr (w_2 | \text{<s>}, w_1) \Pr(w_3 | \text{<s>}, w_1, w_2) \cdots \Pr(w_n | \text{<s>}, w_1, w_2, \ldots, w_{n-1})
 $$
 
 \end{frame}
@@ -438,7 +438,7 @@ $$
 \begin{frame}{Simplifications in `classical' language models}
 Despite factorization, the last term of
 $
-\Pr(w_{1:n}) = \Pr(w_1 | \text{<s>}) \Pr (w_2 | \text{<s>}, w_1) \Pr(w_3 | \text{<s>}, w_1, w_2) \cdots \Pr(w_k | \text{<s>}, w_1, w_2, \ldots, w_{n-1})
+\Pr(w_{1:n}) = \Pr(w_1 | \text{<s>}) \Pr (w_2 | \text{<s>}, w_1) \Pr(w_3 | \text{<s>}, w_1, w_2) \cdots \Pr(w_n | \text{<s>}, w_1, w_2, \ldots, w_{n-1})
 $
 still depends on all the previous words of the sequence
 
